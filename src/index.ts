@@ -1,9 +1,49 @@
 import { McpServer } from "@modelcontextprotocol/server";
 import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
+import {
+  getSubsidyDetail,
+  JGrantsApiError,
+  searchSubsidies,
+} from "./jgrants";
 
 const SERVER_NAME = "subsidy-ai-mcp";
 const SERVER_VERSION = "0.1.0";
+
+function jsonToolResult(value: unknown) {
+  return {
+    content: [
+      {
+        type: "text" as const,
+        text: JSON.stringify(value, null, 2),
+      },
+    ],
+  };
+}
+
+function errorToolResult(error: unknown) {
+  const known = error instanceof JGrantsApiError;
+  const payload = {
+    error: {
+      code: known ? error.code : "internal_error",
+      message: known
+        ? error.message
+        : "補助金情報の取得中に予期しないエラーが発生しました。",
+      retryable: known
+        ? error.code === "timeout" || error.code === "upstream_error"
+        : false,
+    },
+  };
+  return {
+    isError: true,
+    content: [
+      {
+        type: "text" as const,
+        text: JSON.stringify(payload, null, 2),
+      },
+    ],
+  };
+}
 
 function createServer(): McpServer {
   const server = new McpServer({
@@ -27,6 +67,118 @@ function createServer(): McpServer {
         },
       ],
     }),
+  );
+
+  server.registerTool(
+    "search_subsidies",
+    {
+      description:
+        "Jグランツの公開APIから補助金候補を検索します。所在地が指定された場合は全国対象制度も含めます。検索結果だけで対象可否を断定せず、候補選定後にget_subsidy_detailを使用してください。",
+      inputSchema: {
+        keyword: z
+          .string()
+          .trim()
+          .min(2)
+          .max(255)
+          .describe("事業や投資目的を表す2〜255文字の検索語"),
+        use_purpose: z
+          .string()
+          .trim()
+          .min(1)
+          .max(255)
+          .optional()
+          .describe("Jグランツの利用目的区分"),
+        target_area: z
+          .string()
+          .trim()
+          .min(1)
+          .max(100)
+          .optional()
+          .describe("事業実施地域または所在地。例: 東京都"),
+        industry: z
+          .string()
+          .trim()
+          .min(1)
+          .max(255)
+          .optional()
+          .describe("Jグランツの業種区分。例: 製造業"),
+        employee_count: z
+          .number()
+          .int()
+          .min(0)
+          .max(10_000_000)
+          .optional()
+          .describe("現在の従業員数。API取得後の候補絞り込みに使用"),
+        accepting_only: z
+          .boolean()
+          .optional()
+          .default(true)
+          .describe("trueの場合、現在受付中の制度だけを返す"),
+        sort: z
+          .enum([
+            "created_date",
+            "acceptance_start_datetime",
+            "acceptance_end_datetime",
+          ])
+          .optional()
+          .default("acceptance_end_datetime"),
+        order: z.enum(["ASC", "DESC"]).optional().default("ASC"),
+        limit: z.number().int().min(1).max(50).optional().default(10),
+      },
+    },
+    async ({
+      keyword,
+      use_purpose,
+      target_area,
+      industry,
+      employee_count,
+      accepting_only,
+      sort,
+      order,
+      limit,
+    }) => {
+      try {
+        return jsonToolResult(
+          await searchSubsidies({
+            keyword,
+            usePurpose: use_purpose,
+            targetArea: target_area,
+            industry,
+            employeeCount: employee_count,
+            acceptingOnly: accepting_only,
+            sort,
+            order,
+            limit,
+          }),
+        );
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "get_subsidy_detail",
+    {
+      description:
+        "search_subsidiesが返した補助金IDからJグランツ詳細API V2を取得します。公募回ごとの受付期間と文書メタデータを返し、Base64文書本体は返しません。",
+      inputSchema: {
+        subsidy_id: z
+          .string()
+          .trim()
+          .min(1)
+          .max(18)
+          .regex(/^[A-Za-z0-9]+$/)
+          .describe("Jグランツの補助金ID（18文字以内の英数字）"),
+      },
+    },
+    async ({ subsidy_id }) => {
+      try {
+        return jsonToolResult(await getSubsidyDetail(subsidy_id));
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
   );
 
   return server;

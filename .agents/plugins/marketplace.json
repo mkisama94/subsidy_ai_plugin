@@ -1,0 +1,20 @@
+{
+  "name": "subsidy-ai",
+  "interface": {
+    "displayName": "補助金AI"
+  },
+  "plugins": [
+    {
+      "name": "subsidy-ai",
+      "source": {
+        "source": "local",
+        "path": "./plugins/subsidy-ai"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

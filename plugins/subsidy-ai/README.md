@@ -6,7 +6,6 @@ JグランツMCPラッパーの初期実装と社内配布検証を完了し、�
 
 ## 現在利用できるMCPツール
 
-- `hello`: MCPサーバーの疎通確認
 - `search_subsidies`: Jグランツ公開APIから補助金候補を検索
 - `get_subsidy_detail`: Jグランツ詳細API V2から公募回、詳細、文書メタデータを取得
 - `evaluate_subsidy_fit`: 補助金詳細と企業プロフィールを照合し、一致、不一致、未確認事項を分離

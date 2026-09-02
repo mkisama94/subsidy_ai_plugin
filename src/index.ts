@@ -9,7 +9,7 @@ import {
 import { evaluateSubsidyFit } from "./matching";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.2.0";
+const SERVER_VERSION = "0.3.0";
 
 function jsonToolResult(value: unknown) {
   return {
@@ -52,23 +52,6 @@ function createServer(): McpServer {
     version: SERVER_VERSION,
   });
 
-  server.registerTool(
-    "hello",
-    {
-      description: "MCPサーバーの疎通確認用ツールです。指定された名前へ挨拶を返します。",
-      inputSchema: {
-        name: z.string().trim().min(1).max(100).optional(),
-      },
-    },
-    async ({ name }) => ({
-      content: [
-        {
-          type: "text",
-          text: `こんにちは、${name ?? "世界"}。補助金AI MCPサーバーは正常に動作しています。`,
-        },
-      ],
-    }),
-  );
 
   server.registerTool(
     "search_subsidies",

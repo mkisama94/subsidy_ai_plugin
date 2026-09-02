@@ -6,9 +6,10 @@ import {
   JGrantsApiError,
   searchSubsidies,
 } from "./jgrants";
+import { evaluateSubsidyFit } from "./matching";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.1.0";
+const SERVER_VERSION = "0.2.0";
 
 function jsonToolResult(value: unknown) {
   return {
@@ -175,6 +176,58 @@ function createServer(): McpServer {
     async ({ subsidy_id }) => {
       try {
         return jsonToolResult(await getSubsidyDetail(subsidy_id));
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "evaluate_subsidy_fit",
+    {
+      description:
+        "指定した補助金のJグランツ詳細と企業プロフィールを照合し、明示的な一致、不一致、未確認事項を分けて返します。受給資格や採択を断定するツールではありません。",
+      inputSchema: {
+        subsidy_id: z
+          .string()
+          .trim()
+          .min(1)
+          .max(18)
+          .regex(/^[A-Za-z0-9]+$/)
+          .describe("search_subsidiesが返したJグランツの補助金ID"),
+        company_profile: z.object({
+          location: z.string().trim().min(1).max(100).optional(),
+          industry: z.string().trim().min(1).max(255).optional(),
+          employee_count: z
+            .number()
+            .int()
+            .min(0)
+            .max(10_000_000)
+            .optional(),
+          capital_yen: z
+            .number()
+            .int()
+            .min(0)
+            .max(100_000_000_000_000)
+            .optional(),
+          business_plans: z
+            .array(z.string().trim().min(1).max(255))
+            .max(20)
+            .optional(),
+        }),
+      },
+    },
+    async ({ subsidy_id, company_profile }) => {
+      try {
+        return jsonToolResult(
+          await evaluateSubsidyFit(subsidy_id, {
+            location: company_profile.location,
+            industry: company_profile.industry,
+            employeeCount: company_profile.employee_count,
+            capitalYen: company_profile.capital_yen,
+            businessPlans: company_profile.business_plans,
+          }),
+        );
       } catch (error) {
         return errorToolResult(error);
       }

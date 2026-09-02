@@ -54,6 +54,29 @@
 - Jグランツ詳細URL
 - 取得日時
 
+### `evaluate_subsidy_fit`
+
+補助金IDと、その場でユーザーが確認した企業プロフィールを照合する読み取り専用ツール。初期版では企業情報を保存しない。
+
+主な入力:
+
+- `subsidy_id`: `search_subsidies` が返した補助金ID
+- `company_profile.location`: 法人または事業者の所在地
+- `company_profile.industry`: 主な業種
+- `company_profile.employee_count`: 従業員数
+- `company_profile.capital_yen`: 資本金
+- `company_profile.business_plans`: 設備投資、DX、省エネなどの計画
+
+主な出力:
+
+- `matchedConditions`: 構造化項目上で一致した条件
+- `conflictingConditions`: 明示的に一致しない条件
+- `unconfirmedConditions`: 公募要領や実施機関への確認が必要な条件
+- `missingProfileFields`: 判定に不足している企業情報
+- `status`: `strong_candidate`、`needs_confirmation`、`potentially_ineligible`、`insufficient_information`
+
+この出力は候補評価であり、受給資格や採択を保証しない。
+
 ### `get_application_guidelines`
 
 補助金IDに紐づく公募要領を取得し、モデルが根拠箇所を確認できる形にする読み取り専用ツール。

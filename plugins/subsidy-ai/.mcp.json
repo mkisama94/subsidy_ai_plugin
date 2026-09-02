@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "subsidy-ai": {
-      "type": "http",
-      "url": "https://subsidy-ai-plugin.mkisama.workers.dev/mcp"
-    }
-  }
-}

@@ -6,6 +6,7 @@
   "plugins": [
     {
       "name": "subsidy-ai",
+      "pluginId": "plugin_asdk_app_6a95475d3dc48191a91289c12b3e8e93",
       "source": {
         "source": "local",
         "path": "./plugins/subsidy-ai"

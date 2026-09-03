@@ -16,9 +16,11 @@ import {
 import { EdinetApiError } from "./edinet";
 import { createD1CompanyRelationsRepository } from "./d1Relations";
 import { verifyAndStoreCorporateRelationship } from "./edinetRelationsService";
+import { resolveCompanyRelationshipGate } from "./companyRelationshipGate";
+import { searchSubsidiesForCompany } from "./companySubsidySearch";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.7.1";
+const SERVER_VERSION = "0.8.0";
 
 function jsonToolResult(value: unknown) {
   return {
@@ -69,6 +71,8 @@ function createServer(
     name: SERVER_NAME,
     version: SERVER_VERSION,
   });
+  const relationsRepository =
+    createD1CompanyRelationsRepository(relationsDatabase);
 
   server.registerTool(
     "search_companies",
@@ -267,7 +271,7 @@ function createServer(
               documentId: document_id,
             },
             edinetApiKey,
-            createD1CompanyRelationsRepository(relationsDatabase),
+            relationsRepository,
           ),
         );
       } catch (error) {
@@ -279,7 +283,7 @@ function createServer(
     "evaluate_subsidy_fit_for_company",
     {
       description:
-        "法人番号から取得したgBizINFOの企業プロフィールを、指定したJグランツ補助金の公開条件と照合します。gBizINFOで未登録または古い所在地、業種、従業員数、資本金は利用者の明示入力で補完でき、各値の出典と矛盾も返します。中小企業要件がある制度では親会社・大企業からの出資関係を利用者に確認し、親会社候補が示された場合はverify_corporate_relationshipで検証してください。申請資格や採択を断定しません。",
+        "特定企業に補助金を推薦・順位付けする前に必ず使用する評価ゲートです。最初にD1の検証済み資本関係を確認し、親会社候補が指定されていて未保存なら公式EDINETで検証してからJグランツを照合します。資本関係を確認できない場合は評価を停止します。親会社候補が不明な場合は探索候補だけを返し、企業別の推薦として断定しません。gBizINFOの欠損は利用者の明示入力で補完できます。申請資格や採択を断定しません。",
       inputSchema: {
         subsidy_id: z
           .string()
@@ -326,6 +330,34 @@ function createServer(
           .max(100_000_000_000_000)
           .optional()
           .describe("利用者が確認した現在の資本金（円）。指定時はgBizINFOより優先"),
+        parent_company_name: z
+          .string()
+          .trim()
+          .min(1)
+          .max(200)
+          .optional()
+          .describe(
+            "会話・会社公式サイト等で判明した親会社候補の正式名称。候補がある場合は必ず指定し、未検証のまま省略しない",
+          ),
+        parent_corporate_number: z
+          .string()
+          .trim()
+          .regex(/^\d{13}$/)
+          .optional()
+          .describe("親会社候補の13桁の法人番号。判明している場合に指定"),
+        relationship_filing_date: z
+          .string()
+          .trim()
+          .regex(/^\d{4}-\d{2}-\d{2}$/)
+          .optional()
+          .describe("資本関係を確認するEDINET書類の提出日"),
+        relationship_document_id: z
+          .string()
+          .trim()
+          .regex(/^[A-Za-z0-9]+$/)
+          .max(20)
+          .optional()
+          .describe("資本関係を確認するEDINET書類管理番号"),
       },
     },
     async ({
@@ -336,6 +368,10 @@ function createServer(
       industry,
       employee_count,
       capital_yen,
+      parent_company_name,
+      parent_corporate_number,
+      relationship_filing_date,
+      relationship_document_id,
     }) => {
       try {
         return jsonToolResult(
@@ -350,6 +386,156 @@ function createServer(
               employeeCount: employee_count,
               capitalYen: capital_yen,
             },
+            {
+              parentCandidate: parent_company_name
+                ? {
+                    name: parent_company_name,
+                    corporateNumber: parent_corporate_number,
+                    filingDate: relationship_filing_date,
+                    documentId: relationship_document_id,
+                  }
+                : undefined,
+              resolver: (input) =>
+                resolveCompanyRelationshipGate(
+                  input,
+                  edinetApiKey,
+                  relationsRepository,
+                ),
+            },
+          ),
+        );
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
+  );
+  server.registerTool(
+    "search_subsidies_for_company",
+    {
+      description:
+        "法人番号が特定できている会社について補助金候補を探す場合は、汎用のsearch_subsidiesではなく必ずこのツールを先に使用します。D1の検証済み資本関係を最初に確認し、親会社候補が指定されていて未保存なら公式EDINETで検証します。検証不能なら検索を停止し、親会社候補が不明なら探索候補に限定します。返却されたrecommendationGateを無視して推薦・順位付けしないでください。",
+      inputSchema: {
+        corporate_number: z
+          .string()
+          .trim()
+          .regex(/^\d{13}$/)
+          .describe("対象会社の13桁の法人番号"),
+        keyword: z
+          .string()
+          .trim()
+          .min(2)
+          .max(255)
+          .describe("実施したい事業や投資目的を表す検索語"),
+        use_purpose: z.string().trim().min(1).max(255).optional(),
+        location: z
+          .string()
+          .trim()
+          .min(1)
+          .max(100)
+          .optional()
+          .describe("利用者が確認した現在の所在地。指定時はgBizINFOより優先"),
+        industry: z
+          .string()
+          .trim()
+          .min(1)
+          .max(255)
+          .optional()
+          .describe("利用者が確認した現在の業種。指定時はgBizINFOより優先"),
+        employee_count: z.number().int().min(0).max(10_000_000).optional(),
+        capital_yen: z
+          .number()
+          .int()
+          .min(0)
+          .max(100_000_000_000_000)
+          .optional(),
+        parent_company_name: z
+          .string()
+          .trim()
+          .min(1)
+          .max(200)
+          .optional()
+          .describe(
+            "会話・会社公式サイト等で判明した親会社候補。候補がある場合は必ず指定する",
+          ),
+        parent_corporate_number: z
+          .string()
+          .trim()
+          .regex(/^\d{13}$/)
+          .optional(),
+        relationship_filing_date: z
+          .string()
+          .trim()
+          .regex(/^\d{4}-\d{2}-\d{2}$/)
+          .optional(),
+        relationship_document_id: z
+          .string()
+          .trim()
+          .regex(/^[A-Za-z0-9]+$/)
+          .max(20)
+          .optional(),
+        accepting_only: z.boolean().optional().default(true),
+        sort: z
+          .enum([
+            "created_date",
+            "acceptance_start_datetime",
+            "acceptance_end_datetime",
+          ])
+          .optional()
+          .default("acceptance_end_datetime"),
+        order: z.enum(["ASC", "DESC"]).optional().default("ASC"),
+        limit: z.number().int().min(1).max(50).optional().default(10),
+      },
+    },
+    async ({
+      corporate_number,
+      keyword,
+      use_purpose,
+      location,
+      industry,
+      employee_count,
+      capital_yen,
+      parent_company_name,
+      parent_corporate_number,
+      relationship_filing_date,
+      relationship_document_id,
+      accepting_only,
+      sort,
+      order,
+      limit,
+    }) => {
+      try {
+        return jsonToolResult(
+          await searchSubsidiesForCompany(
+            {
+              corporateNumber: corporate_number,
+              keyword,
+              usePurpose: use_purpose,
+              profileOverrides: {
+                location,
+                industry,
+                employeeCount: employee_count,
+                capitalYen: capital_yen,
+              },
+              parentCandidate: parent_company_name
+                ? {
+                    name: parent_company_name,
+                    corporateNumber: parent_corporate_number,
+                    filingDate: relationship_filing_date,
+                    documentId: relationship_document_id,
+                  }
+                : undefined,
+              acceptingOnly: accepting_only,
+              sort,
+              order,
+              limit,
+            },
+            gbizInfoApiToken,
+            (input) =>
+              resolveCompanyRelationshipGate(
+                input,
+                edinetApiKey,
+                relationsRepository,
+              ),
           ),
         );
       } catch (error) {
@@ -361,7 +547,7 @@ function createServer(
     "search_subsidies",
     {
       description:
-        "Jグランツの公開APIから補助金候補を検索します。所在地が指定された場合は全国対象制度も含めます。検索結果だけで対象可否を断定せず、候補選定後にget_subsidy_detailを使用してください。",
+        "Jグランツの公開APIから制度の探索候補だけを検索します。特定の企業に対する推薦、順位付け、対象可否の判断には使用しないでください。会社名または法人番号が会話にある場合は、候補選定後に各制度についてevaluate_subsidy_fit_for_companyを必ず使用し、そのrecommendationGateに従ってください。所在地が指定された場合は全国対象制度も含めます。",
       inputSchema: {
         keyword: z
           .string()

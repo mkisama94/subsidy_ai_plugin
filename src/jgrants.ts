@@ -288,8 +288,14 @@ export async function searchSubsidies(input: SearchSubsidiesInput) {
     returnedCount: Math.min(matching.length, input.limit),
     hasMore: matching.length > input.limit,
     subsidies: matching.slice(0, input.limit),
+    usagePolicy: {
+      resultKind: "exploratory_candidates_only",
+      companySpecificRecommendationAllowed: false,
+      requiredNextAction:
+        "特定企業への推薦・順位付けを行う場合は、各候補についてevaluate_subsidy_fit_for_companyを実行し、資本関係のrecommendationGateを確認してください。",
+    },
     caution:
-      "検索結果だけで対象可否を断定せず、詳細情報と最新の公募要領を確認してください。",
+      "これは制度の探索候補であり、企業別のおすすめ順位ではありません。検索結果だけで対象可否を断定せず、資本関係、詳細情報、最新の公募要領を確認してください。",
   };
 }
 

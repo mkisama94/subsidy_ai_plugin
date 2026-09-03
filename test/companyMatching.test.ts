@@ -239,3 +239,127 @@ test("都道府県・市区町村だけの入力は詳細住所と矛盾させ�
   assert.deepEqual(result.profileResolution.conflictFields, []);
   assert.equal(result.profileResolution.requiresUserConfirmation, false);
 });
+
+test("親会社候補を検証できなければJグランツ照合を開始しない", async () => {
+  const requestedHosts: string[] = [];
+  globalThis.fetch = async (input) => {
+    const url = new URL(String(input));
+    requestedHosts.push(url.hostname);
+    return Response.json({
+      "hojin-infos": [
+        {
+          corporate_number: "7010001224615",
+          name: "株式会社トレファクテクノロジーズ",
+          location: "東京都千代田区",
+          industry: ["情報通信業"],
+          certification: [],
+          subsidy: [],
+        },
+      ],
+    });
+  };
+
+  const result = await evaluateSubsidyFitForCompany(
+    "blocked123",
+    "7010001224615",
+    "secret-token",
+    undefined,
+    {},
+    {
+      parentCandidate: { name: "株式会社トレジャー・ファクトリー" },
+      resolver: async () => ({
+        status: "needs_verification",
+        source: "none",
+        riskLevel: "unknown",
+        checkedBeforeSubsidyAssessment: true,
+        storageAvailable: true,
+        verifiedRelations: [],
+        parentCandidate: {
+          name: "株式会社トレジャー・ファクトリー",
+          corporateNumber: null,
+        },
+        verification: null,
+        error: null,
+      }),
+    },
+  );
+
+  assert.deepEqual(requestedHosts, ["api.info.gbiz.go.jp"]);
+  assert.equal(result.assessment, null);
+  assert.equal(
+    result.recommendationGate.status,
+    "blocked_pending_corporate_relationship_verification",
+  );
+  assert.equal(
+    result.recommendationGate.companySpecificRecommendationAllowed,
+    false,
+  );
+});
+
+test("D1で100%子会社を確認してから条件付き評価へ進む", async () => {
+  const requestedHosts: string[] = [];
+  globalThis.fetch = async (input) => {
+    const url = new URL(String(input));
+    requestedHosts.push(url.hostname);
+    if (url.hostname === "api.info.gbiz.go.jp") {
+      return Response.json({
+        "hojin-infos": [
+          {
+            corporate_number: "7010001224615",
+            name: "株式会社トレファクテクノロジーズ",
+            location: "東京都千代田区",
+            employee_number: 16,
+            industry: ["情報通信業"],
+            certification: [],
+            subsidy: [],
+          },
+        ],
+      });
+    }
+    return Response.json({
+      result: [
+        {
+          id: "detail-group",
+          title: "中小企業向け支援",
+          target_number_of_employees: "300人以下",
+          workflow: [{ target_area_search: "東京都" }],
+        },
+      ],
+    });
+  };
+
+  const result = await evaluateSubsidyFitForCompany(
+    "detail-group",
+    "7010001224615",
+    "secret-token",
+    undefined,
+    {},
+    {
+      resolver: async () => ({
+        status: "verified",
+        source: "d1",
+        riskLevel: "high",
+        checkedBeforeSubsidyAssessment: true,
+        storageAvailable: true,
+        verifiedRelations: [],
+        parentCandidate: null,
+        verification: null,
+        error: null,
+      }),
+    },
+  );
+
+  assert.deepEqual(requestedHosts, [
+    "api.info.gbiz.go.jp",
+    "api.jgrants-portal.go.jp",
+  ]);
+  assert.notEqual(result.assessment, null);
+  assert.equal(
+    result.recommendationGate.status,
+    "conditional_verified_group_relationship",
+  );
+  assert.equal(
+    result.recommendationGate.eligibilityConclusionAllowed,
+    false,
+  );
+});

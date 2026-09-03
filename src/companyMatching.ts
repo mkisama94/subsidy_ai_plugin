@@ -1,5 +1,10 @@
 import { getCompanyProfile } from "./gbizinfo";
 import { evaluateSubsidyFit } from "./matching";
+import type {
+  CompanyRelationshipGateInput,
+  CompanyRelationshipGateResult,
+  ParentCompanyCandidate,
+} from "./companyRelationshipGate";
 
 export type CompanyProfileOverrides = {
   location?: string;
@@ -7,6 +12,77 @@ export type CompanyProfileOverrides = {
   employeeCount?: number;
   capitalYen?: number;
 };
+
+export type CompanyRelationshipResolver = (
+  input: CompanyRelationshipGateInput,
+) => Promise<CompanyRelationshipGateResult>;
+
+export function recommendationGate(
+  relationship: CompanyRelationshipGateResult,
+) {
+  if (relationship.status === "needs_verification") {
+    return {
+      status: "blocked_pending_corporate_relationship_verification" as const,
+      candidateSearchAllowed: false,
+      companySpecificRecommendationAllowed: false,
+      eligibilityConclusionAllowed: false,
+      requiredNextAction:
+        "親会社候補をEDINET提出書類で確認できるまで、企業別の推薦・順位付けを行わないでください。",
+    };
+  }
+  if (relationship.status === "verification_failed") {
+    return {
+      status: "blocked_corporate_relationship_unavailable" as const,
+      candidateSearchAllowed: false,
+      companySpecificRecommendationAllowed: false,
+      eligibilityConclusionAllowed: false,
+      requiredNextAction:
+        "資本関係の確認を再実行してください。確認できるまでは企業別の推薦を行わないでください。",
+    };
+  }
+  if (relationship.status === "not_identified") {
+    return {
+      status: "provisional_relationship_not_identified" as const,
+      candidateSearchAllowed: true,
+      companySpecificRecommendationAllowed: false,
+      eligibilityConclusionAllowed: false,
+      requiredNextAction:
+        "候補制度の探索だけに留め、親会社候補の有無を利用者に確認してから企業別の推薦を確定してください。",
+    };
+  }
+  if (relationship.riskLevel === "high") {
+    return {
+      status: "conditional_verified_group_relationship" as const,
+      candidateSearchAllowed: true,
+      companySpecificRecommendationAllowed: true,
+      eligibilityConclusionAllowed: false,
+      requiredNextAction:
+        "検証済みの大企業子会社リスクを、対象制度の最新公募要領にあるみなし大企業規定と照合してください。",
+    };
+  }
+  return {
+    status: "relationship_verified" as const,
+    candidateSearchAllowed: true,
+    companySpecificRecommendationAllowed: true,
+    eligibilityConclusionAllowed: false,
+    requiredNextAction:
+      "検証済み資本関係を含め、対象制度の最新公募要領と照合してください。",
+  };
+}
+
+function defaultRelationshipResult(): CompanyRelationshipGateResult {
+  return {
+    status: "not_identified",
+    source: "none",
+    riskLevel: "unknown",
+    checkedBeforeSubsidyAssessment: true,
+    storageAvailable: false,
+    verifiedRelations: [],
+    parentCandidate: null,
+    verification: null,
+    error: null,
+  };
+}
 
 type ProfileValue = string | number;
 type FieldRelationship =
@@ -154,9 +230,35 @@ export async function evaluateSubsidyFitForCompany(
   apiToken: string | undefined,
   businessPlans?: string[],
   overrides: CompanyProfileOverrides = {},
+  relationshipOptions: {
+    parentCandidate?: ParentCompanyCandidate;
+    resolver?: CompanyRelationshipResolver;
+  } = {},
 ) {
   const companyProfile = await getCompanyProfile(corporateNumber, apiToken, 10);
   const company = companyProfile.company;
+  const corporateRelationship = relationshipOptions.resolver
+    ? await relationshipOptions.resolver({
+        targetCompanyName:
+          company.name ?? `法人番号${company.corporateNumber}`,
+        targetCorporateNumber: company.corporateNumber,
+        parentCandidate: relationshipOptions.parentCandidate,
+      })
+    : defaultRelationshipResult();
+  const gate = recommendationGate(corporateRelationship);
+
+  if (!gate.candidateSearchAllowed) {
+    return {
+      sources: [companyProfile.source],
+      retrievedAt: { company: companyProfile.retrievedAt, subsidy: null },
+      company,
+      corporateRelationship,
+      recommendationGate: gate,
+      assessment: null,
+      caution:
+        "資本関係を公的資料で確認できていないため、補助金の適合度評価と推薦を停止しました。",
+    };
+  }
   const publicIndustry = company.industries.length
     ? company.industries.join(" / ")
     : null;
@@ -219,6 +321,8 @@ export async function evaluateSubsidyFitForCompany(
       requiresUserConfirmation: conflictFields.length > 0,
     },
     statusPolicy: companyProfile.statusPolicy,
+    corporateRelationship,
+    recommendationGate: gate,
     assessment,
     caution:
       "gBizINFOとJグランツの公開構造化情報、および明示された利用者入力を組み合わせた候補評価です。利用者入力は公的データより優先して照合しますが、矛盾がある場合は確認が必要です。申請資格や採択を保証しないため、最新の公募要領と実施機関の案内を確認してください。",

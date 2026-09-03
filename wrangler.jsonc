@@ -6,5 +6,12 @@
   "compatibility_flags": ["nodejs_compat"],
   "observability": {
     "enabled": true
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "subsidy_ai_relations",
+      "database_name": "subsidy-ai-relations",
+      "database_id": "7a921696-7f84-4195-b629-61ff7c2bf611"
+    }
+  ]
 }

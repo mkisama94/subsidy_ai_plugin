@@ -13,10 +13,9 @@ import {
   GBIZINFO_ACTIVITY_TYPES,
   getCompanyActivities,
 } from "./gbizinfoActivities";
-import {
-  EdinetApiError,
-  verifyCorporateRelationship,
-} from "./edinet";
+import { EdinetApiError } from "./edinet";
+import { createD1CompanyRelationsRepository } from "./d1Relations";
+import { verifyAndStoreCorporateRelationship } from "./edinetRelationsService";
 
 const SERVER_NAME = "subsidy-ai-mcp";
 const SERVER_VERSION = "0.7.1";
@@ -64,6 +63,7 @@ function errorToolResult(error: unknown) {
 function createServer(
   gbizInfoApiToken?: string,
   edinetApiKey?: string,
+  relationsDatabase?: D1Database,
 ): McpServer {
   const server = new McpServer({
     name: SERVER_NAME,
@@ -257,7 +257,7 @@ function createServer(
     }) => {
       try {
         return jsonToolResult(
-          await verifyCorporateRelationship(
+          await verifyAndStoreCorporateRelationship(
             {
               targetCompanyName: target_company_name,
               targetCorporateNumber: target_corporate_number,
@@ -267,6 +267,7 @@ function createServer(
               documentId: document_id,
             },
             edinetApiKey,
+            createD1CompanyRelationsRepository(relationsDatabase),
           ),
         );
       } catch (error) {
@@ -521,6 +522,7 @@ function createServer(
 type Env = {
   GBIZINFO_API_TOKEN?: string;
   EDINET_API_KEY?: string;
+  subsidy_ai_relations?: D1Database;
 };
 
 export default {
@@ -542,7 +544,11 @@ export default {
 
     if (url.pathname === "/mcp") {
       const handleMcpRequest = createMcpHandler(() =>
-        createServer(env.GBIZINFO_API_TOKEN, env.EDINET_API_KEY),
+        createServer(
+          env.GBIZINFO_API_TOKEN,
+          env.EDINET_API_KEY,
+          env.subsidy_ai_relations,
+        ),
       );
       return handleMcpRequest(request, env, ctx);
     }

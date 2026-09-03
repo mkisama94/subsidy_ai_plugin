@@ -68,6 +68,14 @@ test("gBizINFOの企業情報をJグランツの適合度判定へ自動投入�
   assert.equal(result.profileResolution.fields.industry.source, "gbizinfo");
   assert.deepEqual(result.profileResolution.conflictFields, []);
   assert.equal(result.profileResolution.requiresUserConfirmation, false);
+  assert.equal(
+    result.assessment.assessment.statusLabel,
+    "申請条件の追加確認が必要です",
+  );
+  assert.match(
+    result.assessment.assessment.summary,
+    /追加確認が必要な項目/u,
+  );
   assert.deepEqual(
     result.assessment.assessment.matchedConditions.map(
       (condition) => condition.field,

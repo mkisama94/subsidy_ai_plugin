@@ -1,7 +1,7 @@
 {
   "name": "subsidy-ai",
-  "version": "0.6.0",
-  "description": "Jグランツの補助金情報とgBizINFOの法人情報を組み合わせ、企業ごとの候補条件を整理するプラグインです。",
+  "version": "0.8.0",
+  "description": "Jグランツの補助金情報と経済産業省の公開法人情報を組み合わせ、企業ごとの候補条件を整理するプラグインです。",
   "author": {
     "name": "mkisama94",
     "url": "https://github.com/mkisama94"
@@ -15,8 +15,8 @@
     "brandColor": "#006A8E",
     "composerIcon": "./assets/subsidy-search-icon.png",
     "logo": "./assets/subsidy-search-logo.png",
-    "shortDescription": "JグランツとgBizINFOで補助金候補を確認",
-    "longDescription": "Jグランツの補助金情報とgBizINFOの公開法人情報を組み合わせ、所在地、業種、従業員数、資本金などの構造化情報から一致、不一致、未確認事項を整理します。",
+    "shortDescription": "政府の公開情報から補助金候補を確認",
+    "longDescription": "Jグランツの補助金情報と経済産業省の法人情報データベース（gBizINFO）を組み合わせ、所在地、業種、従業員数、資本金などの公開情報から一致、不一致、未確認事項を整理します。",
     "developerName": "mkisama94",
     "category": "Productivity",
     "capabilities": ["Search", "Read"],
@@ -29,7 +29,8 @@
       "会社名と所在地から法人候補を確認して",
       "法人番号から当社の公開情報を確認して",
       "法人番号から特許、補助金、認定などの活動情報を確認して",
-      "法人番号を使って、この補助金が当社に合うか確認して"
+      "法人番号を使って、この補助金が当社に合うか確認して",
+      "親会社がある企業について、この補助金のみなし大企業の扱いを確認して"
     ]
   }
 }

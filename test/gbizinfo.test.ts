@@ -58,6 +58,10 @@ test("法人番号から企業基本情報を正規化し活動情報を未取�
 
   const result = await getCompanyProfile("8000012010038", "secret-token", 1);
 
+  assert.equal(
+    result.source.name,
+    "経済産業省の法人情報データベース（gBizINFO）",
+  );
   assert.equal(requestedToken, "secret-token");
   assert.equal(new URL(requestedUrl).pathname, "/hojin/v2/hojin/8000012010038");
   assert.equal(requestedUrl.endsWith("/"), false);

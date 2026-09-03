@@ -626,8 +626,11 @@ export async function verifyCorporateRelationship(
     },
     largeEnterpriseAffiliation: {
       requiresGuidelineReview: true,
+      relationshipConfirmed: status === "confirmed",
+      programEligibilityEvaluated: false,
+      statusLabel: "制度ごとの申請条件を確認する必要があります",
       note:
-        "みなし大企業の判定基準は補助金ごとに異なります。出資比率、複数大企業の保有、役員構成などを最新の公募要領と照合してください。",
+        "EDINETで確認できるのは資本関係の事実です。100%子会社であっても全制度で一律に対象外とは限りません。出資比率、複数大企業の保有、役員構成などを、候補となった補助金の最新の公募要領と照合してください。",
     },
     caution:
       "これはEDINET提出書類における名称検索と関係文脈の確認結果です。現在の資本関係、みなし大企業該当性、補助金の申請資格を保証しません。",

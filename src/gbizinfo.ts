@@ -1,5 +1,7 @@
 const GBIZINFO_BASE_URL = "https://api.info.gbiz.go.jp/hojin/v2/hojin";
 const GBIZINFO_SOURCE_URL = "https://content.info.gbiz.go.jp/api/index.html";
+export const GBIZINFO_DISPLAY_NAME =
+  "経済産業省の法人情報データベース（gBizINFO）";
 const REQUEST_TIMEOUT_MS = 15_000;
 
 type JsonRecord = Record<string, unknown>;
@@ -170,7 +172,7 @@ function normalizeProfile(item: JsonRecord): CompanyProfile {
   const corporateNumber = asString(item.corporate_number);
   if (!corporateNumber) {
     throw new GBizInfoApiError(
-      "gBizINFOの応答に法人番号がありません。",
+      `${GBIZINFO_DISPLAY_NAME}の応答に法人番号がありません。`,
       "invalid_response",
     );
   }
@@ -207,7 +209,7 @@ function normalizeSearchCandidate(item: JsonRecord): CompanySearchCandidate {
   const corporateNumber = asString(item.corporate_number);
   if (!corporateNumber) {
     throw new GBizInfoApiError(
-      "gBizINFOの検索応答に法人番号がありません。",
+      `${GBIZINFO_DISPLAY_NAME}の検索応答に法人番号がありません。`,
       "invalid_response",
     );
   }
@@ -252,7 +254,7 @@ async function fetchGBizInfo(
                 ? "rate_limited"
                 : "upstream_error";
       throw new GBizInfoApiError(
-        `gBizINFO APIがHTTP ${response.status}を返しました。`,
+        `${GBIZINFO_DISPLAY_NAME} APIがHTTP ${response.status}を返しました。`,
         code,
         response.status,
       );
@@ -261,7 +263,7 @@ async function fetchGBizInfo(
       return await response.json();
     } catch {
       throw new GBizInfoApiError(
-        "gBizINFO APIの応答をJSONとして解析できませんでした。",
+        `${GBIZINFO_DISPLAY_NAME} APIの応答をJSONとして解析できませんでした。`,
         "invalid_response",
         response.status,
       );
@@ -270,12 +272,12 @@ async function fetchGBizInfo(
     if (error instanceof GBizInfoApiError) throw error;
     if (error instanceof DOMException && error.name === "AbortError") {
       throw new GBizInfoApiError(
-        "gBizINFO APIへの接続がタイムアウトしました。",
+        `${GBIZINFO_DISPLAY_NAME} APIへの接続がタイムアウトしました。`,
         "timeout",
       );
     }
     throw new GBizInfoApiError(
-      "gBizINFO APIへ接続できませんでした。時間をおいて再試行してください。",
+      `${GBIZINFO_DISPLAY_NAME} APIへ接続できませんでした。時間をおいて再試行してください。`,
       "upstream_error",
     );
   } finally {
@@ -287,7 +289,7 @@ function requireApiToken(apiToken: string | undefined): string {
   const normalizedToken = apiToken?.trim();
   if (!normalizedToken) {
     throw new GBizInfoApiError(
-      "gBizINFO APIトークンが設定されていません。Cloudflare SecretのGBIZINFO_API_TOKENを設定してください。",
+      `${GBIZINFO_DISPLAY_NAME}のAPIトークンが設定されていません。Cloudflare SecretのGBIZINFO_API_TOKENを設定してください。`,
       "configuration_error",
     );
   }
@@ -316,21 +318,21 @@ export async function getCompanyProfile(
   const payload = await fetchGBizInfo(url, normalizedToken);
   if (!isRecord(payload)) {
     throw new GBizInfoApiError(
-      "gBizINFO APIからJSONオブジェクト以外の応答が返されました。",
+      `${GBIZINFO_DISPLAY_NAME} APIからJSONオブジェクト以外の応答が返されました。`,
       "invalid_response",
     );
   }
   const item = asRecords(payload["hojin-infos"])[0];
   if (!item) {
     throw new GBizInfoApiError(
-      `法人番号「${normalizedNumber}」はgBizINFOで見つかりませんでした。`,
+      `法人番号「${normalizedNumber}」は${GBIZINFO_DISPLAY_NAME}で見つかりませんでした。`,
       "not_found",
       404,
     );
   }
   return {
     source: {
-      name: "Gビズインフォ（gBizINFO）",
+      name: GBIZINFO_DISPLAY_NAME,
       apiDocumentationUrl: GBIZINFO_SOURCE_URL,
     },
     retrievedAt: new Date().toISOString(),
@@ -352,7 +354,7 @@ export async function getCompanyProfile(
     statusPolicy:
       "statusAvailabilityがnot_providedの場合、登記中・存続中とは断定できません。状態情報が取得できていないものとして扱ってください。",
     caution:
-      "gBizINFOの公開情報には未登録・未更新の項目があります。補助金の申請資格や採択実績を保証するものではありません。",
+      `${GBIZINFO_DISPLAY_NAME}の公開情報には未登録・未更新の項目があります。補助金の申請資格や採択実績を保証するものではありません。`,
   };
 }
 
@@ -398,7 +400,7 @@ export async function searchCompanies(
   const payload = await fetchGBizInfo(url, requireApiToken(apiToken));
   if (!isRecord(payload)) {
     throw new GBizInfoApiError(
-      "gBizINFO APIからJSONオブジェクト以外の応答が返されました。",
+      `${GBIZINFO_DISPLAY_NAME} APIからJSONオブジェクト以外の応答が返されました。`,
       "invalid_response",
     );
   }
@@ -415,7 +417,7 @@ export async function searchCompanies(
 
   return {
     source: {
-      name: "Gビズインフォ（gBizINFO）",
+      name: GBIZINFO_DISPLAY_NAME,
       apiDocumentationUrl: GBIZINFO_SOURCE_URL,
     },
     retrievedAt: new Date().toISOString(),

@@ -15,6 +15,37 @@ type ConditionResult = {
   reason: string;
 };
 
+export type SubsidyFitStatus =
+  | "strong_candidate"
+  | "needs_confirmation"
+  | "potentially_ineligible"
+  | "insufficient_information";
+
+const STATUS_LABELS: Record<SubsidyFitStatus, string> = {
+  strong_candidate: "有力な候補です",
+  needs_confirmation: "申請条件の追加確認が必要です",
+  potentially_ineligible: "対象外となる可能性があります",
+  insufficient_information: "判断に必要な企業情報が不足しています",
+};
+
+function summarizeAssessment(
+  status: SubsidyFitStatus,
+  conflictingCount: number,
+  unconfirmedCount: number,
+  missingCount: number,
+): string {
+  switch (status) {
+    case "strong_candidate":
+      return "公開情報で確認できる条件は一致しています。申請前に最新の公募要領を確認してください。";
+    case "needs_confirmation":
+      return `公開情報で確認できる範囲では候補ですが、公募要領などで追加確認が必要な項目が${unconfirmedCount}件あります。`;
+    case "potentially_ineligible":
+      return `公開情報上、対象条件と一致しない可能性がある項目が${conflictingCount}件あります。公募要領または実施機関に確認してください。`;
+    case "insufficient_information":
+      return `判断に必要な企業情報が${missingCount}件不足しています。情報を補ってから改めて確認してください。`;
+  }
+}
+
 export type SubsidyDetailSnapshot = {
   source: { name: string; apiDocumentationUrl: string };
   retrievedAt: string;
@@ -254,7 +285,7 @@ export function evaluateSubsidyFitFromDetail(
     reason: "申請主体、対象経費、実施期間などを最新の公募要領で確認してください。",
   });
 
-  const status = conflictingConditions.length
+  const status: SubsidyFitStatus = conflictingConditions.length
     ? "potentially_ineligible"
     : missingProfileFields.length
       ? "insufficient_information"
@@ -283,6 +314,13 @@ export function evaluateSubsidyFitFromDetail(
     },
     assessment: {
       status,
+      statusLabel: STATUS_LABELS[status],
+      summary: summarizeAssessment(
+        status,
+        conflictingConditions.length,
+        unconfirmedConditions.length,
+        missingProfileFields.length,
+      ),
       matchedConditions,
       conflictingConditions,
       unconfirmedConditions,

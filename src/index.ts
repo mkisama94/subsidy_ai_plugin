@@ -17,9 +17,10 @@ import {
 import { EdinetApiError } from "./edinet";
 import { createD1CompanyRelationsRepository } from "./d1Relations";
 import { verifyAndStoreCorporateRelationship } from "./edinetRelationsService";
+import { assessDeemedLargeEnterpriseEligibility } from "./deemedLargeEnterprise";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.7.1";
+const SERVER_VERSION = "0.8.0";
 
 function jsonToolResult(value: unknown) {
   return {
@@ -87,7 +88,7 @@ function createServer(env: Env): McpServer {
     "search_companies",
     {
       description:
-        "gBizINFOの公開APIで法人名を検索し、法人番号・所在地を含む候補を返します。同名法人など複数候補がある場合は自動決定せず、利用者に所在地や正式名称を確認してください。mayHaveMoreがtrueなら先頭ページだけであることを明示してください。statusAvailabilityがnot_providedの法人を登記中・存続中と断定しないでください。候補確定後はget_company_profileを使用します。",
+        "経済産業省の法人情報データベース（gBizINFO）で法人名を検索し、法人番号・所在地を含む候補を返します。利用者向け回答では単に『gBizINFO』とせず、『経済産業省の法人情報データベース』と説明してください。同名法人など複数候補がある場合は自動決定せず、利用者に所在地や正式名称を確認してください。mayHaveMoreがtrueなら先頭ページだけであることを明示してください。statusAvailabilityがnot_providedの法人を登記中・存続中と断定しないでください。候補確定後はget_company_profileを使用します。",
       inputSchema: {
         name: z
           .string()
@@ -131,7 +132,7 @@ function createServer(env: Env): McpServer {
     "get_company_profile",
     {
       description:
-        "法人番号からgBizINFOの公開法人基本情報を取得します。所在地、業種、従業員数、資本金などを返します。活動情報は完全性を保証できない基本情報レスポンスから数えず、not_fetchedとして返します。認定、特許、補助金などはget_company_activitiesを使用してください。未登録項目は推測せずnullまたは空配列で返し、statusAvailabilityがnot_providedの場合は登記中・存続中と断定しません。",
+        "法人番号から経済産業省の法人情報データベース（gBizINFO）にある公開法人基本情報を取得します。利用者向け回答では単に『gBizINFO』とせず、『経済産業省の法人情報データベース』と説明してください。所在地、業種、従業員数、資本金などを返します。活動情報は完全性を保証できない基本情報レスポンスから数えず、not_fetchedとして返します。認定、特許、補助金などはget_company_activitiesを使用してください。未登録項目は推測せずnullまたは空配列で返し、statusAvailabilityがnot_providedの場合は登記中・存続中と断定しません。",
       inputSchema: {
         corporate_number: z
           .string()
@@ -169,7 +170,7 @@ function createServer(env: Env): McpServer {
     "get_company_activities",
     {
       description:
-        "法人番号からgBizINFOの活動別専用APIを呼び、届出・認定、表彰、事業所、財務、特許・意匠・商標、調達、補助金、職場情報を取得します。法人名検索のactivityCountはこれらの総合指標であり、特定種類の件数とは限りません。種類別件数、取得失敗、検索APIの報告件数との差を分けて返します。",
+        "法人番号から経済産業省の法人情報データベース（gBizINFO）にある活動情報を取得します。利用者向け回答では単に『gBizINFO』とせず、『経済産業省の法人情報データベース』と説明してください。届出・認定、表彰、事業所、財務、特許・意匠・商標、調達、補助金、職場情報を返します。法人名検索のactivityCountはこれらの総合指標であり、特定種類の件数とは限りません。種類別件数、取得失敗、検索APIの報告件数との差を分けて返します。",
       inputSchema: {
         corporate_number: z
           .string()
@@ -215,7 +216,7 @@ function createServer(env: Env): McpServer {
     "verify_corporate_relationship",
     {
       description:
-        "利用者が申告した親会社候補を、金融庁EDINETの最新の有価証券報告書で検証します。親会社をゼロから推測するツールではありません。対象会社名が書類にない場合も資本関係なしとは断定せず、not_found_in_checked_filingとして返します。confirmedでも補助金ごとの『みなし大企業』条件は最新の公募要領で別途確認してください。",
+        "利用者が申告した親会社候補を、金融庁EDINETの最新の有価証券報告書で検証します。親会社をゼロから推測するツールではありません。対象会社名が書類にない場合も資本関係なしとは断定しません。statusやpersistenceの英語値、relationIdなどは内部処理用です。利用者向け回答では自然な日本語に言い換え、保存状態や内部IDは求められない限り表示しないでください。関係が確認できても、資本関係だけで補助金候補から除外しないでください。候補制度の最新の公募要領または公式FAQを確認し、assess_deemed_large_enterprise_eligibilityで制度別に照合してください。",
       inputSchema: {
         target_company_name: z
           .string()
@@ -289,10 +290,142 @@ function createServer(env: Env): McpServer {
     },
   );
   server.registerTool(
+    "assess_deemed_large_enterprise_eligibility",
+    {
+      description:
+        "候補となった補助金の公式資料にある『みなし大企業』の扱いと、EDINET等で確認した公開資本関係を照合します。100%子会社という事実だけで全制度を対象外にせず、制度が申請を認める場合、対象外とする場合、条件付きの場合を分けます。program_ruleは必ず最新の公募要領・公式FAQなどから入力し、source_urlと確認日を付けてください。single_large_owner_percent等は、株主がその制度上の大企業に該当すると確認できた場合だけ入力してください。課税所得や役員兼務など公開情報で確認できない値は推測せず省略してください。英語のstatusは内部処理用であり、利用者向け回答ではstatusLabelとsummaryを自然な日本語で使用してください。入力と判定結果は保存しません。",
+      inputSchema: {
+        subsidy_id: z
+          .string()
+          .trim()
+          .min(1)
+          .max(18)
+          .regex(/^[A-Za-z0-9]+$/)
+          .describe("対象となるJグランツの補助金ID"),
+        program_rule: z.object({
+          treatment: z
+            .enum(["excluded", "allowed", "conditional", "not_stated"])
+            .describe(
+              "公式資料における扱い。対象外、申請可能、条件付き、明記なしのいずれか",
+            ),
+          single_large_owner_threshold_percent: z
+            .number()
+            .min(0)
+            .max(100)
+            .optional()
+            .describe("単一の大企業による保有割合の対象外基準（%）"),
+          multiple_large_owners_threshold_percent: z
+            .number()
+            .min(0)
+            .max(100)
+            .optional()
+            .describe("複数大企業の合計保有割合の対象外基準（%）"),
+          officer_overlap_threshold_percent: z
+            .number()
+            .min(0)
+            .max(100)
+            .optional()
+            .describe("大企業の役員・職員が兼務する役員割合の基準（%）"),
+          indirect_ownership_included: z
+            .boolean()
+            .optional()
+            .default(false)
+            .describe("間接保有・孫会社等を対象外基準に含むか"),
+          high_income_rule_included: z
+            .boolean()
+            .optional()
+            .default(false)
+            .describe("課税所得等の非公開情報に関する基準を含むか"),
+          source_url: z
+            .url()
+            .refine((value) => value.startsWith("https://"), {
+              message: "公式資料のHTTPS URLを指定してください",
+            })
+            .describe("判定基準を確認した公募要領または公式FAQのURL"),
+          source_title: z.string().trim().min(1).max(300).optional(),
+          source_section: z
+            .string()
+            .trim()
+            .min(1)
+            .max(300)
+            .optional()
+            .describe("根拠となるページ番号または節見出し"),
+          checked_at: z
+            .string()
+            .regex(/^\d{4}-\d{2}-\d{2}$/)
+            .describe("公式資料を確認した日（YYYY-MM-DD）"),
+        }),
+        affiliation_facts: z.object({
+          single_large_owner_percent: z
+            .number()
+            .min(0)
+            .max(100)
+            .optional()
+            .describe("制度上の大企業に該当する単一株主の確認済み保有割合"),
+          multiple_large_owners_percent: z
+            .number()
+            .min(0)
+            .max(100)
+            .optional()
+            .describe("制度上の大企業に該当する複数株主の確認済み合計保有割合"),
+          officer_overlap_percent: z
+            .number()
+            .min(0)
+            .max(100)
+            .optional()
+            .describe("公開情報または利用者確認による役員・職員兼務割合"),
+          indirectly_controlled_by_large_enterprise: z.boolean().optional(),
+          high_income_rule_applies: z
+            .boolean()
+            .optional()
+            .describe("利用者が確認した場合のみ指定。課税所得そのものは入力しない"),
+          conditional_requirement_met: z
+            .boolean()
+            .optional()
+            .describe("条件付きで申請可能な制度について、公式条件を満たすか"),
+        }),
+      },
+    },
+    async ({ subsidy_id, program_rule, affiliation_facts }) =>
+      jsonToolResult(
+        assessDeemedLargeEnterpriseEligibility(
+          subsidy_id,
+          {
+            treatment: program_rule.treatment,
+            singleLargeOwnerThresholdPercent:
+              program_rule.single_large_owner_threshold_percent,
+            multipleLargeOwnersThresholdPercent:
+              program_rule.multiple_large_owners_threshold_percent,
+            officerOverlapThresholdPercent:
+              program_rule.officer_overlap_threshold_percent,
+            indirectOwnershipIncluded:
+              program_rule.indirect_ownership_included,
+            highIncomeRuleIncluded: program_rule.high_income_rule_included,
+            sourceUrl: program_rule.source_url,
+            sourceTitle: program_rule.source_title,
+            sourceSection: program_rule.source_section,
+            checkedAt: program_rule.checked_at,
+          },
+          {
+            singleLargeOwnerPercent:
+              affiliation_facts.single_large_owner_percent,
+            multipleLargeOwnersPercent:
+              affiliation_facts.multiple_large_owners_percent,
+            officerOverlapPercent: affiliation_facts.officer_overlap_percent,
+            indirectlyControlledByLargeEnterprise:
+              affiliation_facts.indirectly_controlled_by_large_enterprise,
+            highIncomeRuleApplies: affiliation_facts.high_income_rule_applies,
+            conditionalRequirementMet:
+              affiliation_facts.conditional_requirement_met,
+          },
+        ),
+      ),
+  );
+  server.registerTool(
     "evaluate_subsidy_fit_for_company",
     {
       description:
-        "法人番号から取得したgBizINFOの企業プロフィールを、指定したJグランツ補助金の公開条件と照合します。gBizINFOで未登録または古い所在地、業種、従業員数、資本金は利用者の明示入力で補完でき、各値の出典と矛盾も返します。中小企業要件がある制度では親会社・大企業からの出資関係を利用者に確認し、親会社候補が示された場合はverify_corporate_relationshipで検証してください。申請資格や採択を断定しません。",
+        "法人番号から経済産業省の法人情報データベース（gBizINFO）の企業プロフィールを取得し、指定したJグランツ補助金の公開条件と照合します。利用者向け回答では単に『gBizINFO』とせず、『経済産業省の法人情報データベース』と説明してください。公開情報で未登録または古い所在地、業種、従業員数、資本金は利用者の明示入力で補完でき、各値の出典と矛盾も返します。中小企業要件がある制度では親会社・大企業からの出資関係を利用者に確認し、親会社候補が示された場合はverify_corporate_relationshipで検証してください。ただし、資本関係だけで候補から除外せず、公式資料の制度別基準をassess_deemed_large_enterprise_eligibilityで照合してください。assessment.assessment.statusは内部処理用です。利用者向け回答には英語コードを表示せず、assessment.assessment.statusLabelとsummaryを使って自然な日本語で説明してください。申請資格や採択を断定しません。",
       inputSchema: {
         subsidy_id: z
           .string()
@@ -305,7 +438,7 @@ function createServer(env: Env): McpServer {
           .string()
           .trim()
           .regex(/^\d{13}$/)
-          .describe("gBizINFOで企業情報を取得する13桁の法人番号"),
+          .describe("経済産業省の法人情報データベースで企業を特定する13桁の法人番号"),
         business_plans: z
           .array(z.string().trim().min(1).max(255))
           .max(20)
@@ -317,28 +450,28 @@ function createServer(env: Env): McpServer {
           .min(1)
           .max(100)
           .optional()
-          .describe("利用者が確認した現在の所在地。指定時はgBizINFOより優先"),
+          .describe("利用者が確認した現在の所在地。指定時は公開法人情報より優先"),
         industry: z
           .string()
           .trim()
           .min(1)
           .max(255)
           .optional()
-          .describe("利用者が確認した現在の業種。指定時はgBizINFOより優先"),
+          .describe("利用者が確認した現在の業種。指定時は公開法人情報より優先"),
         employee_count: z
           .number()
           .int()
           .min(0)
           .max(10_000_000)
           .optional()
-          .describe("利用者が確認した現在の従業員数。指定時はgBizINFOより優先"),
+          .describe("利用者が確認した現在の従業員数。指定時は公開法人情報より優先"),
         capital_yen: z
           .number()
           .int()
           .min(0)
           .max(100_000_000_000_000)
           .optional()
-          .describe("利用者が確認した現在の資本金（円）。指定時はgBizINFOより優先"),
+          .describe("利用者が確認した現在の資本金（円）。指定時は公開法人情報より優先"),
       },
     },
     async ({
@@ -492,7 +625,7 @@ function createServer(env: Env): McpServer {
     "evaluate_subsidy_fit",
     {
       description:
-        "指定した補助金のJグランツ詳細と企業プロフィールを照合し、明示的な一致、不一致、未確認事項を分けて返します。受給資格や採択を断定するツールではありません。",
+        "指定した補助金のJグランツ詳細と企業プロフィールを照合し、明示的な一致、不一致、未確認事項を分けて返します。assessment.statusは内部処理用です。利用者向け回答にはstrong_candidate、needs_confirmation、potentially_ineligible、insufficient_informationなどの英語コードを表示せず、statusLabelとsummaryを使って自然な日本語で説明してください。受給資格や採択を断定するツールではありません。",
       inputSchema: {
         subsidy_id: z
           .string()

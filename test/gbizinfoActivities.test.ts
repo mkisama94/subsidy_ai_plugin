@@ -77,6 +77,10 @@ test("検索件数11を特許10件と補助金1件として取得する", async 
     20,
   );
 
+  assert.equal(
+    result.source.name,
+    "経済産業省の法人情報データベース（gBizINFO）",
+  );
   assert.deepEqual(new Set(requestedPaths), new Set([
     "/hojin/v2/hojin",
     "/hojin/v2/hojin/3010001205734/certification",

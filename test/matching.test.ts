@@ -46,6 +46,11 @@ test("明示的な一致と要確認事項を分離する", () => {
   });
 
   assert.equal(result.assessment.status, "needs_confirmation");
+  assert.equal(
+    result.assessment.statusLabel,
+    "申請条件の追加確認が必要です",
+  );
+  assert.match(result.assessment.summary, /追加確認が必要な項目/u);
   assert.deepEqual(
     result.assessment.matchedConditions.map((condition) => condition.field),
     ["location", "industry", "employee_count", "acceptance_period"],
@@ -65,6 +70,11 @@ test("地域または従業員数が不一致なら対象外の可能性を返�
   });
 
   assert.equal(result.assessment.status, "potentially_ineligible");
+  assert.equal(
+    result.assessment.statusLabel,
+    "対象外となる可能性があります",
+  );
+  assert.match(result.assessment.summary, /一致しない可能性/u);
   assert.deepEqual(
     result.assessment.conflictingConditions.map((condition) => condition.field),
     ["location", "employee_count"],
@@ -75,6 +85,11 @@ test("企業情報が不足している場合は不足項目を返す", () => {
   const result = evaluateSubsidyFitFromDetail(createDetail(), {});
 
   assert.equal(result.assessment.status, "insufficient_information");
+  assert.equal(
+    result.assessment.statusLabel,
+    "判断に必要な企業情報が不足しています",
+  );
+  assert.match(result.assessment.summary, /3件不足/u);
   assert.deepEqual(result.assessment.missingProfileFields, [
     "location",
     "industry",

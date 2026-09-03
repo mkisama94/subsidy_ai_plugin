@@ -1,4 +1,4 @@
-import { GBizInfoApiError } from "./gbizinfo";
+import { GBIZINFO_DISPLAY_NAME, GBizInfoApiError } from "./gbizinfo";
 
 const GBIZINFO_BASE_URL = "https://api.info.gbiz.go.jp/hojin/v2/hojin";
 const GBIZINFO_SOURCE_URL = "https://content.info.gbiz.go.jp/api/index.html";
@@ -58,7 +58,7 @@ function requireApiToken(apiToken: string | undefined): string {
   const normalizedToken = apiToken?.trim();
   if (!normalizedToken) {
     throw new GBizInfoApiError(
-      "gBizINFO APIトークンが設定されていません。Cloudflare SecretのGBIZINFO_API_TOKENを設定してください。",
+      `${GBIZINFO_DISPLAY_NAME}のAPIトークンが設定されていません。Cloudflare SecretのGBIZINFO_API_TOKENを設定してください。`,
       "configuration_error",
     );
   }
@@ -101,7 +101,7 @@ async function fetchJson(url: URL, apiToken: string): Promise<unknown> {
                 ? "rate_limited"
                 : "upstream_error";
       throw new GBizInfoApiError(
-        `gBizINFO APIがHTTP ${response.status}を返しました。`,
+        `${GBIZINFO_DISPLAY_NAME} APIがHTTP ${response.status}を返しました。`,
         code,
         response.status,
       );
@@ -110,7 +110,7 @@ async function fetchJson(url: URL, apiToken: string): Promise<unknown> {
       return await response.json();
     } catch {
       throw new GBizInfoApiError(
-        "gBizINFO APIの応答をJSONとして解析できませんでした。",
+        `${GBIZINFO_DISPLAY_NAME} APIの応答をJSONとして解析できませんでした。`,
         "invalid_response",
         response.status,
       );
@@ -119,12 +119,12 @@ async function fetchJson(url: URL, apiToken: string): Promise<unknown> {
     if (error instanceof GBizInfoApiError) throw error;
     if (error instanceof DOMException && error.name === "AbortError") {
       throw new GBizInfoApiError(
-        "gBizINFO APIへの接続がタイムアウトしました。",
+        `${GBIZINFO_DISPLAY_NAME} APIへの接続がタイムアウトしました。`,
         "timeout",
       );
     }
     throw new GBizInfoApiError(
-      "gBizINFO APIへ接続できませんでした。時間をおいて再試行してください。",
+      `${GBIZINFO_DISPLAY_NAME} APIへ接続できませんでした。時間をおいて再試行してください。`,
       "upstream_error",
     );
   } finally {
@@ -216,7 +216,7 @@ async function fetchActivity(
   const payload = await fetchJson(url, apiToken);
   if (!isRecord(payload)) {
     throw new GBizInfoApiError(
-      `gBizINFOの${type}応答がJSONオブジェクトではありません。`,
+      `${GBIZINFO_DISPLAY_NAME}の${type}応答がJSONオブジェクトではありません。`,
       "invalid_response",
     );
   }
@@ -357,7 +357,7 @@ export async function getCompanyActivities(
 
   return {
     source: {
-      name: "Gビズインフォ（gBizINFO）",
+      name: GBIZINFO_DISPLAY_NAME,
       apiDocumentationUrl: GBIZINFO_SOURCE_URL,
     },
     retrievedAt: new Date().toISOString(),
@@ -382,6 +382,6 @@ export async function getCompanyActivities(
     reportedCountError,
     partial: errors.length > 0 || reportedCountError !== null,
     caution:
-      "活動情報は各府省等の公開情報をgBizINFOが集約したものです。未登録や更新時差があり、現在の法人状態、権利の有効性、補助金の申請資格や採択を保証しません。",
+      `活動情報は各府省等の公開情報を${GBIZINFO_DISPLAY_NAME}が集約したものです。未登録や更新時差があり、現在の法人状態、権利の有効性、補助金の申請資格や採択を保証しません。`,
   };
 }

@@ -103,6 +103,15 @@ test("親会社候補をEDINET提出書類で確認し根拠を返す", async ()
   assert.deepEqual(result.assessment.percentages, ["100%"]);
   assert.equal(result.assessment.evidence.length, 1);
   assert.equal(result.largeEnterpriseAffiliation?.requiresGuidelineReview, true);
+  assert.equal(result.largeEnterpriseAffiliation?.relationshipConfirmed, true);
+  assert.equal(
+    result.largeEnterpriseAffiliation?.programEligibilityEvaluated,
+    false,
+  );
+  assert.match(
+    result.largeEnterpriseAffiliation?.note ?? "",
+    /全制度で一律に対象外とは限りません/u,
+  );
   assert.equal(JSON.stringify(result).includes("edinet-secret"), false);
   assert.equal(requestedUrls.length, 3);
 });

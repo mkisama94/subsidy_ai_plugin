@@ -18,6 +18,30 @@
 
 ## MCPツール契約
 
+### `search_companies`
+
+法人名と任意の所在地からgBizINFOの法人候補を検索する読み取り専用ツール。
+
+主な入力:
+
+- `name`: 法人名。正式名称を推奨
+- `prefecture`: 任意の都道府県
+- `city`: 任意の市区町村
+- `page`: ページ番号。既定値1
+- `limit`: 返却件数。既定値10、最大20
+
+主な出力:
+
+- 法人番号、法人名、所在地、郵便番号、更新日
+- `selectionStatus`: `no_match`、`unique`、`ambiguous`
+- `requiresSelection`: 複数候補から利用者による選択が必要か
+- `mayHaveMore`: 返却上限に達し、次ページに候補が存在する可能性があるか
+- `statusAvailability`: 法人状態の値が提供されているか
+- 次に行う確認手順
+
+複数候補がある場合は、モデルが一社を推測で選ばず、正式名称や所在地を利用者に確認する。
+`mayHaveMore` が `true` の場合は先頭ページだけであることを明示する。`statusAvailability` が `not_provided` の場合、登記中・存続中とは断定しない。
+
 ### `search_subsidies`
 
 ユーザー条件から補助金候補を検索する読み取り専用ツール。
@@ -56,21 +80,53 @@
 
 ### `get_company_profile`
 
-13桁の法人番号からgBizINFOの公開法人情報を取得する読み取り専用ツール。APIトークンはCloudflare Secretから読み込み、応答やログへ出力しない。
+13桁の法人番号からgBizINFOの公開法人基本情報を取得する読み取り専用ツール。APIトークンはCloudflare Secretから読み込み、応答やログへ出力しない。
 
 主な入力:
 
 - `corporate_number`: 13桁の法人番号
-- `activity_limit`: 認定情報と過去の補助金情報の最大返却件数。既定値20、最大50
+- `activity_limit`: 後方互換用。活動情報の取得には使用せず、将来削除予定
 
 主な出力:
 
 - 法人名、法人種別、本社所在地、郵便番号
 - 業種、事業概要、従業員数、資本金
-- 認定情報と過去の補助金情報
+- 業種大分類コードと日本語名称
 - gBizINFOの出典URLと取得日時
 
 未登録・未更新の項目は推測せず、`null` または空配列として返す。
+法人基本情報APIに含まれる活動配列は完全性を保証できないため、活動情報は `not_fetched` として返し、0件とは断定しない。
+
+### `get_company_activities`
+
+13桁の法人番号からgBizINFOの活動別専用APIを並列取得する読み取り専用ツール。
+
+主な入力:
+
+- `corporate_number`: 13桁の法人番号
+- `activity_types`: 取得する種類。省略時は8種類すべて
+- `activity_limit`: 種類ごとの最大返却件数。既定値20、最大50
+
+対応する種類:
+
+- `certification`: 届出・認定
+- `commendation`: 表彰
+- `corporation`: 事業所
+- `finance`: 財務
+- `patent`: 特許・意匠・商標
+- `procurement`: 調達
+- `subsidy`: 補助金
+- `workplace`: 職場情報
+
+主な出力:
+
+- 検索APIが報告した `reportedActivityCount`
+- 専用APIから取得した `retrievedTopLevelItemCount`
+- 種類別の総件数、返却件数、続きの有無、項目
+- 件数比較の `matched`、`mismatch`、`unavailable`
+- 部分障害を示す `partial` と種類別 `errors`
+
+`reportedActivityCount` は法人活動情報全体の指標であり、補助金件数や認定件数ではない。財務・職場情報など複合オブジェクトの数え方により単純合計と一致しない場合があるため、差をデータ欠損と即断しない。
 
 ### `evaluate_subsidy_fit_for_company`
 
@@ -81,12 +137,22 @@
 - `subsidy_id`: `search_subsidies` が返した補助金ID
 - `corporate_number`: gBizINFOで企業を特定する13桁の法人番号
 - `business_plans`: 任意の事業計画
+- `location`: 利用者が確認した現在の所在地（任意）
+- `industry`: 利用者が確認した現在の業種（任意）
+- `employee_count`: 利用者が確認した現在の従業員数（任意）
+- `capital_yen`: 利用者が確認した現在の資本金（任意）
 
 主な出力:
 
 - 照合に使用した法人情報と更新日
 - gBizINFOとJグランツ双方の出典・取得日時
+- 照合に使用した各項目の出典（`gbizinfo`、`user_provided`、`missing`）
+- gBizINFOと利用者入力の矛盾、および追加確認が必要か
+- 所在地の関係: `exact_match`、`compatible`、`conflict`、`unknown`
 - 一致、不一致、未確認事項を分離した候補評価
+
+利用者が明示した値は照合時にgBizINFOの値より優先する。ただし、双方の値が異なる場合は矛盾を隠さず返し、モデルは利用者に確認する。利用者入力は保存しない。
+都道府県・市区町村だけの入力と、それを含む詳細住所は `compatible` とし、矛盾として扱わない。異なる詳細住所を行政区域が同じという理由だけで一致とは扱わない。
 
 ### `evaluate_subsidy_fit`
 
@@ -135,6 +201,12 @@
 4. 取得日時と公募締切を区別する。
 5. 不足情報は推測せず、ユーザーへの確認事項として返す。
 6. JグランツAPIと公募要領が矛盾する場合は、公募要領の記載を優先候補として示し、実施機関への確認を促す。
+7. 法人名検索で複数候補がある場合は、自動決定せず利用者に確認する。
+8. 公的データと利用者入力の出典を分け、矛盾を明示する。
+9. 法人状態が提供されていない場合、登記中・存続中とは断定しない。
+10. 検索結果が返却上限に達した場合、続きの候補が存在する可能性を明示する。
+11. 法人検索の活動件数を補助金・認定など単一種類の件数として表示しない。
+12. 活動別APIの一部が失敗した場合、取得済み結果と失敗種類を分離して返す。
 
 ## MVPの完了条件
 

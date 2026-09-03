@@ -3,11 +3,15 @@ import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
 import { getSubsidyDetail, JGrantsApiError, searchSubsidies } from "./jgrants";
 import { evaluateSubsidyFit } from "./matching";
-import { GBizInfoApiError, getCompanyProfile } from "./gbizinfo";
+import {
+  GBizInfoApiError,
+  getCompanyProfile,
+  searchCompanies,
+} from "./gbizinfo";
 import { evaluateSubsidyFitForCompany } from "./companyMatching";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.4.0";
+const SERVER_VERSION = "0.5.0";
 
 function jsonToolResult(value: unknown) {
   return {
@@ -54,6 +58,50 @@ function createServer(gbizInfoApiToken?: string): McpServer {
   });
 
   server.registerTool(
+    "search_companies",
+    {
+      description:
+        "gBizINFOの公開APIで法人名を検索し、法人番号・所在地を含む候補を返します。同名法人など複数候補がある場合は自動決定せず、利用者に所在地や正式名称を確認してください。候補確定後はget_company_profileを使用します。",
+      inputSchema: {
+        name: z
+          .string()
+          .trim()
+          .min(1)
+          .max(200)
+          .describe("検索する法人名。正式名称が望ましい"),
+        prefecture: z
+          .string()
+          .trim()
+          .min(1)
+          .max(20)
+          .optional()
+          .describe("候補を絞り込む都道府県。例: 東京都"),
+        city: z
+          .string()
+          .trim()
+          .min(1)
+          .max(100)
+          .optional()
+          .describe("候補を絞り込む市区町村。例: 千代田区"),
+        page: z.number().int().min(1).max(10_000).optional().default(1),
+        limit: z.number().int().min(1).max(20).optional().default(10),
+      },
+    },
+    async ({ name, prefecture, city, page, limit }) => {
+      try {
+        return jsonToolResult(
+          await searchCompanies(
+            { name, prefecture, city, page, limit },
+            gbizInfoApiToken,
+          ),
+        );
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
+  );
+
+  server.registerTool(
     "get_company_profile",
     {
       description:
@@ -93,7 +141,7 @@ function createServer(gbizInfoApiToken?: string): McpServer {
     "evaluate_subsidy_fit_for_company",
     {
       description:
-        "法人番号から取得したgBizINFOの企業プロフィールを、指定したJグランツ補助金の公開条件と照合します。所在地、業種、従業員数、資本金を自動取得しますが、申請資格や採択を断定しません。",
+        "法人番号から取得したgBizINFOの企業プロフィールを、指定したJグランツ補助金の公開条件と照合します。gBizINFOで未登録または古い所在地、業種、従業員数、資本金は利用者の明示入力で補完でき、各値の出典と矛盾も返します。申請資格や採択を断定しません。",
       inputSchema: {
         subsidy_id: z
           .string()
@@ -112,9 +160,45 @@ function createServer(gbizInfoApiToken?: string): McpServer {
           .max(20)
           .optional()
           .describe("補助金との照合に使う任意の事業計画"),
+        location: z
+          .string()
+          .trim()
+          .min(1)
+          .max(100)
+          .optional()
+          .describe("利用者が確認した現在の所在地。指定時はgBizINFOより優先"),
+        industry: z
+          .string()
+          .trim()
+          .min(1)
+          .max(255)
+          .optional()
+          .describe("利用者が確認した現在の業種。指定時はgBizINFOより優先"),
+        employee_count: z
+          .number()
+          .int()
+          .min(0)
+          .max(10_000_000)
+          .optional()
+          .describe("利用者が確認した現在の従業員数。指定時はgBizINFOより優先"),
+        capital_yen: z
+          .number()
+          .int()
+          .min(0)
+          .max(100_000_000_000_000)
+          .optional()
+          .describe("利用者が確認した現在の資本金（円）。指定時はgBizINFOより優先"),
       },
     },
-    async ({ subsidy_id, corporate_number, business_plans }) => {
+    async ({
+      subsidy_id,
+      corporate_number,
+      business_plans,
+      location,
+      industry,
+      employee_count,
+      capital_yen,
+    }) => {
       try {
         return jsonToolResult(
           await evaluateSubsidyFitForCompany(
@@ -122,6 +206,12 @@ function createServer(gbizInfoApiToken?: string): McpServer {
             corporate_number,
             gbizInfoApiToken,
             business_plans,
+            {
+              location,
+              industry,
+              employeeCount: employee_count,
+              capitalYen: capital_yen,
+            },
           ),
         );
       } catch (error) {

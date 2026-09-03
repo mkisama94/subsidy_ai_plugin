@@ -80,22 +80,53 @@
 
 ### `get_company_profile`
 
-13桁の法人番号からgBizINFOの公開法人情報を取得する読み取り専用ツール。APIトークンはCloudflare Secretから読み込み、応答やログへ出力しない。
+13桁の法人番号からgBizINFOの公開法人基本情報を取得する読み取り専用ツール。APIトークンはCloudflare Secretから読み込み、応答やログへ出力しない。
 
 主な入力:
 
 - `corporate_number`: 13桁の法人番号
-- `activity_limit`: 認定情報と過去の補助金情報の最大返却件数。既定値20、最大50
+- `activity_limit`: 後方互換用。活動情報の取得には使用せず、将来削除予定
 
 主な出力:
 
 - 法人名、法人種別、本社所在地、郵便番号
 - 業種、事業概要、従業員数、資本金
 - 業種大分類コードと日本語名称
-- 認定情報と過去の補助金情報
 - gBizINFOの出典URLと取得日時
 
 未登録・未更新の項目は推測せず、`null` または空配列として返す。
+法人基本情報APIに含まれる活動配列は完全性を保証できないため、活動情報は `not_fetched` として返し、0件とは断定しない。
+
+### `get_company_activities`
+
+13桁の法人番号からgBizINFOの活動別専用APIを並列取得する読み取り専用ツール。
+
+主な入力:
+
+- `corporate_number`: 13桁の法人番号
+- `activity_types`: 取得する種類。省略時は8種類すべて
+- `activity_limit`: 種類ごとの最大返却件数。既定値20、最大50
+
+対応する種類:
+
+- `certification`: 届出・認定
+- `commendation`: 表彰
+- `corporation`: 事業所
+- `finance`: 財務
+- `patent`: 特許・意匠・商標
+- `procurement`: 調達
+- `subsidy`: 補助金
+- `workplace`: 職場情報
+
+主な出力:
+
+- 検索APIが報告した `reportedActivityCount`
+- 専用APIから取得した `retrievedTopLevelItemCount`
+- 種類別の総件数、返却件数、続きの有無、項目
+- 件数比較の `matched`、`mismatch`、`unavailable`
+- 部分障害を示す `partial` と種類別 `errors`
+
+`reportedActivityCount` は法人活動情報全体の指標であり、補助金件数や認定件数ではない。財務・職場情報など複合オブジェクトの数え方により単純合計と一致しない場合があるため、差をデータ欠損と即断しない。
 
 ### `evaluate_subsidy_fit_for_company`
 
@@ -174,6 +205,8 @@
 8. 公的データと利用者入力の出典を分け、矛盾を明示する。
 9. 法人状態が提供されていない場合、登記中・存続中とは断定しない。
 10. 検索結果が返却上限に達した場合、続きの候補が存在する可能性を明示する。
+11. 法人検索の活動件数を補助金・認定など単一種類の件数として表示しない。
+12. 活動別APIの一部が失敗した場合、取得済み結果と失敗種類を分離して返す。
 
 ## MVPの完了条件
 

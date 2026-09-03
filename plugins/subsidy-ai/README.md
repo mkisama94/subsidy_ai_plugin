@@ -2,19 +2,20 @@
 
 Jグランツの最新公開データと公募要領を参照し、日本の補助金について根拠付きで回答するためのプラグインです。
 
-JグランツMCPラッパーの初期実装と社内配布検証を完了し、企業プロフィールとの照合機能を開発しています。MVPの範囲とMCPツール契約は `docs/mvp.md` に定義しています。
+JグランツMCPラッパーの初期実装、社内配布、gBizINFOとの実データ連携を完了しています。MVPの範囲とMCPツール契約は `docs/mvp.md` に定義しています。
 
 ## 現在利用できるMCPツール
 
+- `search_companies`: gBizINFOで法人名・所在地から法人候補を検索。複数候補は自動決定しない
 - `get_company_profile`: gBizINFOから法人基本情報、認定情報、過去の補助金情報を取得
-- `evaluate_subsidy_fit_for_company`: gBizINFOの企業情報をJグランツの補助金条件と自動照合
+- `evaluate_subsidy_fit_for_company`: gBizINFOと利用者が確認した補完情報をJグランツの補助金条件と照合し、値の出典と矛盾を表示
 - `search_subsidies`: Jグランツ公開APIから補助金候補を検索
 - `get_subsidy_detail`: Jグランツ詳細API V2から公募回、詳細、文書メタデータを取得
 - `evaluate_subsidy_fit`: 補助金詳細と企業プロフィールを照合し、一致、不一致、未確認事項を分離
 
 `search_subsidies` で都道府県を指定した場合は、その地域固有の制度と全国対象制度を統合して返します。検索結果だけで対象可否を断定せず、候補選定後に `get_subsidy_detail` と最新の公募要領を確認してください。
 
-`evaluate_subsidy_fit` は受給資格や採択を断定しません。所在地、業種、従業員数など、Jグランツの構造化項目で確認できる範囲だけを機械的に照合し、公募要領で確認すべき事項を別に返します。企業プロフィールは保存しません。gBizINFO連携にはCloudflare Secretの `GBIZINFO_API_TOKEN` が必要です。Swagger掲載の動作確認用トークンはアプリへ設定せず、正式発行されたトークンだけを使用してください。
+`evaluate_subsidy_fit` は受給資格や採択を断定しません。所在地、業種、従業員数など、Jグランツの構造化項目で確認できる範囲だけを機械的に照合し、公募要領で確認すべき事項を別に返します。企業プロフィールと補完入力は保存しません。gBizINFO連携にはCloudflare Secretの `GBIZINFO_API_TOKEN` が必要です。Swagger掲載の動作確認用トークンはアプリへ設定せず、正式発行されたトークンだけを使用してください。
 
 ## 社内配布テスト
 

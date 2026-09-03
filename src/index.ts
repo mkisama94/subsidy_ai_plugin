@@ -1,15 +1,13 @@
 import { McpServer } from "@modelcontextprotocol/server";
 import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
-import {
-  getSubsidyDetail,
-  JGrantsApiError,
-  searchSubsidies,
-} from "./jgrants";
+import { getSubsidyDetail, JGrantsApiError, searchSubsidies } from "./jgrants";
 import { evaluateSubsidyFit } from "./matching";
+import { GBizInfoApiError, getCompanyProfile } from "./gbizinfo";
+import { evaluateSubsidyFitForCompany } from "./companyMatching";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.3.0";
+const SERVER_VERSION = "0.4.0";
 
 function jsonToolResult(value: unknown) {
   return {
@@ -23,15 +21,18 @@ function jsonToolResult(value: unknown) {
 }
 
 function errorToolResult(error: unknown) {
-  const known = error instanceof JGrantsApiError;
+  const known =
+    error instanceof JGrantsApiError || error instanceof GBizInfoApiError;
   const payload = {
     error: {
       code: known ? error.code : "internal_error",
       message: known
         ? error.message
-        : "補助金情報の取得中に予期しないエラーが発生しました。",
+        : "公的情報の取得中に予期しないエラーが発生しました。",
       retryable: known
-        ? error.code === "timeout" || error.code === "upstream_error"
+        ? error.code === "timeout" ||
+          error.code === "upstream_error" ||
+          error.code === "rate_limited"
         : false,
     },
   };
@@ -46,13 +47,88 @@ function errorToolResult(error: unknown) {
   };
 }
 
-function createServer(): McpServer {
+function createServer(gbizInfoApiToken?: string): McpServer {
   const server = new McpServer({
     name: SERVER_NAME,
     version: SERVER_VERSION,
   });
 
+  server.registerTool(
+    "get_company_profile",
+    {
+      description:
+        "法人番号からgBizINFOの公開法人情報を取得します。所在地、業種、従業員数、資本金、認定情報、過去の補助金情報を返します。未登録項目は推測せずnullまたは空配列で返します。",
+      inputSchema: {
+        corporate_number: z
+          .string()
+          .trim()
+          .regex(/^\d{13}$/)
+          .describe("13桁の法人番号"),
+        activity_limit: z
+          .number()
+          .int()
+          .min(1)
+          .max(50)
+          .optional()
+          .default(20)
+          .describe("認定情報と補助金履歴の最大返却件数"),
+      },
+    },
+    async ({ corporate_number, activity_limit }) => {
+      try {
+        return jsonToolResult(
+          await getCompanyProfile(
+            corporate_number,
+            gbizInfoApiToken,
+            activity_limit,
+          ),
+        );
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
+  );
 
+  server.registerTool(
+    "evaluate_subsidy_fit_for_company",
+    {
+      description:
+        "法人番号から取得したgBizINFOの企業プロフィールを、指定したJグランツ補助金の公開条件と照合します。所在地、業種、従業員数、資本金を自動取得しますが、申請資格や採択を断定しません。",
+      inputSchema: {
+        subsidy_id: z
+          .string()
+          .trim()
+          .min(1)
+          .max(18)
+          .regex(/^[A-Za-z0-9]+$/)
+          .describe("search_subsidiesが返したJグランツの補助金ID"),
+        corporate_number: z
+          .string()
+          .trim()
+          .regex(/^\d{13}$/)
+          .describe("gBizINFOで企業情報を取得する13桁の法人番号"),
+        business_plans: z
+          .array(z.string().trim().min(1).max(255))
+          .max(20)
+          .optional()
+          .describe("補助金との照合に使う任意の事業計画"),
+      },
+    },
+    async ({ subsidy_id, corporate_number, business_plans }) => {
+      try {
+        return jsonToolResult(
+          await evaluateSubsidyFitForCompany(
+            subsidy_id,
+            corporate_number,
+            gbizInfoApiToken,
+            business_plans,
+          ),
+        );
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
+  );
   server.registerTool(
     "search_subsidies",
     {
@@ -181,12 +257,7 @@ function createServer(): McpServer {
         company_profile: z.object({
           location: z.string().trim().min(1).max(100).optional(),
           industry: z.string().trim().min(1).max(255).optional(),
-          employee_count: z
-            .number()
-            .int()
-            .min(0)
-            .max(10_000_000)
-            .optional(),
+          employee_count: z.number().int().min(0).max(10_000_000).optional(),
           capital_yen: z
             .number()
             .int()
@@ -220,12 +291,14 @@ function createServer(): McpServer {
   return server;
 }
 
-const handleMcpRequest = createMcpHandler(createServer);
+type Env = {
+  GBIZINFO_API_TOKEN?: string;
+};
 
 export default {
   async fetch(
     request: Request,
-    env: unknown,
+    env: Env,
     ctx: ExecutionContext,
   ): Promise<Response> {
     const url = new URL(request.url);
@@ -240,9 +313,12 @@ export default {
     }
 
     if (url.pathname === "/mcp") {
+      const handleMcpRequest = createMcpHandler(() =>
+        createServer(env.GBIZINFO_API_TOKEN),
+      );
       return handleMcpRequest(request, env, ctx);
     }
 
     return Response.json({ error: "Not found" }, { status: 404 });
   },
-} satisfies ExportedHandler;
+} satisfies ExportedHandler<Env>;

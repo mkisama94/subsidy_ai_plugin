@@ -13,9 +13,13 @@ import {
   GBIZINFO_ACTIVITY_TYPES,
   getCompanyActivities,
 } from "./gbizinfoActivities";
+import {
+  EdinetApiError,
+  verifyCorporateRelationship,
+} from "./edinet";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.6.0";
+const SERVER_VERSION = "0.7.0";
 
 function jsonToolResult(value: unknown) {
   return {
@@ -30,7 +34,9 @@ function jsonToolResult(value: unknown) {
 
 function errorToolResult(error: unknown) {
   const known =
-    error instanceof JGrantsApiError || error instanceof GBizInfoApiError;
+    error instanceof JGrantsApiError ||
+    error instanceof GBizInfoApiError ||
+    error instanceof EdinetApiError;
   const payload = {
     error: {
       code: known ? error.code : "internal_error",
@@ -55,7 +61,10 @@ function errorToolResult(error: unknown) {
   };
 }
 
-function createServer(gbizInfoApiToken?: string): McpServer {
+function createServer(
+  gbizInfoApiToken?: string,
+  edinetApiKey?: string,
+): McpServer {
   const server = new McpServer({
     name: SERVER_NAME,
     version: SERVER_VERSION,
@@ -190,10 +199,86 @@ function createServer(gbizInfoApiToken?: string): McpServer {
   );
 
   server.registerTool(
+    "verify_corporate_relationship",
+    {
+      description:
+        "利用者が申告した親会社候補を、金融庁EDINETの最新の有価証券報告書で検証します。親会社をゼロから推測するツールではありません。対象会社名が書類にない場合も資本関係なしとは断定せず、not_found_in_checked_filingとして返します。confirmedでも補助金ごとの『みなし大企業』条件は最新の公募要領で別途確認してください。",
+      inputSchema: {
+        target_company_name: z
+          .string()
+          .trim()
+          .min(1)
+          .max(200)
+          .describe("親子関係を確認したい対象会社の正式名称"),
+        target_corporate_number: z
+          .string()
+          .trim()
+          .regex(/^\d{13}$/)
+          .optional()
+          .describe("対象会社の13桁の法人番号。判明している場合に指定"),
+        parent_company_name: z
+          .string()
+          .trim()
+          .min(1)
+          .max(200)
+          .describe("利用者が申告した親会社候補の正式名称"),
+        parent_corporate_number: z
+          .string()
+          .trim()
+          .regex(/^\d{13}$/)
+          .optional()
+          .describe("親会社候補の13桁の法人番号。同名候補の特定に使用"),
+        filing_date: z
+          .string()
+          .trim()
+          .regex(/^\d{4}-\d{2}-\d{2}$/)
+          .optional()
+          .describe(
+            "有価証券報告書の提出日。分かる場合にYYYY-MM-DDで指定すると、その日だけを照会",
+          ),
+        document_id: z
+          .string()
+          .trim()
+          .regex(/^[A-Za-z0-9]+$/)
+          .max(20)
+          .optional()
+          .describe(
+            "EDINETの書類管理番号。分かる場合は提出日検索を省略して直接検証",
+          ),
+      },
+    },
+    async ({
+      target_company_name,
+      target_corporate_number,
+      parent_company_name,
+      parent_corporate_number,
+      filing_date,
+      document_id,
+    }) => {
+      try {
+        return jsonToolResult(
+          await verifyCorporateRelationship(
+            {
+              targetCompanyName: target_company_name,
+              targetCorporateNumber: target_corporate_number,
+              parentCompanyName: parent_company_name,
+              parentCorporateNumber: parent_corporate_number,
+              filingDate: filing_date,
+              documentId: document_id,
+            },
+            edinetApiKey,
+          ),
+        );
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
+  );
+  server.registerTool(
     "evaluate_subsidy_fit_for_company",
     {
       description:
-        "法人番号から取得したgBizINFOの企業プロフィールを、指定したJグランツ補助金の公開条件と照合します。gBizINFOで未登録または古い所在地、業種、従業員数、資本金は利用者の明示入力で補完でき、各値の出典と矛盾も返します。申請資格や採択を断定しません。",
+        "法人番号から取得したgBizINFOの企業プロフィールを、指定したJグランツ補助金の公開条件と照合します。gBizINFOで未登録または古い所在地、業種、従業員数、資本金は利用者の明示入力で補完でき、各値の出典と矛盾も返します。中小企業要件がある制度では親会社・大企業からの出資関係を利用者に確認し、親会社候補が示された場合はverify_corporate_relationshipで検証してください。申請資格や採択を断定しません。",
       inputSchema: {
         subsidy_id: z
           .string()
@@ -435,6 +520,7 @@ function createServer(gbizInfoApiToken?: string): McpServer {
 
 type Env = {
   GBIZINFO_API_TOKEN?: string;
+  EDINET_API_KEY?: string;
 };
 
 export default {
@@ -456,7 +542,7 @@ export default {
 
     if (url.pathname === "/mcp") {
       const handleMcpRequest = createMcpHandler(() =>
-        createServer(env.GBIZINFO_API_TOKEN),
+        createServer(env.GBIZINFO_API_TOKEN, env.EDINET_API_KEY),
       );
       return handleMcpRequest(request, env, ctx);
     }

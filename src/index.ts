@@ -19,7 +19,7 @@ import {
 } from "./edinet";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.7.0";
+const SERVER_VERSION = "0.7.1";
 
 function jsonToolResult(value: unknown) {
   return {

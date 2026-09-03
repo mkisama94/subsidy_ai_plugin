@@ -8,7 +8,7 @@ const EDINET_SOURCE_URL =
 const REQUEST_TIMEOUT_MS = 15_000;
 const MAX_ARCHIVE_BYTES = 25 * 1024 * 1024;
 const MAX_UNCOMPRESSED_BYTES = 60 * 1024 * 1024;
-const MAX_EVIDENCE_ITEMS = 8;
+const MAX_EVIDENCE_ITEMS = 2;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -361,31 +361,35 @@ async function findLatestAnnualReport(
       : [];
   if (!dates.length) return { document: null, checkedDates: [] };
 
-  const documents: EdinetDocument[] = [];
-  for (let index = 0; index < dates.length; index += 8) {
-    const batch = dates.slice(index, index + 8);
+  const datesNewestFirst = [...dates].reverse();
+  const checkedDates: string[] = [];
+  for (let index = 0; index < datesNewestFirst.length; index += 8) {
+    const batch = datesNewestFirst.slice(index, index + 8);
     const results = await Promise.all(
       batch.map((date) => fetchDocumentsForDate(date, apiKey)),
     );
-    documents.push(...results.flat());
+    checkedDates.push(...batch);
+    const annualReports = results
+      .flat()
+      .filter(
+        (document) =>
+          document.edinetCode === parent.edinetCode &&
+          (document.docTypeCode === "120" ||
+            document.docDescription?.includes("有価証券報告書")) &&
+          !document.docDescription?.includes("訂正") &&
+          document.csvFlag === "1" &&
+          (document.legalStatus === "1" || document.legalStatus === "2") &&
+          (!documentId || document.docID === documentId),
+      )
+      .sort((left, right) =>
+        (right.submitDateTime ?? "").localeCompare(left.submitDateTime ?? ""),
+      );
+    if (annualReports.length) {
+      return { document: annualReports[0]!, checkedDates };
+    }
   }
-  const annualReports = documents
-    .filter(
-      (document) =>
-        document.edinetCode === parent.edinetCode &&
-        (document.docTypeCode === "120" ||
-          document.docDescription?.includes("有価証券報告書")) &&
-        !document.docDescription?.includes("訂正") &&
-        document.csvFlag === "1" &&
-        (document.legalStatus === "1" || document.legalStatus === "2") &&
-        (!documentId || document.docID === documentId),
-    )
-    .sort((left, right) =>
-      (right.submitDateTime ?? "").localeCompare(left.submitDateTime ?? ""),
-    );
-  return { document: annualReports[0] ?? null, checkedDates: dates };
+  return { document: null, checkedDates };
 }
-
 function stripMarkup(value: string): string {
   return value
     .replace(/<[^>]*>/gu, " ")
@@ -397,14 +401,42 @@ function stripMarkup(value: string): string {
     .trim();
 }
 
-function evidenceSnippet(value: string, target: string): string {
-  const plain = stripMarkup(value);
-  const compactTarget = target.replace(/\s+/gu, "");
-  const compactPlain = plain.replace(/\s+/gu, "");
-  const compactIndex = compactPlain.indexOf(compactTarget);
-  if (compactIndex < 0) return plain.slice(0, 500);
-  const start = Math.max(0, compactIndex - 180);
-  return compactPlain.slice(start, compactIndex + compactTarget.length + 260);
+function targetEvidenceSegment(value: string, targetCompanyName: string): string {
+  const compact = stripMarkup(value).normalize("NFKC").replace(/\s+/gu, "");
+  const target = normalizeCompanyName(targetCompanyName);
+  const targetIndex = compact.toLowerCase().indexOf(target);
+  if (targetIndex < 0) return compact.slice(0, 500);
+
+  const relationshipMarker = /\((?:連結)?(?:子会社|関連会社|親会社)[^)]*\)/gu;
+  const markers = [...compact.matchAll(relationshipMarker)].map((match) => ({
+    index: match.index,
+  }));
+  const currentMarker = markers
+    .filter((marker) => marker.index <= targetIndex)
+    .at(-1);
+  const nextMarker = markers.find((marker) => marker.index > targetIndex);
+  const start = currentMarker?.index ?? Math.max(0, targetIndex - 120);
+  const end = nextMarker?.index ?? targetIndex + target.length + 320;
+  return compact.slice(start, Math.min(compact.length, end, start + 700));
+}
+
+function evidencePriority(itemId: string | null, itemName: string | null): number {
+  const value = `${itemId ?? ""} ${itemName ?? ""}`;
+  if (/OverviewOfAffiliatedEntitiesTextBlock|関係会社の状況/u.test(value)) return 0;
+  if (/NumberOfConsolidatedSubsidiaries|連結子会社の数/u.test(value)) return 1;
+  if (/DescriptionOfBusinessTextBlock|事業の内容/u.test(value)) return 2;
+  if (/ConsolidatedFinancialStatements|連結の範囲/u.test(value)) return 3;
+  return 10;
+}
+
+function checkedDateRange(dates: string[]) {
+  if (!dates.length) return null;
+  const sorted = [...dates].sort();
+  return {
+    from: sorted[0]!,
+    to: sorted.at(-1)!,
+    count: sorted.length,
+  };
 }
 
 function inspectRelationshipCsv(
@@ -414,28 +446,39 @@ function inspectRelationshipCsv(
   const normalizedTarget = normalizeCompanyName(targetCompanyName);
   const evidence: Array<{
     file: string;
+    itemId: string | null;
     itemName: string | null;
     snippet: string;
+    priority: number;
   }> = [];
 
   for (const [file, bytes] of Object.entries(files)) {
     if (!file.toLowerCase().endsWith(".csv")) continue;
     for (const row of parseCsv(decodeText(bytes))) {
-      const matchingCell = row.find((cell) =>
+      const fields = row.flatMap((cell) => cell.split("\t"));
+      const matchingCell = fields.find((cell) =>
         normalizeCompanyName(stripMarkup(cell)).includes(normalizedTarget),
       );
       if (!matchingCell) continue;
+      const itemIdIndex = fields.findIndex((field) =>
+        /^[A-Za-z][A-Za-z0-9_]*:[A-Za-z0-9_]+$/u.test(field.trim()),
+      );
+      const itemId = asString(fields[itemIdIndex >= 0 ? itemIdIndex : 0]);
+      const itemName = asString(fields[itemIdIndex >= 0 ? itemIdIndex + 1 : 1]);
       evidence.push({
         file,
-        itemName: asString(row[1]) ?? asString(row[0]),
-        snippet: evidenceSnippet(matchingCell, normalizedTarget),
+        itemId,
+        itemName: itemName?.slice(0, 160) ?? null,
+        snippet: targetEvidenceSegment(matchingCell, targetCompanyName),
+        priority: evidencePriority(itemId, itemName),
       });
-      if (evidence.length >= MAX_EVIDENCE_ITEMS) break;
     }
-    if (evidence.length >= MAX_EVIDENCE_ITEMS) break;
   }
 
-  const combined = evidence.map((item) => item.snippet).join(" ");
+  evidence.sort((left, right) => left.priority - right.priority);
+  const selectedEvidence = evidence.slice(0, MAX_EVIDENCE_ITEMS);
+  const primaryEvidence = selectedEvidence[0];
+  const combined = selectedEvidence.map((item) => item.snippet).join(" ");
   const relationshipWords = [
     "子会社",
     "連結子会社",
@@ -450,15 +493,20 @@ function inspectRelationshipCsv(
   );
   const percentages = [
     ...new Set(
-      [...combined.matchAll(/(?:\d{1,3}(?:\.\d+)?)\s*[%％]/gu)].map(
-        (match) => match[0].replace("％", "%"),
-      ),
+      [
+        ...(primaryEvidence?.snippet ?? "").matchAll(
+          /(?:\d{1,3}(?:\.\d+)?)\s*[%％]/gu,
+        ),
+      ].map((match) => match[0].replace("％", "%")),
     ),
   ].slice(0, 10);
 
-  return { evidence, hasRelationshipContext, percentages };
+  return {
+    evidence: selectedEvidence.map(({ priority: _priority, ...item }) => item),
+    hasRelationshipContext,
+    percentages,
+  };
 }
-
 function unknownResult(
   input: VerifyCorporateRelationshipInput,
   reason: string,
@@ -473,7 +521,7 @@ function unknownResult(
       status: "unknown" as const,
       reason,
       parentCandidates,
-      checkedDates,
+      checkedDateRange: checkedDateRange(checkedDates),
       evidence: [],
     },
     caution:
@@ -563,7 +611,7 @@ export async function verifyCorporateRelationship(
       submittedAt: document.submitDateTime,
       periodStart: document.periodStart,
       periodEnd: document.periodEnd,
-      checkedDates,
+      checkedDateRange: checkedDateRange(checkedDates),
     },
     assessment: {
       status,

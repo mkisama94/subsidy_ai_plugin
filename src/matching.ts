@@ -1,4 +1,4 @@
-import { getSubsidyDetail } from "./jgrants";
+import { getSubsidyDetail, type JGrantsCacheOptions } from "./jgrants";
 
 export type CompanyProfileInput = {
   location?: string;
@@ -18,6 +18,12 @@ type ConditionResult = {
 export type SubsidyDetailSnapshot = {
   source: { name: string; apiDocumentationUrl: string };
   retrievedAt: string;
+  servedAt?: string;
+  cache?: {
+    status: "hit" | "miss" | "stale" | "bypass";
+    isStale: boolean;
+    expiresAt: string | null;
+  };
   subsidy: {
     id: string;
     title: string;
@@ -259,6 +265,8 @@ export function evaluateSubsidyFitFromDetail(
   return {
     source: detail.source,
     retrievedAt: detail.retrievedAt,
+    servedAt: detail.servedAt ?? detail.retrievedAt,
+    cache: detail.cache ?? null,
     subsidy: {
       id: detail.subsidy.id,
       title: detail.subsidy.title,
@@ -288,9 +296,10 @@ export function evaluateSubsidyFitFromDetail(
 export async function evaluateSubsidyFit(
   subsidyId: string,
   profile: CompanyProfileInput,
+  cacheOptions: JGrantsCacheOptions = {},
 ) {
   return evaluateSubsidyFitFromDetail(
-    await getSubsidyDetail(subsidyId),
+    await getSubsidyDetail(subsidyId, cacheOptions),
     profile,
   );
 }

@@ -1,9 +1,19 @@
+import {
+  createPrivateCacheKey,
+  type PublicApiCache,
+  readThroughPublicCache,
+} from "./cache";
+
 const JGRANTS_SEARCH_URL =
   "https://api.jgrants-portal.go.jp/exp/v1/public/subsidies";
 const JGRANTS_DETAIL_URL =
   "https://api.jgrants-portal.go.jp/exp/v2/public/subsidies/id";
 const JGRANTS_SOURCE_URL = "https://developers.digital.go.jp/documents/jgrants/api/";
 const REQUEST_TIMEOUT_MS = 15_000;
+const SEARCH_CACHE_TTL_MS = 30 * 60 * 1000;
+const SEARCH_CACHE_STALE_TTL_MS = 24 * 60 * 60 * 1000;
+const DETAIL_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+const DETAIL_CACHE_STALE_TTL_MS = 72 * 60 * 60 * 1000;
 
 type JsonRecord = Record<string, unknown>;
 
@@ -20,6 +30,12 @@ export type SearchSubsidiesInput = {
     | "acceptance_end_datetime";
   order: "ASC" | "DESC";
   limit: number;
+};
+
+export type JGrantsCacheOptions = {
+  cache?: PublicApiCache;
+  searchCacheKeySecret?: string;
+  now?: () => number;
 };
 
 export type SubsidySearchItem = {
@@ -238,7 +254,24 @@ function sortSubsidies(
   });
 }
 
-export async function searchSubsidies(input: SearchSubsidiesInput) {
+function searchQuery(input: SearchSubsidiesInput) {
+  return {
+    keyword: input.keyword.trim(),
+    usePurpose: input.usePurpose?.trim() || null,
+    targetArea: input.targetArea?.trim() || null,
+    includesNationwidePrograms: Boolean(
+      input.targetArea?.trim() && input.targetArea.trim() !== "全国",
+    ),
+    industry: input.industry?.trim() || null,
+    employeeCount: input.employeeCount ?? null,
+    acceptingOnly: input.acceptingOnly,
+    sort: input.sort,
+    order: input.order,
+    limit: input.limit,
+  };
+}
+
+async function fetchSubsidySearch(input: SearchSubsidiesInput) {
   const targetAreas = input.targetArea?.trim()
     ? input.targetArea.trim() === "全国"
       ? ["全国"]
@@ -269,20 +302,6 @@ export async function searchSubsidies(input: SearchSubsidiesInput) {
       apiDocumentationUrl: JGRANTS_SOURCE_URL,
     },
     retrievedAt: new Date().toISOString(),
-    query: {
-      keyword: input.keyword.trim(),
-      usePurpose: input.usePurpose?.trim() || null,
-      targetArea: input.targetArea?.trim() || null,
-      includesNationwidePrograms: Boolean(
-        input.targetArea?.trim() && input.targetArea.trim() !== "全国",
-      ),
-      industry: input.industry?.trim() || null,
-      employeeCount: input.employeeCount ?? null,
-      acceptingOnly: input.acceptingOnly,
-      sort: input.sort,
-      order: input.order,
-      limit: input.limit,
-    },
     upstreamCount,
     matchingCount: matching.length,
     returnedCount: Math.min(matching.length, input.limit),
@@ -290,6 +309,52 @@ export async function searchSubsidies(input: SearchSubsidiesInput) {
     subsidies: matching.slice(0, input.limit),
     caution:
       "検索結果だけで対象可否を断定せず、詳細情報と最新の公募要領を確認してください。",
+  };
+}
+
+function canUseStaleJGrantsData(error: unknown): boolean {
+  return (
+    error instanceof JGrantsApiError &&
+    (error.code === "timeout" || error.code === "upstream_error")
+  );
+}
+
+export async function searchSubsidies(
+  input: SearchSubsidiesInput,
+  cacheOptions: JGrantsCacheOptions = {},
+) {
+  const query = searchQuery(input);
+  const cacheKey = cacheOptions.searchCacheKeySecret
+    ? await createPrivateCacheKey(
+        "jgrants:search:v1",
+        query,
+        cacheOptions.searchCacheKeySecret,
+      )
+    : undefined;
+  const cached = await readThroughPublicCache({
+    cache: cacheOptions.cache,
+    key: cacheKey,
+    source: "jgrants",
+    resourceType: "subsidy_search",
+    ttlMs: SEARCH_CACHE_TTL_MS,
+    staleTtlMs: SEARCH_CACHE_STALE_TTL_MS,
+    load: () => fetchSubsidySearch(input),
+    canUseStale: canUseStaleJGrantsData,
+    now: cacheOptions.now,
+  });
+
+  return {
+    ...cached.value,
+    query,
+    servedAt: new Date((cacheOptions.now ?? Date.now)()).toISOString(),
+    cache: {
+      status: cached.status,
+      isStale: cached.isStale,
+      expiresAt:
+        cached.expiresAt === null
+          ? null
+          : new Date(cached.expiresAt).toISOString(),
+    },
   };
 }
 
@@ -358,7 +423,7 @@ function normalizeDocuments(value: unknown, type: string) {
   });
 }
 
-export async function getSubsidyDetail(subsidyId: string) {
+async function fetchSubsidyDetail(subsidyId: string) {
   const url = new URL(
     `${JGRANTS_DETAIL_URL}/${encodeURIComponent(subsidyId.trim())}`,
   );
@@ -409,5 +474,36 @@ export async function getSubsidyDetail(subsidyId: string) {
     },
     caution:
       "この情報は参考情報です。申請前に最新の公募要領を確認し、必要に応じて実施機関へ問い合わせてください。",
+  };
+}
+
+export async function getSubsidyDetail(
+  subsidyId: string,
+  cacheOptions: JGrantsCacheOptions = {},
+) {
+  const normalizedId = subsidyId.trim();
+  const cached = await readThroughPublicCache({
+    cache: cacheOptions.cache,
+    key: `jgrants:detail:v1:${normalizedId}`,
+    source: "jgrants",
+    resourceType: "subsidy_detail",
+    ttlMs: DETAIL_CACHE_TTL_MS,
+    staleTtlMs: DETAIL_CACHE_STALE_TTL_MS,
+    load: () => fetchSubsidyDetail(normalizedId),
+    canUseStale: canUseStaleJGrantsData,
+    now: cacheOptions.now,
+  });
+
+  return {
+    ...cached.value,
+    servedAt: new Date((cacheOptions.now ?? Date.now)()).toISOString(),
+    cache: {
+      status: cached.status,
+      isStale: cached.isStale,
+      expiresAt:
+        cached.expiresAt === null
+          ? null
+          : new Date(cached.expiresAt).toISOString(),
+    },
   };
 }

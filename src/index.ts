@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/server";
 import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
+import { D1PublicApiCache } from "./cache";
 import { getSubsidyDetail, JGrantsApiError, searchSubsidies } from "./jgrants";
 import { evaluateSubsidyFit } from "./matching";
 import { GBizInfoApiError, getCompanyProfile } from "./gbizinfo";
@@ -47,11 +48,23 @@ function errorToolResult(error: unknown) {
   };
 }
 
-function createServer(gbizInfoApiToken?: string): McpServer {
+type Env = {
+  GBIZINFO_API_TOKEN?: string;
+  CACHE_KEY_SECRET?: string;
+  PUBLIC_CACHE?: D1Database;
+};
+
+function createServer(env: Env): McpServer {
   const server = new McpServer({
     name: SERVER_NAME,
     version: SERVER_VERSION,
   });
+  const jGrantsCacheOptions = {
+    cache: env.PUBLIC_CACHE
+      ? new D1PublicApiCache(env.PUBLIC_CACHE)
+      : undefined,
+    searchCacheKeySecret: env.CACHE_KEY_SECRET,
+  };
 
   server.registerTool(
     "get_company_profile",
@@ -79,7 +92,7 @@ function createServer(gbizInfoApiToken?: string): McpServer {
         return jsonToolResult(
           await getCompanyProfile(
             corporate_number,
-            gbizInfoApiToken,
+            env.GBIZINFO_API_TOKEN,
             activity_limit,
           ),
         );
@@ -120,8 +133,9 @@ function createServer(gbizInfoApiToken?: string): McpServer {
           await evaluateSubsidyFitForCompany(
             subsidy_id,
             corporate_number,
-            gbizInfoApiToken,
+            env.GBIZINFO_API_TOKEN,
             business_plans,
+            jGrantsCacheOptions,
           ),
         );
       } catch (error) {
@@ -199,17 +213,20 @@ function createServer(gbizInfoApiToken?: string): McpServer {
     }) => {
       try {
         return jsonToolResult(
-          await searchSubsidies({
-            keyword,
-            usePurpose: use_purpose,
-            targetArea: target_area,
-            industry,
-            employeeCount: employee_count,
-            acceptingOnly: accepting_only,
-            sort,
-            order,
-            limit,
-          }),
+          await searchSubsidies(
+            {
+              keyword,
+              usePurpose: use_purpose,
+              targetArea: target_area,
+              industry,
+              employeeCount: employee_count,
+              acceptingOnly: accepting_only,
+              sort,
+              order,
+              limit,
+            },
+            jGrantsCacheOptions,
+          ),
         );
       } catch (error) {
         return errorToolResult(error);
@@ -234,7 +251,9 @@ function createServer(gbizInfoApiToken?: string): McpServer {
     },
     async ({ subsidy_id }) => {
       try {
-        return jsonToolResult(await getSubsidyDetail(subsidy_id));
+        return jsonToolResult(
+          await getSubsidyDetail(subsidy_id, jGrantsCacheOptions),
+        );
       } catch (error) {
         return errorToolResult(error);
       }
@@ -274,13 +293,17 @@ function createServer(gbizInfoApiToken?: string): McpServer {
     async ({ subsidy_id, company_profile }) => {
       try {
         return jsonToolResult(
-          await evaluateSubsidyFit(subsidy_id, {
-            location: company_profile.location,
-            industry: company_profile.industry,
-            employeeCount: company_profile.employee_count,
-            capitalYen: company_profile.capital_yen,
-            businessPlans: company_profile.business_plans,
-          }),
+          await evaluateSubsidyFit(
+            subsidy_id,
+            {
+              location: company_profile.location,
+              industry: company_profile.industry,
+              employeeCount: company_profile.employee_count,
+              capitalYen: company_profile.capital_yen,
+              businessPlans: company_profile.business_plans,
+            },
+            jGrantsCacheOptions,
+          ),
         );
       } catch (error) {
         return errorToolResult(error);
@@ -290,10 +313,6 @@ function createServer(gbizInfoApiToken?: string): McpServer {
 
   return server;
 }
-
-type Env = {
-  GBIZINFO_API_TOKEN?: string;
-};
 
 export default {
   async fetch(
@@ -313,9 +332,7 @@ export default {
     }
 
     if (url.pathname === "/mcp") {
-      const handleMcpRequest = createMcpHandler(() =>
-        createServer(env.GBIZINFO_API_TOKEN),
-      );
+      const handleMcpRequest = createMcpHandler(() => createServer(env));
       return handleMcpRequest(request, env, ctx);
     }
 

@@ -1,4 +1,5 @@
 import { getCompanyProfile } from "./gbizinfo";
+import type { JGrantsCacheOptions } from "./jgrants";
 import { evaluateSubsidyFit } from "./matching";
 
 export async function evaluateSubsidyFitForCompany(
@@ -6,18 +7,23 @@ export async function evaluateSubsidyFitForCompany(
   corporateNumber: string,
   apiToken: string | undefined,
   businessPlans?: string[],
+  cacheOptions: JGrantsCacheOptions = {},
 ) {
   const companyProfile = await getCompanyProfile(corporateNumber, apiToken, 10);
   const company = companyProfile.company;
-  const assessment = await evaluateSubsidyFit(subsidyId, {
-    location: company.location ?? undefined,
-    industry: company.industries.length
-      ? company.industries.join(" / ")
-      : undefined,
-    employeeCount: company.employeeNumber ?? undefined,
-    capitalYen: company.capitalStockYen ?? undefined,
-    businessPlans,
-  });
+  const assessment = await evaluateSubsidyFit(
+    subsidyId,
+    {
+      location: company.location ?? undefined,
+      industry: company.industries.length
+        ? company.industries.join(" / ")
+        : undefined,
+      employeeCount: company.employeeNumber ?? undefined,
+      capitalYen: company.capitalStockYen ?? undefined,
+      businessPlans,
+    },
+    cacheOptions,
+  );
 
   return {
     sources: [companyProfile.source, assessment.source],

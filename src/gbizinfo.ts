@@ -24,6 +24,7 @@ export type CompanyProfile = {
   businessItems: string[];
   qualificationGrade: string | null;
   status: string | null;
+  statusAvailability: "provided" | "not_provided";
   updateDate: string | null;
   closeDate: string | null;
   closeCause: string | null;
@@ -44,6 +45,7 @@ export type CompanySearchCandidate = {
   postalCode: string | null;
   location: string | null;
   status: string | null;
+  statusAvailability: "provided" | "not_provided";
   updateDate: string | null;
   activityCount: number | null;
 };
@@ -210,6 +212,7 @@ function normalizeProfile(item: JsonRecord): CompanyProfile {
     );
   }
   const industries = normalizeIndustries(item.industry);
+  const status = asNullableString(item.status);
   return {
     corporateNumber,
     name: asNullableString(item.name),
@@ -229,7 +232,8 @@ function normalizeProfile(item: JsonRecord): CompanyProfile {
     industryCodes: industries.codes,
     businessItems: asStrings(item.business_items),
     qualificationGrade: normalizeQualificationGrade(item.qualification_grade),
-    status: asNullableString(item.status),
+    status,
+    statusAvailability: status ? "provided" : "not_provided",
     updateDate: asNullableString(item.update_date),
     closeDate: asNullableString(item.close_date),
     closeCause: asNullableString(item.close_cause),
@@ -244,13 +248,15 @@ function normalizeSearchCandidate(item: JsonRecord): CompanySearchCandidate {
       "invalid_response",
     );
   }
+  const status = asNullableString(item.status);
   return {
     corporateNumber,
     name: asNullableString(item.name),
     nameEnglish: asNullableString(item.name_en),
     postalCode: asNullableString(item.postal_code),
     location: asNullableString(item.location),
-    status: asNullableString(item.status),
+    status,
+    statusAvailability: status ? "provided" : "not_provided",
     updateDate: asNullableString(item.update_date),
     activityCount: asNumber(item.number_of_activity),
   };
@@ -380,6 +386,8 @@ export async function getCompanyProfile(
       subsidyHistory: subsidies.slice(0, limit),
       hasMore: certifications.length > limit || subsidies.length > limit,
     },
+    statusPolicy:
+      "statusAvailabilityがnot_providedの場合、登記中・存続中とは断定できません。状態情報が取得できていないものとして扱ってください。",
     caution:
       "gBizINFOの公開情報には未登録・未更新の項目があります。補助金の申請資格や採択実績を保証するものではありません。",
   };
@@ -434,10 +442,11 @@ export async function searchCompanies(
   const candidates = asRecords(payload["hojin-infos"]).map(
     normalizeSearchCandidate,
   );
+  const mayHaveMore = candidates.length === limit;
   const selectionStatus =
     candidates.length === 0
       ? "no_match"
-      : candidates.length === 1
+      : candidates.length === 1 && !mayHaveMore
         ? "unique"
         : "ambiguous";
 
@@ -457,13 +466,21 @@ export async function searchCompanies(
     selectionStatus,
     requiresSelection: selectionStatus === "ambiguous",
     returnedCount: candidates.length,
+    mayHaveMore,
+    resultScope: mayHaveMore
+      ? `第${page}ページの先頭${limit}件。次ページに候補が存在する可能性があります。`
+      : `第${page}ページで返された${candidates.length}件。`,
     candidates,
     nextStep:
       selectionStatus === "unique"
         ? "唯一の候補の法人番号をget_company_profileに渡して詳細を確認してください。"
         : selectionStatus === "ambiguous"
-          ? "所在地や正式名称を利用者に確認し、候補を自動決定せず法人番号を選択してください。"
+          ? mayHaveMore
+            ? "これは先頭ページの候補です。所在地や正式名称で絞り込むか次ページを確認し、候補を自動決定せず法人番号を選択してください。"
+            : "所在地や正式名称を利用者に確認し、候補を自動決定せず法人番号を選択してください。"
           : "名称の表記を変えるか、都道府県・市区町村を追加して再検索してください。",
+    statusPolicy:
+      "候補のstatusAvailabilityがnot_providedの場合、登記中・存続中とは断定せず、状態情報なしと表示してください。",
     caution:
       "名称検索は法人を一意に特定できない場合があります。所在地と法人番号を確認してから企業プロフィールや補助金適合度判定へ進んでください。",
   };

@@ -1,6 +1,6 @@
 {
   "name": "subsidy-ai",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Jグランツの補助金情報とgBizINFOの法人情報を組み合わせ、企業ごとの候補条件を整理するプラグインです。",
   "author": {
     "name": "mkisama94",

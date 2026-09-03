@@ -195,3 +195,47 @@ test("gBizINFOにも利用者入力にもない項目をmissingとして返す",
   ]);
   assert.equal(result.profileResolution.businessPlans.source, "missing");
 });
+
+test("都道府県・市区町村だけの入力は詳細住所と矛盾させない", async () => {
+  globalThis.fetch = async (input) => {
+    const url = new URL(String(input));
+    if (url.hostname === "api.info.gbiz.go.jp") {
+      return Response.json({
+        "hojin-infos": [
+          {
+            corporate_number: "3010001205734",
+            name: "小規模サンプル株式会社",
+            location: "東京都千代田区神田鍛冶町3丁目7番地21",
+            certification: [],
+            subsidy: [],
+          },
+        ],
+      });
+    }
+    return Response.json({
+      result: [
+        {
+          id: "detail999",
+          title: "東京都中小企業支援",
+          workflow: [{ target_area_search: "東京都" }],
+        },
+      ],
+    });
+  };
+
+  const result = await evaluateSubsidyFitForCompany(
+    "detail999",
+    "3010001205734",
+    "secret-token",
+    undefined,
+    { location: "東京都千代田区" },
+  );
+
+  assert.equal(
+    result.profileResolution.fields.location.relationship,
+    "compatible",
+  );
+  assert.equal(result.profileResolution.fields.location.conflict, false);
+  assert.deepEqual(result.profileResolution.conflictFields, []);
+  assert.equal(result.profileResolution.requiresUserConfirmation, false);
+});

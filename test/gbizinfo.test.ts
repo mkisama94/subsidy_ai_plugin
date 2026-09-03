@@ -67,7 +67,9 @@ test("法人番号から企業基本情報と活動情報を正規化する", as
   assert.deepEqual(result.company.industryCodes, ["G"]);
   assert.equal(result.company.qualificationGrade, "C");
   assert.equal(result.company.status, null);
+  assert.equal(result.company.statusAvailability, "not_provided");
   assert.equal(result.company.companyUrl, null);
+  assert.match(result.statusPolicy, /断定できません/);
   assert.equal(result.activities.certificationCount, 2);
   assert.equal(result.activities.certifications[0]?.title, "認定A");
   assert.equal(result.activities.returnedCertificationCount, 1);
@@ -122,6 +124,7 @@ test("法人名検索で複数候補を自動決定せず返す", async () => {
           corporate_number: "2222222222222",
           name: "株式会社サンプル",
           location: "大阪府大阪市",
+          status: "閉鎖",
           number_of_activity: "0",
         },
       ],
@@ -148,7 +151,13 @@ test("法人名検索で複数候補を自動決定せず返す", async () => {
   assert.equal(result.requiresSelection, true);
   assert.equal(result.returnedCount, 2);
   assert.equal(result.candidates[0]?.status, null);
+  assert.equal(
+    result.candidates[0]?.statusAvailability,
+    "not_provided",
+  );
   assert.equal(result.candidates[0]?.activityCount, 3);
+  assert.equal(result.candidates[1]?.statusAvailability, "provided");
+  assert.equal(result.mayHaveMore, false);
   assert.match(result.nextStep, /自動決定せず/);
 });
 
@@ -180,4 +189,54 @@ test("法人名検索が1件なら詳細取得への次手を示す", async () =
   assert.equal(result.selectionStatus, "unique");
   assert.equal(result.requiresSelection, false);
   assert.match(result.nextStep, /get_company_profile/);
+});
+
+test("返却件数が上限と一致すると続き候補の可能性を明示する", async () => {
+  globalThis.fetch = async () =>
+    Response.json({
+      "hojin-infos": [
+        {
+          corporate_number: "4444444444444",
+          name: "同名株式会社",
+          location: "東京都港区",
+        },
+        {
+          corporate_number: "5555555555555",
+          name: "同名株式会社",
+          location: "東京都渋谷区",
+        },
+      ],
+    });
+
+  const result = await searchCompanies(
+    { name: "同名株式会社", limit: 2 },
+    "token",
+  );
+
+  assert.equal(result.mayHaveMore, true);
+  assert.match(result.resultScope, /次ページ/);
+  assert.match(result.nextStep, /先頭ページ/);
+  assert.match(result.statusPolicy, /登記中・存続中とは断定せず/);
+});
+
+test("上限1件で1件返っても唯一候補とは断定しない", async () => {
+  globalThis.fetch = async () =>
+    Response.json({
+      "hojin-infos": [
+        {
+          corporate_number: "6666666666666",
+          name: "候補株式会社",
+          location: "東京都中央区",
+        },
+      ],
+    });
+
+  const result = await searchCompanies(
+    { name: "候補株式会社", limit: 1 },
+    "token",
+  );
+
+  assert.equal(result.mayHaveMore, true);
+  assert.equal(result.selectionStatus, "ambiguous");
+  assert.equal(result.requiresSelection, true);
 });

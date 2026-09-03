@@ -11,7 +11,7 @@ import {
 import { evaluateSubsidyFitForCompany } from "./companyMatching";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.5.0";
+const SERVER_VERSION = "0.5.1";
 
 function jsonToolResult(value: unknown) {
   return {
@@ -61,7 +61,7 @@ function createServer(gbizInfoApiToken?: string): McpServer {
     "search_companies",
     {
       description:
-        "gBizINFOの公開APIで法人名を検索し、法人番号・所在地を含む候補を返します。同名法人など複数候補がある場合は自動決定せず、利用者に所在地や正式名称を確認してください。候補確定後はget_company_profileを使用します。",
+        "gBizINFOの公開APIで法人名を検索し、法人番号・所在地を含む候補を返します。同名法人など複数候補がある場合は自動決定せず、利用者に所在地や正式名称を確認してください。mayHaveMoreがtrueなら先頭ページだけであることを明示してください。statusAvailabilityがnot_providedの法人を登記中・存続中と断定しないでください。候補確定後はget_company_profileを使用します。",
       inputSchema: {
         name: z
           .string()
@@ -105,7 +105,7 @@ function createServer(gbizInfoApiToken?: string): McpServer {
     "get_company_profile",
     {
       description:
-        "法人番号からgBizINFOの公開法人情報を取得します。所在地、業種、従業員数、資本金、認定情報、過去の補助金情報を返します。未登録項目は推測せずnullまたは空配列で返します。",
+        "法人番号からgBizINFOの公開法人情報を取得します。所在地、業種、従業員数、資本金、認定情報、過去の補助金情報を返します。未登録項目は推測せずnullまたは空配列で返し、statusAvailabilityがnot_providedの場合は登記中・存続中と断定しません。",
       inputSchema: {
         corporate_number: z
           .string()

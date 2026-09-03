@@ -13,7 +13,7 @@
   "interface": {
     "displayName": "補助金AI",
     "brandColor": "#006A8E",
-    "composerIcon": "./assets/subsidy-search-icon.png",
+    "composerIcon": "./assets/subsidy-search-logo.png",
     "logo": "./assets/subsidy-search-logo.png",
     "shortDescription": "政府の公開情報から補助金候補を確認",
     "longDescription": "Jグランツの補助金情報と経済産業省の法人情報データベース（gBizINFO）を組み合わせ、所在地、業種、従業員数、資本金などの公開情報から一致、不一致、未確認事項を整理します。公的資料で確認した過去の申請件数・採択件数を根拠付きで蓄積し、公式採択率と制度全体の参考見通しを区別して表示します。未確認事項は、社労士などの専門家へ渡せる質問と準備資料に整理します。",
@@ -21,6 +21,9 @@
     "category": "Productivity",
     "capabilities": ["Search", "Read"],
     "websiteURL": "https://github.com/mkisama94/subsidy_ai_plugin",
+    "supportURL": "https://github.com/mkisama94/subsidy_ai_plugin/issues",
+    "privacyPolicyURL": "https://github.com/mkisama94/subsidy_ai_plugin/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/mkisama94/subsidy_ai_plugin/blob/main/TERMS.md",
     "defaultPrompt": [
       "東京都の省エネ関連で、現在受付中の補助金を探して",
       "法人番号を使って、この補助金が当社に合うか確認して",

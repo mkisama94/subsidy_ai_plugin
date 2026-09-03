@@ -18,9 +18,16 @@ import { EdinetApiError } from "./edinet";
 import { createD1CompanyRelationsRepository } from "./d1Relations";
 import { verifyAndStoreCorporateRelationship } from "./edinetRelationsService";
 import { assessDeemedLargeEnterpriseEligibility } from "./deemedLargeEnterprise";
+import {
+  createD1SelectionStatisticsRepository,
+  estimateSelectionOutlook,
+  recordSelectionEvidence,
+  SelectionStatisticsError,
+  verifyOfficialResearchSource,
+} from "./selectionStatistics";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.8.0";
+const SERVER_VERSION = "0.9.0";
 
 function jsonToolResult(value: unknown) {
   return {
@@ -37,7 +44,8 @@ function errorToolResult(error: unknown) {
   const known =
     error instanceof JGrantsApiError ||
     error instanceof GBizInfoApiError ||
-    error instanceof EdinetApiError;
+    error instanceof EdinetApiError ||
+    error instanceof SelectionStatisticsError;
   const payload = {
     error: {
       code: known ? error.code : "internal_error",
@@ -421,6 +429,248 @@ function createServer(env: Env): McpServer {
         ),
       ),
   );
+  server.registerTool(
+    "record_official_selection_statistics",
+    {
+      description:
+        "実施機関・政府が公開した同一公募回の申請件数と採択件数を、出典と計算根拠付きでD1へ保存します。割合は入力せず、コードが採択件数÷申請件数で計算します。同じ公募回・同じ枠・同じ審査段階と確認できない場合はcomparabilityをnot_confirmedまたはnot_comparableにし、公式採択率を算定しないでください。採択者一覧しかない場合もapplications_countを推測しません。根拠本文はハッシュ計算にだけ使い、DBへ保存しません。企業情報や利用者情報を入力しないでください。",
+      inputSchema: {
+        program: z.object({
+          series_key: z.string().trim().min(1).max(100),
+          canonical_name: z.string().trim().min(1).max(300),
+          institution_name: z.string().trim().min(1).max(300).optional(),
+        }),
+        round: z.object({
+          jgrants_subsidy_id: z.string().trim().max(18).optional(),
+          fiscal_year: z.number().int().min(2000).max(2200),
+          round_name: z.string().trim().min(1).max(200),
+          scope_key: z
+            .string()
+            .trim()
+            .min(1)
+            .max(100)
+            .optional()
+            .default("overall")
+            .describe("制度全体・通常枠など、数値の対象範囲を識別する安定したキー"),
+          acceptance_start: z.string().trim().max(40).optional(),
+          acceptance_end: z.string().trim().max(40).optional(),
+          budget_yen: z.number().int().min(0).optional(),
+          official_detail_url: z.url().optional(),
+          last_checked_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        }),
+        counts: z.object({
+          applications_count: z.number().int().min(0).optional(),
+          selected_count: z.number().int().min(0).optional(),
+          denominator_label: z.string().trim().min(1).max(100).optional(),
+          numerator_label: z.string().trim().min(1).max(100).optional(),
+          comparability: z.enum([
+            "confirmed_same_round_and_scope",
+            "not_confirmed",
+            "not_comparable",
+          ]),
+        }),
+        source: z.object({
+          source_type: z.enum([
+            "official_result",
+            "official_report",
+            "official_budget",
+            "official_guideline",
+            "government_statistics",
+          ]),
+          publisher: z.string().trim().min(1).max(300),
+          title: z.string().trim().min(1).max(500),
+          url: z.url().refine((value) => value.startsWith("https://"), {
+            message: "公的資料のHTTPS URLを指定してください",
+          }),
+          published_at: z.string().trim().max(40).optional(),
+          retrieved_at: z.string().trim().min(1).max(40),
+          reliability: z.enum(["high", "medium"]).default("high"),
+          role: z.enum([
+            "applications_count",
+            "selected_count",
+            "both_counts",
+            "budget",
+            "methodology",
+          ]),
+          evidence_text: z
+            .string()
+            .trim()
+            .min(1)
+            .max(2000)
+            .describe("件数と対象公募回を確認できる必要最小限の根拠。保存せずハッシュ化する"),
+        }),
+        basis_summary: z.string().trim().min(1).max(1000),
+        as_of_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        expires_at: z.string().trim().max(40).optional(),
+      },
+    },
+    async ({ program, round, counts, source, basis_summary, as_of_date, expires_at }) => {
+      try {
+        const verifiedSource = await verifyOfficialResearchSource(
+          source.url,
+          source.evidence_text,
+        );
+        return jsonToolResult(
+          await recordSelectionEvidence(
+            {
+              program: {
+                seriesKey: program.series_key,
+                canonicalName: program.canonical_name,
+                institutionName: program.institution_name,
+              },
+              round: {
+                jgrantsSubsidyId: round.jgrants_subsidy_id,
+                fiscalYear: round.fiscal_year,
+                roundName: round.round_name,
+                scopeKey: round.scope_key,
+                acceptanceStart: round.acceptance_start,
+                acceptanceEnd: round.acceptance_end,
+                budgetYen: round.budget_yen,
+                officialDetailUrl: round.official_detail_url,
+                lastCheckedAt: round.last_checked_at,
+              },
+              counts: {
+                applicationsCount: counts.applications_count,
+                selectedCount: counts.selected_count,
+                denominatorLabel: counts.denominator_label,
+                numeratorLabel: counts.numerator_label,
+                comparability: counts.comparability,
+              },
+              source: {
+                sourceType: source.source_type,
+                publisher: source.publisher,
+                title: source.title,
+                url: verifiedSource.verifiedUrl,
+                publishedAt: source.published_at,
+                retrievedAt: source.retrieved_at,
+                contentHash: verifiedSource.contentHash,
+                reliability: source.reliability,
+                role: source.role,
+              },
+              basisSummary: basis_summary,
+              asOfDate: as_of_date,
+              expiresAt: expires_at,
+            },
+            createD1SelectionStatisticsRepository(publicCacheDatabase),
+          ),
+        );
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "get_official_selection_statistics",
+    {
+      description:
+        "Jグランツ補助金IDに紐づけて保存された、公募回別の公式申請件数・採択件数・公式採択率と根拠を返します。officialRateがnullの場合は割合を推測しないでください。利用者向けには『過去の公式採択率』と表記し、個別企業の採択確率とは説明しないでください。",
+      inputSchema: {
+        jgrants_subsidy_id: z.string().trim().min(1).max(18),
+      },
+    },
+    async ({ jgrants_subsidy_id }) => {
+      try {
+        const repository = createD1SelectionStatisticsRepository(publicCacheDatabase);
+        if (!repository) {
+          throw new SelectionStatisticsError(
+            "採択実績用のD1データベースが設定されていません。",
+            "database_error",
+          );
+        }
+        const records = await repository.findByJgrantsSubsidyId(jgrants_subsidy_id);
+        return jsonToolResult({
+          ...records,
+          statusLabel: records.statistics.length
+            ? "保存済みの公式採択実績があります"
+            : "保存済みの公式採択実績はありません",
+          guidance:
+            "公式採択率は制度全体の過去実績であり、個別企業の採択確率ではありません。nullの割合は推測しないでください。",
+        });
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "estimate_program_selection_outlook",
+    {
+      description:
+        "同じ制度系列の過去最大3回の公式採択実績から、今回の制度全体の採択見通しを説明可能なルールで参考算定します。個別企業の採択確率ではありません。申請資格が未確定・条件付き・対象外可能性ありの場合は必ず計算を停止します。予算、補助上限、対象範囲の変化は公式資料で確認できる場合だけ入力してください。target_jgrants_subsidy_idに登録済み公募回を指定すると、算定結果と方法論バージョンをD1へ保存します。",
+      inputSchema: {
+        program_series_key: z.string().trim().min(1).max(100),
+        target_jgrants_subsidy_id: z
+          .string()
+          .trim()
+          .min(1)
+          .max(18)
+          .optional()
+          .describe("算定結果を保存する現在公募回のJグランツID"),
+        eligibility_status: z.enum([
+          "eligible",
+          "conditional",
+          "needs_confirmation",
+          "likely_ineligible",
+        ]),
+        budget_change_percent: z.number().min(-100).max(1000).optional(),
+        maximum_grant_change_percent: z.number().min(-100).max(1000).optional(),
+        target_scope_change: z
+          .enum(["expanded", "unchanged", "narrowed", "unknown"])
+          .optional()
+          .default("unknown"),
+        program_continuity: z
+          .enum(["continuing", "new", "unknown"])
+          .optional()
+          .default("unknown"),
+      },
+    },
+    async ({
+      program_series_key,
+      target_jgrants_subsidy_id,
+      eligibility_status,
+      budget_change_percent,
+      maximum_grant_change_percent,
+      target_scope_change,
+      program_continuity,
+    }) => {
+      try {
+        const repository = createD1SelectionStatisticsRepository(publicCacheDatabase);
+        if (!repository) {
+          throw new SelectionStatisticsError(
+            "採択実績用のD1データベースが設定されていません。",
+            "database_error",
+          );
+        }
+        const historicalRates = await repository.historicalOfficialRates(
+          program_series_key,
+          3,
+        );
+        const outlook = estimateSelectionOutlook({
+          eligibilityStatus: eligibility_status,
+          historicalRates,
+          budgetChangePercent: budget_change_percent,
+          maximumGrantChangePercent: maximum_grant_change_percent,
+          targetScopeChange: target_scope_change,
+          programContinuity: program_continuity,
+        });
+        const persistence = target_jgrants_subsidy_id
+          ? await repository.saveEstimateForJgrantsId(
+              target_jgrants_subsidy_id,
+              outlook,
+              new Date().toISOString().slice(0, 10),
+            )
+          : ({
+              status: "not_saved",
+              reason: "target_round_not_specified",
+            } as const);
+        return jsonToolResult({ ...outlook, persistence });
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
+  );
+
   server.registerTool(
     "evaluate_subsidy_fit_for_company",
     {

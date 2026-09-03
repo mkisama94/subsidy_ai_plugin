@@ -7,7 +7,8 @@ JグランツMCPラッパーの初期実装、社内配布、gBizINFOとの実�
 ## 現在利用できるMCPツール
 
 - `search_companies`: gBizINFOで法人名・所在地から法人候補を検索。複数候補は自動決定しない
-- `get_company_profile`: gBizINFOから法人基本情報、認定情報、過去の補助金情報を取得
+- `get_company_profile`: gBizINFOから法人基本情報を取得。活動情報は0件と断定せず未取得として表示
+- `get_company_activities`: gBizINFOの活動別専用APIから認定、表彰、事業所、財務、特許、調達、補助金、職場情報を取得
 - `evaluate_subsidy_fit_for_company`: gBizINFOと利用者が確認した補完情報をJグランツの補助金条件と照合し、値の出典と矛盾を表示
 - `search_subsidies`: Jグランツ公開APIから補助金候補を検索
 - `get_subsidy_detail`: Jグランツ詳細API V2から公募回、詳細、文書メタデータを取得
@@ -18,6 +19,8 @@ JグランツMCPラッパーの初期実装、社内配布、gBizINFOとの実�
 `evaluate_subsidy_fit` は受給資格や採択を断定しません。所在地、業種、従業員数など、Jグランツの構造化項目で確認できる範囲だけを機械的に照合し、公募要領で確認すべき事項を別に返します。企業プロフィールと補完入力は保存しません。gBizINFO連携にはCloudflare Secretの `GBIZINFO_API_TOKEN` が必要です。Swagger掲載の動作確認用トークンはアプリへ設定せず、正式発行されたトークンだけを使用してください。
 
 法人名検索で `mayHaveMore: true` の場合、返却結果は先頭ページであり網羅的とは限りません。`statusAvailability: not_provided` は「登記中」を意味しないため、状態情報なしとして扱います。所在地の簡略入力と詳細住所は `compatible` として区別し、行政区域が同じという理由だけで完全一致とは扱いません。
+
+法人検索の `activityCount` は全種類を合計した法人活動情報件数であり、補助金件数ではありません。活動情報を確認するときは `get_company_activities` を使用します。種類別APIの一部が失敗した場合も取得済み結果を返し、`partial` と `errors` で不足を明示します。
 
 ## 社内配布テスト
 

@@ -166,43 +166,6 @@ function normalizeQualificationGrade(value: unknown): string | null {
   return grades.length ? [...new Set(grades)].join("、") : null;
 }
 
-function normalizeCertification(item: JsonRecord) {
-  return {
-    title: asString(item.title),
-    target: asString(item.target),
-    category: asString(item.category),
-    governmentDepartments: asString(item.government_departments),
-    dateOfApproval: asString(item.date_of_approval),
-  };
-}
-
-function normalizeSubsidy(item: JsonRecord) {
-  return {
-    title: asString(item.title),
-    target: asString(item.target),
-    amount: asString(item.amount),
-    governmentDepartments: asString(item.government_departments),
-    dateOfApproval: asString(item.date_of_approval),
-  };
-}
-
-function newestFirst<T extends { dateOfApproval: string | null }>(
-  items: T[],
-): T[] {
-  return items.sort((left, right) => {
-    const leftTime = left.dateOfApproval
-      ? Date.parse(left.dateOfApproval)
-      : Number.NaN;
-    const rightTime = right.dateOfApproval
-      ? Date.parse(right.dateOfApproval)
-      : Number.NaN;
-    if (!Number.isFinite(leftTime) && !Number.isFinite(rightTime)) return 0;
-    if (!Number.isFinite(leftTime)) return 1;
-    if (!Number.isFinite(rightTime)) return -1;
-    return rightTime - leftTime;
-  });
-}
-
 function normalizeProfile(item: JsonRecord): CompanyProfile {
   const corporateNumber = asString(item.corporate_number);
   if (!corporateNumber) {
@@ -365,11 +328,6 @@ export async function getCompanyProfile(
       404,
     );
   }
-  const certifications = newestFirst(
-    asRecords(item.certification).map(normalizeCertification),
-  );
-  const subsidies = newestFirst(asRecords(item.subsidy).map(normalizeSubsidy));
-
   return {
     source: {
       name: "Gビズインフォ（gBizINFO）",
@@ -378,13 +336,18 @@ export async function getCompanyProfile(
     retrievedAt: new Date().toISOString(),
     company: normalizeProfile(item),
     activities: {
-      certificationCount: certifications.length,
-      returnedCertificationCount: Math.min(certifications.length, limit),
-      certifications: certifications.slice(0, limit),
-      subsidyHistoryCount: subsidies.length,
-      returnedSubsidyHistoryCount: Math.min(subsidies.length, limit),
-      subsidyHistory: subsidies.slice(0, limit),
-      hasMore: certifications.length > limit || subsidies.length > limit,
+      status: "not_fetched" as const,
+      certificationCount: null,
+      returnedCertificationCount: 0,
+      certifications: [],
+      subsidyHistoryCount: null,
+      returnedSubsidyHistoryCount: 0,
+      subsidyHistory: [],
+      hasMore: null,
+      activityLimit: limit,
+      nextTool: "get_company_activities",
+      note:
+        "法人基本情報APIだけでは活動情報の完全性を保証できないため、この応答では活動件数を0件と断定しません。活動情報はget_company_activitiesで専用APIから取得してください。",
     },
     statusPolicy:
       "statusAvailabilityがnot_providedの場合、登記中・存続中とは断定できません。状態情報が取得できていないものとして扱ってください。",

@@ -12,7 +12,7 @@ test.afterEach(() => {
   globalThis.fetch = originalFetch;
 });
 
-test("法人番号から企業基本情報と活動情報を正規化する", async () => {
+test("法人番号から企業基本情報を正規化し活動情報を未取得とする", async () => {
   let requestedUrl = "";
   let requestedToken = "";
   globalThis.fetch = async (input, init) => {
@@ -70,10 +70,11 @@ test("法人番号から企業基本情報と活動情報を正規化する", as
   assert.equal(result.company.statusAvailability, "not_provided");
   assert.equal(result.company.companyUrl, null);
   assert.match(result.statusPolicy, /断定できません/);
-  assert.equal(result.activities.certificationCount, 2);
-  assert.equal(result.activities.certifications[0]?.title, "認定A");
-  assert.equal(result.activities.returnedCertificationCount, 1);
-  assert.equal(result.activities.hasMore, true);
+  assert.equal(result.activities.status, "not_fetched");
+  assert.equal(result.activities.certificationCount, null);
+  assert.equal(result.activities.subsidyHistoryCount, null);
+  assert.equal(result.activities.nextTool, "get_company_activities");
+  assert.match(result.activities.note, /0件と断定しません/);
   assert.equal(JSON.stringify(result).includes("secret-token"), false);
 });
 

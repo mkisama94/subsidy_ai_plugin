@@ -9,9 +9,13 @@ import {
   searchCompanies,
 } from "./gbizinfo";
 import { evaluateSubsidyFitForCompany } from "./companyMatching";
+import {
+  GBIZINFO_ACTIVITY_TYPES,
+  getCompanyActivities,
+} from "./gbizinfoActivities";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.5.1";
+const SERVER_VERSION = "0.6.0";
 
 function jsonToolResult(value: unknown) {
   return {
@@ -105,7 +109,7 @@ function createServer(gbizInfoApiToken?: string): McpServer {
     "get_company_profile",
     {
       description:
-        "法人番号からgBizINFOの公開法人情報を取得します。所在地、業種、従業員数、資本金、認定情報、過去の補助金情報を返します。未登録項目は推測せずnullまたは空配列で返し、statusAvailabilityがnot_providedの場合は登記中・存続中と断定しません。",
+        "法人番号からgBizINFOの公開法人基本情報を取得します。所在地、業種、従業員数、資本金などを返します。活動情報は完全性を保証できない基本情報レスポンスから数えず、not_fetchedとして返します。認定、特許、補助金などはget_company_activitiesを使用してください。未登録項目は推測せずnullまたは空配列で返し、statusAvailabilityがnot_providedの場合は登記中・存続中と断定しません。",
       inputSchema: {
         corporate_number: z
           .string()
@@ -119,7 +123,9 @@ function createServer(gbizInfoApiToken?: string): McpServer {
           .max(50)
           .optional()
           .default(20)
-          .describe("認定情報と補助金履歴の最大返却件数"),
+          .describe(
+            "後方互換用。活動情報は取得しないため、get_company_activitiesのactivity_limitを使用してください",
+          ),
       },
     },
     async ({ corporate_number, activity_limit }) => {
@@ -128,6 +134,52 @@ function createServer(gbizInfoApiToken?: string): McpServer {
           await getCompanyProfile(
             corporate_number,
             gbizInfoApiToken,
+            activity_limit,
+          ),
+        );
+      } catch (error) {
+        return errorToolResult(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "get_company_activities",
+    {
+      description:
+        "法人番号からgBizINFOの活動別専用APIを呼び、届出・認定、表彰、事業所、財務、特許・意匠・商標、調達、補助金、職場情報を取得します。法人名検索のactivityCountはこれらの総合指標であり、特定種類の件数とは限りません。種類別件数、取得失敗、検索APIの報告件数との差を分けて返します。",
+      inputSchema: {
+        corporate_number: z
+          .string()
+          .trim()
+          .regex(/^\d{13}$/)
+          .describe("活動情報を取得する13桁の法人番号"),
+        activity_types: z
+          .array(z.enum(GBIZINFO_ACTIVITY_TYPES))
+          .min(1)
+          .max(GBIZINFO_ACTIVITY_TYPES.length)
+          .optional()
+          .default([...GBIZINFO_ACTIVITY_TYPES])
+          .describe(
+            "取得する活動情報の種類。省略時は8種類すべてを取得",
+          ),
+        activity_limit: z
+          .number()
+          .int()
+          .min(1)
+          .max(50)
+          .optional()
+          .default(20)
+          .describe("各活動種類の最大返却件数。総件数は切り捨て前を返す"),
+      },
+    },
+    async ({ corporate_number, activity_types, activity_limit }) => {
+      try {
+        return jsonToolResult(
+          await getCompanyActivities(
+            corporate_number,
+            gbizInfoApiToken,
+            activity_types,
             activity_limit,
           ),
         );

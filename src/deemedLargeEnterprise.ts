@@ -1,3 +1,8 @@
+import {
+  createProfessionalConsultationBrief,
+  type ConsultationTopic,
+} from "./professionalConsultation";
+
 export type ProgramTreatment =
   | "excluded"
   | "allowed"
@@ -219,6 +224,13 @@ function result(
   missingInformation: AssessmentReason[],
   summary: string,
 ) {
+  const issues = [
+    ...matchedRules,
+    ...missingInformation,
+  ].map((item) => ({
+    topic: consultationTopic(item.field),
+    summary: item.message,
+  }));
   return {
     subsidyId,
     assessment: {
@@ -230,9 +242,32 @@ function result(
     },
     programRule: rule,
     affiliationFacts: facts,
+    professionalConsultation: createProfessionalConsultationBrief({
+      sourceUrl: rule.sourceUrl,
+      confirmedFacts: matchedRules.map((item) => item.message),
+      issues,
+    }),
     privacy:
       "この判定結果は保存しません。公開情報で確認できない課税所得や役員兼務などは推定しません。",
     caution:
       "これは入力された公式資料の基準と確認済み情報の機械的な照合です。補助金の申請資格を保証しないため、最新の公募要領と実施機関の案内を確認してください。",
   };
+}
+
+function consultationTopic(field: string): ConsultationTopic {
+  switch (field) {
+    case "officer_overlap":
+      return "officer_overlap";
+    case "indirect_control":
+      return "indirect_control";
+    case "high_income_rule":
+      return "high_income_rule";
+    case "conditional_requirement":
+      return "conditional_requirement";
+    case "program_rule":
+    case "program_rule_details":
+      return "program_rule";
+    default:
+      return "corporate_relationship";
+  }
 }

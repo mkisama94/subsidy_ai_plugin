@@ -1,4 +1,8 @@
 import { getSubsidyDetail, type JGrantsCacheOptions } from "./jgrants";
+import {
+  createProfessionalConsultationBrief,
+  type ConsultationTopic,
+} from "./professionalConsultation";
 
 export type CompanyProfileInput = {
   location?: string;
@@ -293,6 +297,23 @@ export function evaluateSubsidyFitFromDetail(
         ? "needs_confirmation"
         : "strong_candidate";
 
+  const consultationIssues = [
+    ...conflictingConditions,
+    ...unconfirmedConditions,
+    ...missingProfileFields.map((field) => ({
+      field,
+      reason: `${field}の企業情報を確認できません。`,
+    })),
+  ].map((condition) => ({
+    topic: consultationTopic(condition.field),
+    summary: condition.reason,
+  }));
+  const openDeadlines = detail.subsidy.workflows
+    .filter((workflow) => workflow.acceptanceStatus === "open")
+    .map((workflow) => workflow.acceptanceEnd)
+    .filter((value): value is string => Boolean(value))
+    .sort();
+
   return {
     source: detail.source,
     retrievedAt: detail.retrievedAt,
@@ -326,9 +347,36 @@ export function evaluateSubsidyFitFromDetail(
       unconfirmedConditions,
       missingProfileFields,
     },
+    professionalConsultation: createProfessionalConsultationBrief({
+      subsidyName: detail.subsidy.title,
+      sourceUrl: detail.subsidy.detailUrl,
+      confirmedFacts: matchedConditions.map((condition) => condition.reason),
+      issues: consultationIssues,
+      applicationDeadline: openDeadlines[0] ?? null,
+    }),
     caution:
       "これはJグランツの構造化情報に基づく候補評価であり、受給資格や採択を保証しません。必ず最新の公募要領と実施機関の案内を確認してください。",
   };
+}
+
+function consultationTopic(field: string): ConsultationTopic {
+  switch (field) {
+    case "location":
+    case "location_detail":
+      return "location";
+    case "industry":
+      return "industry";
+    case "employee_count":
+      return "employee_count";
+    case "capital_yen":
+      return "capital_yen";
+    case "business_plans":
+      return "business_plans";
+    case "acceptance_period":
+      return "acceptance_period";
+    default:
+      return "official_guidelines";
+  }
 }
 
 export async function evaluateSubsidyFit(

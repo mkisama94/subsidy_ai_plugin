@@ -60,6 +60,15 @@ test("公開情報で役員兼務を確認できなければ推定せず追加�
     result.assessment.missingInformation.map((item) => item.field),
     ["officer_overlap"],
   );
+  assert.equal(result.professionalConsultation.recommended, true);
+  assert.ok(
+    result.professionalConsultation.questions.some((question) =>
+      question.includes("兼務状況"),
+    ),
+  );
+  assert.ok(
+    result.professionalConsultation.documentsToPrepare.includes("役員名簿"),
+  );
 });
 
 test("すべての入力済み基準を下回る場合も申請資格を保証しない", () => {

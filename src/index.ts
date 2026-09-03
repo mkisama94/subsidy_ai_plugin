@@ -25,9 +25,13 @@ import {
   SelectionStatisticsError,
   verifyOfficialResearchSource,
 } from "./selectionStatistics";
+import {
+  createProfessionalConsultationBrief,
+  type ConsultationTopic,
+} from "./professionalConsultation";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.9.0";
+const SERVER_VERSION = "0.10.0";
 
 function jsonToolResult(value: unknown) {
   return {
@@ -298,10 +302,75 @@ function createServer(env: Env): McpServer {
     },
   );
   server.registerTool(
+    "prepare_professional_consultation",
+    {
+      description:
+        "補助金調査で確認できた事実と未確認論点から、社労士などの専門家へそのまま共有できる相談メモを作ります。相談推奨先、具体的な質問、準備資料、相談期限、AIと人間の判断境界を整理します。単に『専門家へ相談してください』で終わらせないためのツールです。株主名簿、決算書、賃金台帳など非公開資料の内容や個人情報は入力せず、資料名と相談論点だけを指定してください。結果は保存しません。",
+      inputSchema: {
+        subsidy_name: z.string().trim().min(1).max(300).optional(),
+        source_url: z.url().optional(),
+        confirmed_facts: z
+          .array(z.string().trim().min(1).max(500))
+          .max(20)
+          .optional()
+          .default([]),
+        issues: z
+          .array(
+            z.object({
+              topic: z.enum([
+                "location",
+                "industry",
+                "employee_count",
+                "capital_yen",
+                "business_plans",
+                "official_guidelines",
+                "acceptance_period",
+                "corporate_relationship",
+                "officer_overlap",
+                "indirect_control",
+                "high_income_rule",
+                "conditional_requirement",
+                "program_rule",
+                "research_and_development_costs",
+                "partnership_structure",
+              ]),
+              summary: z.string().trim().min(1).max(500),
+            }),
+          )
+          .min(1)
+          .max(20),
+        application_deadline: z.string().trim().min(1).max(40).optional(),
+        consult_by: z.string().trim().min(1).max(40).optional(),
+      },
+    },
+    async ({
+      subsidy_name,
+      source_url,
+      confirmed_facts,
+      issues,
+      application_deadline,
+      consult_by,
+    }) =>
+      jsonToolResult(
+        createProfessionalConsultationBrief({
+          subsidyName: subsidy_name,
+          sourceUrl: source_url,
+          confirmedFacts: confirmed_facts,
+          issues: issues.map((issue) => ({
+            topic: issue.topic as ConsultationTopic,
+            summary: issue.summary,
+          })),
+          applicationDeadline: application_deadline,
+          consultBy: consult_by,
+        }),
+      ),
+  );
+
+  server.registerTool(
     "assess_deemed_large_enterprise_eligibility",
     {
       description:
-        "候補となった補助金の公式資料にある『みなし大企業』の扱いと、EDINET等で確認した公開資本関係を照合します。100%子会社という事実だけで全制度を対象外にせず、制度が申請を認める場合、対象外とする場合、条件付きの場合を分けます。program_ruleは必ず最新の公募要領・公式FAQなどから入力し、source_urlと確認日を付けてください。single_large_owner_percent等は、株主がその制度上の大企業に該当すると確認できた場合だけ入力してください。課税所得や役員兼務など公開情報で確認できない値は推測せず省略してください。英語のstatusは内部処理用であり、利用者向け回答ではstatusLabelとsummaryを自然な日本語で使用してください。入力と判定結果は保存しません。",
+        "候補となった補助金の公式資料にある『みなし大企業』の扱いと、EDINET等で確認した公開資本関係を照合します。100%子会社という事実だけで全制度を対象外にせず、制度が申請を認める場合、対象外とする場合、条件付きの場合を分けます。program_ruleは必ず最新の公募要領・公式FAQなどから入力し、source_urlと確認日を付けてください。single_large_owner_percent等は、株主がその制度上の大企業に該当すると確認できた場合だけ入力してください。課税所得や役員兼務など公開情報で確認できない値は推測せず省略してください。英語のstatusは内部処理用であり、利用者向け回答ではstatusLabel、summary、professionalConsultationを使い、判定と専門家への具体的な相談事項を自然な日本語で説明してください。入力と判定結果は保存しません。",
       inputSchema: {
         subsidy_id: z
           .string()
@@ -675,7 +744,7 @@ function createServer(env: Env): McpServer {
     "evaluate_subsidy_fit_for_company",
     {
       description:
-        "法人番号から経済産業省の法人情報データベース（gBizINFO）の企業プロフィールを取得し、指定したJグランツ補助金の公開条件と照合します。利用者向け回答では単に『gBizINFO』とせず、『経済産業省の法人情報データベース』と説明してください。公開情報で未登録または古い所在地、業種、従業員数、資本金は利用者の明示入力で補完でき、各値の出典と矛盾も返します。中小企業要件がある制度では親会社・大企業からの出資関係を利用者に確認し、親会社候補が示された場合はverify_corporate_relationshipで検証してください。ただし、資本関係だけで候補から除外せず、公式資料の制度別基準をassess_deemed_large_enterprise_eligibilityで照合してください。assessment.assessment.statusは内部処理用です。利用者向け回答には英語コードを表示せず、assessment.assessment.statusLabelとsummaryを使って自然な日本語で説明してください。申請資格や採択を断定しません。",
+        "法人番号から経済産業省の法人情報データベース（gBizINFO）の企業プロフィールを取得し、指定したJグランツ補助金の公開条件と照合します。利用者向け回答では単に『gBizINFO』とせず、『経済産業省の法人情報データベース』と説明してください。公開情報で未登録または古い所在地、業種、従業員数、資本金は利用者の明示入力で補完でき、各値の出典と矛盾も返します。中小企業要件がある制度では親会社・大企業からの出資関係を利用者に確認し、親会社候補が示された場合はverify_corporate_relationshipで検証してください。ただし、資本関係だけで候補から除外せず、公式資料の制度別基準をassess_deemed_large_enterprise_eligibilityで照合してください。assessment.assessment.statusは内部処理用です。利用者向け回答には英語コードを表示せず、assessment.assessment.statusLabel、summary、assessment.professionalConsultationを使って、判定と専門家への具体的な相談事項を自然な日本語で説明してください。申請資格や採択を断定しません。",
       inputSchema: {
         subsidy_id: z
           .string()
@@ -875,7 +944,7 @@ function createServer(env: Env): McpServer {
     "evaluate_subsidy_fit",
     {
       description:
-        "指定した補助金のJグランツ詳細と企業プロフィールを照合し、明示的な一致、不一致、未確認事項を分けて返します。assessment.statusは内部処理用です。利用者向け回答にはstrong_candidate、needs_confirmation、potentially_ineligible、insufficient_informationなどの英語コードを表示せず、statusLabelとsummaryを使って自然な日本語で説明してください。受給資格や採択を断定するツールではありません。",
+        "指定した補助金のJグランツ詳細と企業プロフィールを照合し、明示的な一致、不一致、未確認事項を分けて返します。assessment.statusは内部処理用です。利用者向け回答にはstrong_candidate、needs_confirmation、potentially_ineligible、insufficient_informationなどの英語コードを表示せず、statusLabel、summary、professionalConsultationを使って、判定と専門家への具体的な相談事項を自然な日本語で説明してください。受給資格や採択を断定するツールではありません。",
       inputSchema: {
         subsidy_id: z
           .string()

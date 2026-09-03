@@ -60,6 +60,23 @@ test("明示的な一致と要確認事項を分離する", () => {
       (condition) => condition.field === "official_guidelines",
     ),
   );
+  assert.equal(result.professionalConsultation.recommended, true);
+  assert.ok(
+    result.professionalConsultation.recommendedProfessionals.some(
+      (professional) => professional.includes("社会保険労務士"),
+    ),
+  );
+  assert.ok(result.professionalConsultation.questions.length > 0);
+  assert.equal(result.professionalConsultation.consultBy, null);
+  assert.equal(
+    result.professionalConsultation.applicationDeadline,
+    "2026-10-31T23:59:59Z",
+  );
+  assert.match(
+    result.professionalConsultation.schedulingGuidance,
+    /相談期限は未設定/u,
+  );
+  assert.match(result.professionalConsultation.dataHandling, /保存せず/u);
 });
 
 test("地域または従業員数が不一致なら対象外の可能性を返す", () => {

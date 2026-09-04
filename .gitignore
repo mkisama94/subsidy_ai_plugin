@@ -3,4 +3,4 @@ node_modules/
 .dev.vars
 .env
 *.log
-/DEVELOPMENT_PLAN.md
+/private_docs/

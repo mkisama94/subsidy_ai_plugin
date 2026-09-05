@@ -1,0 +1,236 @@
+{
+  "$schema": "https://developers.openai.com/plugins/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "補助金AI",
+    "subtitle": "公的情報から補助金候補を整理",
+    "description": "補助金AIは、Jグランツの補助金情報と経済産業省の公開法人情報を検索し、企業ごとの候補条件、一致・不一致・未確認事項、公式な参照元を整理します。金融庁EDINETの公開資料を使った申告済み親会社候補の確認、制度ごとのみなし大企業要件の照合、過去の公式採択実績の参照、専門家へ相談するための論点整理にも対応します。検索結果や評価は申請資格・採択・補助額を保証するものではなく、申請前に最新の公募要領と実施機関の案内を確認する必要があります。",
+    "category": "PRODUCTIVITY"
+  },
+  "tools": {
+    "search_companies": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Queries public corporate records and returns matching company candidates without modifying stored data.",
+        "open_world_justification": "Does not publish content or change any public or third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+      }
+    },
+    "get_company_profile": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves a public company profile by corporate number without creating or updating records.",
+        "open_world_justification": "Does not publish content or change any public or third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+      }
+    },
+    "get_company_activities": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves publicly available company activity records without modifying data.",
+        "open_world_justification": "Does not publish content or change any public or third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+      }
+    },
+    "verify_corporate_relationship": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Reads EDINET filings and upserts verified public corporate relationship evidence in the app's internal database.",
+        "open_world_justification": "Only changes the app's internal evidence database and does not modify EDINET or publish content.",
+        "destructive_justification": "An upsert can replace a previously stored relationship record for the same companies and source document."
+      }
+    },
+    "prepare_professional_consultation": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Computes a consultation brief from supplied facts and issues without storing or transmitting the result.",
+        "open_world_justification": "Does not contact professionals, send messages, submit forms, or publish content.",
+        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+      }
+    },
+    "assess_deemed_large_enterprise_eligibility": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Computes an eligibility assessment from supplied official rules and confirmed affiliation facts without saving the inputs or result.",
+        "open_world_justification": "Does not submit an application or change any external system or public record.",
+        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+      }
+    },
+    "record_official_selection_statistics": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Validates an official public source and upserts reviewable selection statistics and provenance in the app's internal database.",
+        "open_world_justification": "Only changes the app's internal evidence database and does not modify the official source or publish content.",
+        "destructive_justification": "An upsert can replace previously stored statistics for the same program round and scope."
+      }
+    },
+    "get_official_selection_statistics": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Reads previously stored official selection statistics and provenance without modifying records.",
+        "open_world_justification": "Does not publish content or change any public or third-party system.",
+        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+      }
+    },
+    "estimate_program_selection_outlook": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Reads historical statistics and can save or replace a derived program-level outlook in the app's internal database.",
+        "open_world_justification": "Only changes the app's internal database and does not publish the outlook or modify third-party systems.",
+        "destructive_justification": "When a target round is supplied, saving the result can replace the previously stored estimate for that round."
+      }
+    },
+    "evaluate_subsidy_fit_for_company": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves public company and subsidy data and may refresh an internal public-data cache while computing the assessment.",
+        "open_world_justification": "Does not submit applications, publish content, or modify the public government data sources it queries.",
+        "destructive_justification": "Only performs retry-safe cache refreshes and does not delete or irreversibly change user data."
+      }
+    },
+    "search_subsidies": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Queries J-Grants and may refresh an internal cache of public subsidy search results.",
+        "open_world_justification": "Does not apply for subsidies, submit forms, publish content, or modify J-Grants.",
+        "destructive_justification": "Only performs retry-safe cache refreshes and does not delete or irreversibly change user data."
+      }
+    },
+    "get_subsidy_detail": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves J-Grants detail data and may refresh an internal cache of that public information.",
+        "open_world_justification": "Does not submit forms, publish content, or modify J-Grants or another third-party system.",
+        "destructive_justification": "Only performs retry-safe cache refreshes and does not delete or irreversibly change user data."
+      }
+    },
+    "evaluate_subsidy_fit": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves public subsidy details, may refresh an internal public-data cache, and computes a non-binding fit assessment.",
+        "open_world_justification": "Does not apply for subsidies, submit forms, publish content, or modify external systems.",
+        "destructive_justification": "Only performs retry-safe cache refreshes and does not delete or irreversibly change user data."
+      }
+    }
+  },
+  "test_cases": [
+    {
+      "description": "Search for currently open energy-efficiency subsidies in Tokyo and inspect the most relevant program in detail.",
+      "user_prompt": "東京都で事業所の省エネ設備を更新したい中小企業向けに、現在受付中の補助金を3件探してください。締切が最も近い候補は詳細も確認し、Jグランツの制度ID、受付期間、公式詳細URLを示してください。",
+      "file_attachment_urls": null,
+      "tools_triggered": "search_subsidies, get_subsidy_detail",
+      "expected_output": "地域限定制度と全国対象制度を確認し、最大3件の候補と、選択した制度の受付期間・公式URL・確認上の注意を返します。",
+      "expected_output_url": null
+    },
+    {
+      "description": "Disambiguate companies with similar names before retrieving a public company profile and activities.",
+      "user_prompt": "『山本商事』という会社について、東京都千代田区にある法人の候補を調べてください。同名法人が複数ある場合は自動で決めず、候補を示して私に確認してください。候補を確定できた後だけ、基本情報と公開されている補助金・認定などの活動情報を確認してください。",
+      "file_attachment_urls": null,
+      "tools_triggered": "search_companies, get_company_profile, get_company_activities",
+      "expected_output": "候補を法人番号と所在地で区別し、曖昧な場合は確認を求め、確定後に公開基本情報と活動情報の取得結果を分けて返します。",
+      "expected_output_url": null
+    },
+    {
+      "description": "Identify a real company and evaluate its fit for a current subsidy while preserving unknown conditions and source conflicts.",
+      "user_prompt": "愛知県豊田市のトヨタ自動車株式会社について法人候補を確認し、製造業の省エネ設備に利用できる現在受付中の補助金を探してください。法人を一意に確認できた後、最も関連する候補との適合度を評価し、公開法人情報と補助金条件の未確認事項を残したまま、申請資格や採択を断定せず説明してください。",
+      "file_attachment_urls": null,
+      "tools_triggered": "search_companies, search_subsidies, evaluate_subsidy_fit_for_company",
+      "expected_output": "公開法人情報と補助金条件を照合し、一致・不一致・未確認事項、入力値との矛盾、公式参照元を明確に分けて返します。",
+      "expected_output_url": null
+    },
+    {
+      "description": "Verify a user-supplied parent-company candidate using current public EDINET filings.",
+      "user_prompt": "ダイハツ工業株式会社の親会社候補としてトヨタ自動車株式会社を申告します。EDINETの最新の有価証券報告書で両社の資本関係を確認してください。書類に対象会社名が見つからない場合も、資本関係がないとは断定せず、確認済みの事実と未確認事項を分けてください。",
+      "file_attachment_urls": null,
+      "tools_triggered": "verify_corporate_relationship",
+      "expected_output": "申告された親会社候補だけを検証し、EDINETの公開資料で確認できた資本関係の根拠と未確認事項を分けて返します。",
+      "expected_output_url": null
+    },
+    {
+      "description": "Turn unresolved subsidy eligibility questions into a practical consultation brief without collecting private documents.",
+      "user_prompt": "この補助金について、資本関係、役員兼務、対象経費が未確認です。株主名簿や決算書の中身は入力せず、社労士・税理士・実施機関の誰に何を質問し、どの資料名を準備すべきか相談メモにしてください。申請締切は2026年10月31日です。",
+      "file_attachment_urls": null,
+      "tools_triggered": "prepare_professional_consultation",
+      "expected_output": "未確認論点ごとに相談先、具体的な質問、準備する資料名、相談期限、AIと専門家の判断境界を整理して返します。",
+      "expected_output_url": null
+    }
+  ],
+  "negative_test_cases": [
+    {
+      "description": "Do not trigger when the user asks the app to complete and submit a subsidy application.",
+      "user_prompt": "この補助金の申請書を完成させて、私の代わりにJグランツへ提出してください。",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because it cannot complete or submit subsidy applications on the user's behalf.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not trigger for personal benefit or household welfare eligibility requests outside business subsidy research.",
+      "user_prompt": "個人向けの児童手当について、私の世帯が受給できるか判定してください。",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because personal welfare-benefit eligibility is outside its business subsidy and public corporate information workflows.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Do not trigger for unrelated scheduling requests.",
+      "user_prompt": "来週の予定を確認して、空いている時間に会議を入れてください。",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "The app should not be invoked because calendar access and meeting scheduling are outside its supported workflows.",
+      "expected_output_url": null
+    }
+  ]
+}

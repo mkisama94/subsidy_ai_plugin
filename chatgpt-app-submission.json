@@ -167,69 +167,69 @@
   },
   "test_cases": [
     {
-      "description": "Search for currently open energy-efficiency subsidies in Tokyo and inspect the most relevant program in detail.",
-      "user_prompt": "東京都で事業所の省エネ設備を更新したい中小企業向けに、現在受付中の補助金を3件探してください。締切が最も近い候補は詳細も確認し、Jグランツの制度ID、受付期間、公式詳細URLを示してください。",
+      "description": "Search J-Grants for energy-efficiency subsidies in Tokyo and inspect one result even when no program is currently accepting applications.",
+      "user_prompt": "補助金AIを使って、検索語を『民間建築物 省CO2 改修』、対象地域を『東京都』として、Jグランツ制度を最大3件探してください。まず現在受付中の制度を検索し、該当が0件なら受付終了を含む直近の制度を検索してください。見つかった件数が3件未満なら実際の件数を示してください。候補が1件以上あれば、受付中を優先して最も締切が近い1件、受付中がなければ最も新しい1件の詳細も取得し、Jグランツの補助金ID、制度名、受付期間、公式詳細URL、申請前に確認すべき点を示してください。申請資格や採択は断定しないでください。",
       "file_attachment_urls": null,
       "tools_triggered": "search_subsidies, get_subsidy_detail",
-      "expected_output": "地域限定制度と全国対象制度を確認し、最大3件の候補と、選択した制度の受付期間・公式URL・確認上の注意を返します。",
+      "expected_output": "現在受付中を優先して最大3件を返し、0件の場合は受付終了を含めて再検索します。候補があれば1件の詳細を取得し、補助金ID、制度名、受付期間、公式URL、確認事項を示します。該当件数が少ない場合は結果を捏造せず、申請資格や採択を断定しません。",
       "expected_output_url": null
     },
     {
-      "description": "Disambiguate companies with similar names before retrieving a public company profile and activities.",
-      "user_prompt": "『山本商事』という会社について、東京都千代田区にある法人の候補を調べてください。同名法人が複数ある場合は自動で決めず、候補を示して私に確認してください。候補を確定できた後だけ、基本情報と公開されている補助金・認定などの活動情報を確認してください。",
+      "description": "Retrieve the public company profile and activity records for an explicitly identified Japanese corporation.",
+      "user_prompt": "補助金AIを使って、法人番号1180301018771の法人について、経済産業省の法人情報データベースから公開基本情報と公開活動情報を取得してください。基本情報では法人名、所在地、資本金、業種、従業員数について、確認できた値と未登録の項目を区別してください。活動情報では、認定、表彰、事業所、財務、特許等、調達、補助金、職場情報を種類別に整理し、各種類の表示は最大3件にしてください。取得失敗や件数差があれば明示してください。未登録情報を推測せず、この法人番号以外の法人へ置き換えないでください。",
       "file_attachment_urls": null,
-      "tools_triggered": "search_companies, get_company_profile, get_company_activities",
-      "expected_output": "候補を法人番号と所在地で区別し、曖昧な場合は確認を求め、確定後に公開基本情報と活動情報の取得結果を分けて返します。",
+      "tools_triggered": "get_company_profile, get_company_activities",
+      "expected_output": "指定された法人番号について、公開基本情報と8種類の活動情報を分け、各種類を最大3件に制限して返します。未登録項目、取得失敗、件数差を明示し、値を推測したり別法人へ置き換えたりしません。",
       "expected_output_url": null
     },
     {
-      "description": "Identify a real company and evaluate its fit for a current subsidy while preserving unknown conditions and source conflicts.",
-      "user_prompt": "愛知県豊田市のトヨタ自動車株式会社について法人候補を確認し、製造業の省エネ設備に利用できる現在受付中の補助金を探してください。法人を一意に確認できた後、最も関連する候補との適合度を評価し、公開法人情報と補助金条件の未確認事項を残したまま、申請資格や採択を断定せず説明してください。",
+      "description": "Evaluate a specifically identified company against a specifically identified J-Grants program without relying on prior conversation context.",
+      "user_prompt": "補助金AIを使って、法人番号1180301018771の法人と、Jグランツ補助金ID a0WJ200000CDdtlMADの制度を照合してください。検討中の事業は『国内の製造拠点にある既存の空調・照明設備を高効率設備へ更新する』です。経済産業省の公開法人情報とJグランツの公開条件を使い、一致する条件、不一致の可能性、公開情報だけでは確認できない事項、参照元を分けて説明してください。入力値と公開情報に矛盾があれば両方を示し、申請資格、補助対象、採択可能性を断定しないでください。",
       "file_attachment_urls": null,
-      "tools_triggered": "search_companies, search_subsidies, evaluate_subsidy_fit_for_company",
-      "expected_output": "公開法人情報と補助金条件を照合し、一致・不一致・未確認事項、入力値との矛盾、公式参照元を明確に分けて返します。",
+      "tools_triggered": "evaluate_subsidy_fit_for_company",
+      "expected_output": "指定された法人番号と補助金IDを使って公開情報を照合し、一致、不一致の可能性、未確認事項、入力値との矛盾、公式参照元を分けて返します。申請資格、補助対象、採択可能性は断定しません。",
       "expected_output_url": null
     },
     {
       "description": "Verify a user-supplied parent-company candidate using current public EDINET filings.",
-      "user_prompt": "ダイハツ工業株式会社の親会社候補としてトヨタ自動車株式会社を申告します。EDINETの最新の有価証券報告書で両社の資本関係を確認してください。書類に対象会社名が見つからない場合も、資本関係がないとは断定せず、確認済みの事実と未確認事項を分けてください。",
+      "user_prompt": "補助金AIを使って、ダイハツ工業株式会社の親会社候補として私が申告したトヨタ自動車株式会社との資本関係だけを、EDINETの最新の有価証券報告書で確認してください。別の親会社候補を推測したり探索したりしないでください。対象会社名、書類管理番号、提出日、確認できた関係と比率、根拠となる記載、未確認事項を分けて示してください。書類に対象会社名が見つからない場合も、資本関係がないとは断定しないでください。資本関係だけを理由に、特定の補助金へ申請できないとも断定しないでください。",
       "file_attachment_urls": null,
       "tools_triggered": "verify_corporate_relationship",
-      "expected_output": "申告された親会社候補だけを検証し、EDINETの公開資料で確認できた資本関係の根拠と未確認事項を分けて返します。",
+      "expected_output": "申告された親会社候補だけを検証し、EDINETの公開資料について書類管理番号、提出日、対象会社名、確認できた関係・比率・根拠、未確認事項を分けて返します。未検出を関係なしと扱わず、補助金の申請可否も断定しません。",
       "expected_output_url": null
     },
     {
       "description": "Turn unresolved subsidy eligibility questions into a practical consultation brief without collecting private documents.",
-      "user_prompt": "この補助金について、資本関係、役員兼務、対象経費が未確認です。株主名簿や決算書の中身は入力せず、社労士・税理士・実施機関の誰に何を質問し、どの資料名を準備すべきか相談メモにしてください。申請締切は2026年10月31日です。",
+      "user_prompt": "補助金AIを使って、事業者向け補助金を検討するための相談メモを作成してください。制度名と会社名はまだ確認できていないため、推測で補わないでください。資本関係、役員兼務、対象経費が未確認です。株主名簿や決算書など非公開資料の内容は入力せず、確認事項ごとに、社会保険労務士、税理士または公認会計士、補助金の実施機関のうち誰に何を質問し、どの資料を準備すべきか、コピーして使える形で整理してください。資料は内容ではなく資料名だけを挙げてください。申請締切は2026年10月31日です。申請資格や採択を断定せず、相談先へ自動送信しないでください。",
       "file_attachment_urls": null,
       "tools_triggered": "prepare_professional_consultation",
-      "expected_output": "未確認論点ごとに相談先、具体的な質問、準備する資料名、相談期限、AIと専門家の判断境界を整理して返します。",
+      "expected_output": "制度名と会社名を捏造せず、未確認論点ごとに相談先、具体的な質問、準備する資料名、申請締切、AIと専門家の判断境界を整理したコピー可能な相談メモを返します。非公開資料の内容は求めず、自動送信もしません。",
       "expected_output_url": null
     }
   ],
   "negative_test_cases": [
     {
       "description": "Do not trigger when the user asks the app to complete and submit a subsidy application.",
-      "user_prompt": "この補助金の申請書を完成させて、私の代わりにJグランツへ提出してください。",
+      "user_prompt": "補助金AIを使って、事業再構築に関する補助金の申請書を作成し、私の代わりにJグランツへログインして提出まで完了してください。候補検索や相談メモの作成ではなく、外部サイトへの申請入力と代理提出を依頼します。",
       "file_attachment_urls": null,
       "tools_triggered": null,
-      "expected_output": "The app should not be invoked because it cannot complete or submit subsidy applications on the user's behalf.",
+      "expected_output": "The plugin must not invoke any tool, request login credentials or private application documents, or claim it can submit later. It should clearly state that completing application forms and logging in to or submitting through J-Grants are outside the plugin's supported scope.",
       "expected_output_url": null
     },
     {
       "description": "Do not trigger for personal benefit or household welfare eligibility requests outside business subsidy research.",
-      "user_prompt": "個人向けの児童手当について、私の世帯が受給できるか判定してください。",
+      "user_prompt": "私は会社や事業者ではなく個人です。東京都在住で子どもが2人いる世帯について、児童手当を受給できるか判定し、申請手続きも案内してください。法人情報や事業者向け補助金の調査は依頼していません。",
       "file_attachment_urls": null,
       "tools_triggered": null,
-      "expected_output": "The app should not be invoked because personal welfare-benefit eligibility is outside its business subsidy and public corporate information workflows.",
+      "expected_output": "The plugin must not invoke any tool or attempt to determine personal welfare-benefit eligibility. It should explain that household benefits and personal application procedures are outside the plugin's business-subsidy and public-corporate-information scope.",
       "expected_output_url": null
     },
     {
       "description": "Do not trigger for unrelated scheduling requests.",
-      "user_prompt": "来週の予定を確認して、空いている時間に会議を入れてください。",
+      "user_prompt": "来週の月曜日から金曜日までの私のカレンダーを確認し、空いている時間に60分のプロジェクト会議を登録してください。補助金、法人情報、公的支援制度に関する調査は依頼していません。",
       "file_attachment_urls": null,
       "tools_triggered": null,
-      "expected_output": "The app should not be invoked because calendar access and meeting scheduling are outside its supported workflows.",
+      "expected_output": "The plugin must not invoke any tool because reading calendars and creating meetings are outside its supported workflows. The response may use another authorized calendar capability, but it must not call this plugin.",
       "expected_output_url": null
     }
   ]

@@ -210,26 +210,26 @@
   "negative_test_cases": [
     {
       "description": "Do not trigger when the user asks the app to complete and submit a subsidy application.",
-      "user_prompt": "補助金AIを使って、事業再構築に関する補助金の申請書を作成し、私の代わりにJグランツへログインして提出まで完了してください。候補検索や相談メモの作成ではなく、外部サイトへの申請入力と代理提出を依頼します。",
+      "user_prompt": "補助金AIの対応範囲だけを確認します。補助金AIは、利用者に代わってJグランツへログインし、申請書への入力や代理提出を行えますか。実際の申請作業、制度検索、資料収集は行わず、対応できるかどうかと、補助金AIが支援できる範囲だけを簡潔に説明してください。ログイン情報や申請資料も要求しないでください。",
       "file_attachment_urls": null,
       "tools_triggered": null,
-      "expected_output": "The plugin must not invoke any tool, request login credentials or private application documents, or claim it can submit later. It should clearly state that completing application forms and logging in to or submitting through J-Grants are outside the plugin's supported scope.",
+      "expected_output": "The plugin must not invoke any tool, request credentials or documents, or perform any external action. The response should state that logging in to J-Grants, completing application forms, and submitting on the user's behalf are unsupported, while briefly identifying the research and consultation-preparation assistance the plugin can provide.",
       "expected_output_url": null
     },
     {
       "description": "Do not trigger for personal benefit or household welfare eligibility requests outside business subsidy research.",
-      "user_prompt": "私は会社や事業者ではなく個人です。東京都在住で子どもが2人いる世帯について、児童手当を受給できるか判定し、申請手続きも案内してください。法人情報や事業者向け補助金の調査は依頼していません。",
+      "user_prompt": "補助金AIの対応範囲だけを確認します。補助金AIは、個人世帯の児童手当について受給資格を判定したり、個人向けの申請手続きを案内したりできますか。実際の制度検索、受給資格の判定、個人情報の収集は行わず、対応できるかどうかだけを簡潔に説明してください。",
       "file_attachment_urls": null,
       "tools_triggered": null,
-      "expected_output": "The plugin must not invoke any tool or attempt to determine personal welfare-benefit eligibility. It should explain that household benefits and personal application procedures are outside the plugin's business-subsidy and public-corporate-information scope.",
+      "expected_output": "The plugin must not invoke any tool, search for personal benefits, collect personal information, or assess eligibility. The response should explain that household benefits and personal application procedures are outside the plugin's business-subsidy and public-corporate-information scope.",
       "expected_output_url": null
     },
     {
       "description": "Do not trigger for unrelated scheduling requests.",
-      "user_prompt": "来週の月曜日から金曜日までの私のカレンダーを確認し、空いている時間に60分のプロジェクト会議を登録してください。補助金、法人情報、公的支援制度に関する調査は依頼していません。",
+      "user_prompt": "補助金AIの対応範囲だけを確認します。補助金AIは、私のGoogleカレンダーを確認して空き時間を探したり、会議を登録したりできますか。実際にカレンダーを開いたり、予定を検索・登録したり、Google Calendarなど別のサービスへ接続したりせず、対応できるかどうかだけを簡潔に説明してください。",
       "file_attachment_urls": null,
       "tools_triggered": null,
-      "expected_output": "The plugin must not invoke any tool because reading calendars and creating meetings are outside its supported workflows. The response may use another authorized calendar capability, but it must not call this plugin.",
+      "expected_output": "The plugin must not invoke any tool, connect to a calendar service, inspect availability, or create an event. The response should state that calendar access and meeting scheduling are outside the plugin's supported scope.",
       "expected_output_url": null
     }
   ]

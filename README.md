@@ -287,7 +287,17 @@ APIトークンやアプリケーションIDは、ソースコードやGit履歴
 GBIZINFO_API_TOKEN
 CACHE_KEY_SECRET
 EDINET_API_KEY
+OPENAI_APPS_CHALLENGE_TOKEN
 ```
+
+`OPENAI_APPS_CHALLENGE_TOKEN`は、OpenAI PlatformでMCPサーバーのドメイン所有を確認する際に表示された値を設定します。値はリポジトリへ保存せず、Cloudflare Secretとして登録してください。
+
+```bash
+npx wrangler secret put OPENAI_APPS_CHALLENGE_TOKEN
+npm run deploy
+```
+
+デプロイ後、`https://<MCPサーバーのホスト>/.well-known/openai-apps-challenge`が検証トークンだけをプレーンテキストで返すことを確認してから、OpenAI Platformで検証を実行します。未設定時、このURLは404を返します。
 
 国税庁法人番号システムWeb-APIとの統合時には、専用のアプリケーションID用環境変数を追加します。
 

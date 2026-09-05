@@ -32,6 +32,7 @@ import {
 
 const SERVER_NAME = "subsidy-ai-mcp";
 const SERVER_VERSION = "0.10.0";
+const DOMAIN_VERIFICATION_PATH = "/.well-known/openai-apps-challenge";
 
 // OpenAI's public plugin review requires all three safety hints on every tool.
 // Read-only tools may query public services but never change external state.
@@ -102,9 +103,27 @@ type Env = {
   GBIZINFO_API_TOKEN?: string;
   EDINET_API_KEY?: string;
   CACHE_KEY_SECRET?: string;
+  OPENAI_APPS_CHALLENGE_TOKEN?: string;
   PUBLIC_CACHE?: D1Database;
   subsidy_ai_relations?: D1Database;
 };
+
+export function createDomainVerificationResponse(token?: string): Response {
+  const verificationToken = token?.trim();
+
+  if (!verificationToken) {
+    return Response.json({ error: "Not found" }, { status: 404 });
+  }
+
+  return new Response(verificationToken, {
+    status: 200,
+    headers: {
+      "Cache-Control": "no-store",
+      "Content-Type": "text/plain; charset=utf-8",
+      "X-Content-Type-Options": "nosniff",
+    },
+  });
+}
 
 function createServer(env: Env): McpServer {
   const server = new McpServer({
@@ -1046,6 +1065,12 @@ export default {
     ctx: ExecutionContext,
   ): Promise<Response> {
     const url = new URL(request.url);
+
+    if (url.pathname === DOMAIN_VERIFICATION_PATH) {
+      return createDomainVerificationResponse(
+        env.OPENAI_APPS_CHALLENGE_TOKEN,
+      );
+    }
 
     if (url.pathname === "/" || url.pathname === "/health") {
       return Response.json({

@@ -21,6 +21,8 @@ type ConsultationIssue = {
 };
 
 export type ProfessionalConsultationBriefInput = {
+  companyName?: string;
+  publicBusinessSummary?: string;
   subsidyName?: string;
   sourceUrl?: string;
   confirmedFacts?: string[];
@@ -129,6 +131,24 @@ export function createProfessionalConsultationBrief(
         ...guidance.flatMap((item) => item.specialists),
       ])
     : [];
+  const questions = unique(guidance.map((item) => item.question));
+  const documents = unique(guidance.flatMap((item) => item.documents));
+  const facts = unique(input.confirmedFacts ?? []);
+  const readyToSendMessage = input.issues.length ? {
+    subject: `${input.subsidyName ?? "補助金候補"}の初期相談について`,
+    body: [
+      "お世話になっております。",
+      `${input.companyName ? `${input.companyName}について、` : ""}${input.subsidyName ? `「${input.subsidyName}」を` : "補助金の活用を"}候補として検討しています。申請資格や採択が確定した段階ではなく、まず初期相談をお願いしたいと考えています。`,
+      input.publicBusinessSummary ? `事業の概要：${input.publicBusinessSummary}` : null,
+      input.sourceUrl ? `参照資料：${input.sourceUrl}` : null,
+      facts.length ? `調査で確認できた事項：\n${facts.map((fact) => `・${fact}`).join("\n")}` : null,
+      `確認したい事項：\n${input.issues.map((issue) => `・${issue.summary}\n  ${TOPIC_GUIDANCE[issue.topic].question}`).join("\n")}`,
+      input.applicationDeadline ? `把握している申請締切：${input.applicationDeadline}（対象の公募回と最新日程もご確認ください）` : "申請締切は未確認です。現在の受付状況と準備が間に合うかも確認したいです。",
+      input.consultBy ? `相談希望期限：${input.consultBy}` : null,
+      `準備資料の候補：\n${documents.map((document) => `・${document}`).join("\n")}\n必要な資料と共有方法をご指定ください。非公開資料は、共有先・方法を確認したうえで別途お渡しします。`,
+      "ご対応可能でしょうか。ご専門外の論点は、対応できる専門家や実施機関の窓口をご紹介いただけると助かります。初期相談の費用と進め方もお知らせください。",
+    ].filter(Boolean).join("\n\n"),
+  } : null;
   return {
     recommended: input.issues.length > 0,
     statusLabel: input.issues.length
@@ -138,11 +158,18 @@ export function createProfessionalConsultationBrief(
       "AIの調査結果をもとに、人間の専門家が申請資格と対応方針を判断するための引き継ぎメモです。",
     subsidyName: input.subsidyName ?? null,
     sourceUrl: input.sourceUrl ?? null,
-    confirmedFacts: unique(input.confirmedFacts ?? []),
+    confirmedFacts: facts,
     consultationPoints: input.issues.map((issue) => issue.summary),
     recommendedProfessionals: specialists,
-    questions: unique(guidance.map((item) => item.question)),
-    documentsToPrepare: unique(guidance.flatMap((item) => item.documents)),
+    questions,
+    documentsToPrepare: documents,
+    readyToSendMessage,
+    nextAction: readyToSendMessage
+      ? "以下の相談文を確認し、顧問社労士など普段の相談先へコピーして送ってください。"
+      : null,
+    presentationGuidance: readyToSendMessage
+      ? "利用者が候補の検討・専門家への相談に進む場合は、nextActionとreadyToSendMessageをコピーできる相談文として提示してください。『専門家へ相談してください』だけに要約せず、制度名・参照URL・確認事項を引き継いでください。候補探索中は長い相談文を毎回表示する必要はありません。自動送信はしません。"
+      : null,
     applicationDeadline: input.applicationDeadline ?? null,
     consultBy: input.consultBy ?? null,
     schedulingGuidance:

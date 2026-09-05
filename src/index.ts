@@ -334,8 +334,12 @@ function createServer(env: Env): McpServer {
     {
       annotations: READ_ONLY_ANNOTATIONS,
       description:
-        "補助金調査で確認できた事実と未確認論点から、社労士などの専門家へそのまま共有できる相談メモを作ります。相談推奨先、具体的な質問、準備資料、相談期限、AIと人間の判断境界を整理します。単に『専門家へ相談してください』で終わらせないためのツールです。株主名簿、決算書、賃金台帳など非公開資料の内容や個人情報は入力せず、資料名と相談論点だけを指定してください。結果は保存しません。",
+        "利用者が補助金候補を検討したい、専門家に相談したい、次に何をすればよいかと尋ねたときに使います。Web検索や他ツールで得た情報からも、顧問社労士などへコピーして送れる相談文を作成できます。確認済みの制度名・公式URL・公開事実と未確認論点を引き継ぎ、対応可否・紹介・必要資料・初期相談費用を尋ねる文面を返します。nextActionとreadyToSendMessageを利用者がコピーできる形で提示し、単に『専門家へ相談してください』に要約しないでください。未取得の会社名・事業概要・期限は推測せず省略してください。株主名簿、決算書、賃金台帳など非公開資料の内容や個人情報は入力せず、資料名と相談論点だけを指定してください。結果は保存せず、送信もしません。",
       inputSchema: {
+        company_name: z.string().trim().min(1).max(200).optional()
+          .describe("相談対象の公開法人名。未確認なら省略"),
+        public_business_summary: z.string().trim().min(1).max(500).optional()
+          .describe("公開情報で確認した事業概要。非公開の事業計画・取引条件は入力しない"),
         subsidy_name: z.string().trim().min(1).max(300).optional(),
         source_url: z.url().optional(),
         confirmed_facts: z
@@ -373,6 +377,8 @@ function createServer(env: Env): McpServer {
       },
     },
     async ({
+      company_name,
+      public_business_summary,
       subsidy_name,
       source_url,
       confirmed_facts,
@@ -382,6 +388,8 @@ function createServer(env: Env): McpServer {
     }) =>
       jsonToolResult(
         createProfessionalConsultationBrief({
+          companyName: company_name,
+          publicBusinessSummary: public_business_summary,
           subsidyName: subsidy_name,
           sourceUrl: source_url,
           confirmedFacts: confirmed_facts,

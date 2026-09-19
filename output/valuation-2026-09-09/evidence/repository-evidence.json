@@ -1,0 +1,803 @@
+{
+  "repository": "https://github.com/mkisama94/subsidy_ai_plugin",
+  "head": "8d1d45fda938dcdc62132affa2790d96dbcce9aa",
+  "branch": "main",
+  "retrieved": "2026-09-09T22:21:17.034903+09:00",
+  "files": [
+    {
+      "path": ".agents/plugins/marketplace.json",
+      "bytes": 441,
+      "lines": 21,
+      "nonblank_lines": 21,
+      "sha256": "3c98fde19808b840c863658515e6c5e4fd1657ff17e06673437b54bccfb922bc"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 61,
+      "lines": 6,
+      "nonblank_lines": 6,
+      "sha256": "be0a15c20d011ae3515facb8fd10868254c35af472006ac1f06475e2b6965514"
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md",
+      "bytes": 1249,
+      "lines": 21,
+      "nonblank_lines": 15,
+      "sha256": "9f8c6e3236ba4b7304c12b5510db6f42c334596a0a81d7cb31c445a9a5274423"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "bytes": 1904,
+      "lines": 45,
+      "nonblank_lines": 31,
+      "sha256": "bd34f2309ba1aedb3935cd05ec96c8fc65a4d05695284029aefa34f9237326ce"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 34020,
+      "lines": 235,
+      "nonblank_lines": 124,
+      "sha256": "d8a6cc31abc16b6748c7a21f21611f5a1ec33f67d22ca23d7da1c19b95496bee"
+    },
+    {
+      "path": "PRIVACY.md",
+      "bytes": 3585,
+      "lines": 51,
+      "nonblank_lines": 31,
+      "sha256": "d6f2a4191f8c8dc4484eb3fd6806752298c4a1b1026c6c5bcf3fa6ade3aee04b"
+    },
+    {
+      "path": "README.md",
+      "bytes": 27811,
+      "lines": 405,
+      "nonblank_lines": 272,
+      "sha256": "eeaa72743f8f82d4cc4e6124eaf17c5553f1f890cf2a9b85ea955b45eb0c272b"
+    },
+    {
+      "path": "SECURITY.md",
+      "bytes": 1646,
+      "lines": 26,
+      "nonblank_lines": 15,
+      "sha256": "123d1cf5576675d2673f97fa71d1c54f89c2e699b3f1ea84cb97a271b46477e8"
+    },
+    {
+      "path": "TERMS.md",
+      "bytes": 2960,
+      "lines": 42,
+      "nonblank_lines": 25,
+      "sha256": "1c2dd6c99bf6ade2114b96fd4f24ebc7a959d15c41b89b8c41a4c6e8762b3379"
+    },
+    {
+      "path": "chatgpt-app-submission.json",
+      "bytes": 18449,
+      "lines": 236,
+      "nonblank_lines": 236,
+      "sha256": "0759d60932c70bf9630b8b2bd35c483bc045c205a8f60da02869784228a1674a"
+    },
+    {
+      "path": "migrations/0001_initial_schema.sql",
+      "bytes": 5083,
+      "lines": 138,
+      "nonblank_lines": 119,
+      "sha256": "2ee0e49edab9bf9c4bb0d98db91847503ae49e49c4268b5e0b69dc6bcdb4834b"
+    },
+    {
+      "path": "migrations/0002_public_api_cache.sql",
+      "bytes": 475,
+      "lines": 16,
+      "nonblank_lines": 14,
+      "sha256": "909ebb92e4d4cecc913e77a428aad51d49ad7c0d6dbe0528298c0a0926048dbd"
+    },
+    {
+      "path": "migrations/0003_subsidy_research_schema.sql",
+      "bytes": 4478,
+      "lines": 122,
+      "nonblank_lines": 113,
+      "sha256": "eef14df257134a75cd1f86dffc569e7b427da66770f0580de96c07af31e1d302"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 161117,
+      "lines": 4809,
+      "nonblank_lines": 4809,
+      "sha256": "89144a92aed109558c548076fa6830ca6955c894dd62bccb38b17c4d7a0ba200"
+    },
+    {
+      "path": "package.json",
+      "bytes": 597,
+      "lines": 26,
+      "nonblank_lines": 26,
+      "sha256": "2376a80e6dfef74438b5dd4db744f49c3dbf40182484b53731b0d31a482d6066"
+    },
+    {
+      "path": "plugins/subsidy-ai/.app.json",
+      "bytes": 102,
+      "lines": 7,
+      "nonblank_lines": 7,
+      "sha256": "de8d7876082da94c47484007e34806cf684cdfe01ca8dcb17a6ae1dca9a1ef38"
+    },
+    {
+      "path": "plugins/subsidy-ai/.codex-plugin/plugin.json",
+      "bytes": 2089,
+      "lines": 33,
+      "nonblank_lines": 33,
+      "sha256": "7b7688bac3039f9d0bea10146a1cbe164f9c6c1c3345844c6451d270e6b4872c"
+    },
+    {
+      "path": "plugins/subsidy-ai/README.md",
+      "bytes": 7909,
+      "lines": 73,
+      "nonblank_lines": 48,
+      "sha256": "96bc2e7a548ae11255fa4dcf83e5121775425421d94e04f0dfb30e1e59b1702a"
+    },
+    {
+      "path": "plugins/subsidy-ai/assets/subsidy-search-logo.png",
+      "bytes": 1308003,
+      "lines": 0,
+      "nonblank_lines": 0,
+      "sha256": "7622df7b2936a8a0bd057cf98bfddd9d709877ac043a28a3886ef0e5a105cff0"
+    },
+    {
+      "path": "scripts/d1-local-smoke-test.sql",
+      "bytes": 2968,
+      "lines": 126,
+      "nonblank_lines": 118,
+      "sha256": "4391f916c7554e2b66b128ac24ccb4d30360c8c52cd3de343d00d68f6f2f525b"
+    },
+    {
+      "path": "src/cache.ts",
+      "bytes": 5508,
+      "lines": 224,
+      "nonblank_lines": 208,
+      "sha256": "a609cbad07722dcffd5e2082fb7e58e1269d1205780c7e0fae6a9bbe52489d50"
+    },
+    {
+      "path": "src/companyMatching.ts",
+      "bytes": 7422,
+      "lines": 232,
+      "nonblank_lines": 219,
+      "sha256": "05b330fe93e61f2b30da73ea920eb7fd94006c68c242fb0ccc487f2d1ad90702"
+    },
+    {
+      "path": "src/d1Relations.ts",
+      "bytes": 23679,
+      "lines": 697,
+      "nonblank_lines": 657,
+      "sha256": "fe43bb542809235994dd528237bea9d4dc0580baa43bdd0542272dbfe55aa8d8"
+    },
+    {
+      "path": "src/deemedLargeEnterprise.ts",
+      "bytes": 10070,
+      "lines": 273,
+      "nonblank_lines": 254,
+      "sha256": "33c94111f849229d10ebe520410171749963f75c23da84f557cb56dce301073b"
+    },
+    {
+      "path": "src/edinet.ts",
+      "bytes": 21076,
+      "lines": 638,
+      "nonblank_lines": 599,
+      "sha256": "45691d42d2513401c5411f5620eb1d785e089ec58a771f4035708303622cabdb"
+    },
+    {
+      "path": "src/edinetRelationsService.ts",
+      "bytes": 6273,
+      "lines": 206,
+      "nonblank_lines": 192,
+      "sha256": "c46337169545ab9bb9fd021fe5f403b3b0ad09e7b10cc60d98bc912077de112c"
+    },
+    {
+      "path": "src/gbizinfo.ts",
+      "bytes": 15276,
+      "lines": 452,
+      "nonblank_lines": 427,
+      "sha256": "a9f28621a7eb0524f33cc4a3a84026d0dc224bca3bc1ed714b0ce3d0e5f91bca"
+    },
+    {
+      "path": "src/gbizinfoActivities.ts",
+      "bytes": 11883,
+      "lines": 387,
+      "nonblank_lines": 362,
+      "sha256": "0c41b78a9ba110049e7591d4725a6c077af774b780007af4b821bd0b03c2736a"
+    },
+    {
+      "path": "src/index.ts",
+      "bytes": 42841,
+      "lines": 1091,
+      "nonblank_lines": 1064,
+      "sha256": "9da87c8d2ba151f0c37e2c8d91bd9e6898b62fbdc79a1ca36ea0807974b50153"
+    },
+    {
+      "path": "src/jgrants.ts",
+      "bytes": 16299,
+      "lines": 509,
+      "nonblank_lines": 472,
+      "sha256": "3da40a391c17aad09636b1be3bf6cc7248892f880e17cbf67487b7ea781e81d8"
+    },
+    {
+      "path": "src/matching.ts",
+      "bytes": 13434,
+      "lines": 391,
+      "nonblank_lines": 371,
+      "sha256": "7e18f5ff7d845bd9159d526303746f8a43159047d4d9b81a8ad7bef813d5c3a0"
+    },
+    {
+      "path": "src/professionalConsultation.ts",
+      "bytes": 10721,
+      "lines": 184,
+      "nonblank_lines": 179,
+      "sha256": "d4ded365ceda94ab6db336bcdc09a99e760fc1d77c1009ca342d567bb66ac6f8"
+    },
+    {
+      "path": "src/selectionStatistics.ts",
+      "bytes": 30480,
+      "lines": 815,
+      "nonblank_lines": 780,
+      "sha256": "0f0887f190dc41dbefc669e978587f92f69f3b6d7edd3732ec58e1e5960b5359"
+    },
+    {
+      "path": "test/cache.test.ts",
+      "bytes": 2711,
+      "lines": 94,
+      "nonblank_lines": 83,
+      "sha256": "fe3bea8d74eb01f85bf8939ec32bb031da82f6fae5f4f80cd37e7c37d0cdab27"
+    },
+    {
+      "path": "test/companyMatching.test.ts",
+      "bytes": 7506,
+      "lines": 249,
+      "nonblank_lines": 235,
+      "sha256": "2ba163e6605fe2a7c196c36f9b1bea4e7759bd73ad4234abbd16c9ea874b4c91"
+    },
+    {
+      "path": "test/d1Relations.test.ts",
+      "bytes": 10058,
+      "lines": 294,
+      "nonblank_lines": 270,
+      "sha256": "f3c6687b8f85c5d12ac8b13779f98482510c7fb291691d8420de05a21b8aad6e"
+    },
+    {
+      "path": "test/deemedLargeEnterprise.test.ts",
+      "bytes": 4142,
+      "lines": 125,
+      "nonblank_lines": 112,
+      "sha256": "d34be24efdcf763a805565dd2000b6d3bff06a1aed1a6bde0b94f555f3a00585"
+    },
+    {
+      "path": "test/domainVerification.test.ts",
+      "bytes": 883,
+      "lines": 21,
+      "nonblank_lines": 17,
+      "sha256": "87fbd59f3b4b9fdb76d34e56b7a165ef6a820bc38ab110f043dbe4e3b9643ef9"
+    },
+    {
+      "path": "test/edinet.test.ts",
+      "bytes": 6330,
+      "lines": 199,
+      "nonblank_lines": 182,
+      "sha256": "4ec508078c51b91d4819eb138f4fe9c4b2e539970838ac3f3f37b3d1a12d7172"
+    },
+    {
+      "path": "test/edinetDocumentValidation.test.ts",
+      "bytes": 1879,
+      "lines": 63,
+      "nonblank_lines": 57,
+      "sha256": "e64c6fb1fc30c7e7625e0c744831751edd1305ccf122625bcb6c094679b1c465"
+    },
+    {
+      "path": "test/edinetEvidence.test.ts",
+      "bytes": 3764,
+      "lines": 105,
+      "nonblank_lines": 98,
+      "sha256": "7a508110b33bf8ac9cbb3acefa1b668a8b942d3c803785cc549723d021cceef7"
+    },
+    {
+      "path": "test/edinetFilingDates.test.ts",
+      "bytes": 705,
+      "lines": 24,
+      "nonblank_lines": 20,
+      "sha256": "ffae4c51c2e4f157f0aa01f9e08ed7c47215480c518393dd49feb175c0d19311"
+    },
+    {
+      "path": "test/edinetRelationsService.test.ts",
+      "bytes": 6326,
+      "lines": 199,
+      "nonblank_lines": 182,
+      "sha256": "5e8c05f13152e5d0e67585c88ea4c88ba5aa38f5a020670ec7ee81c01bb404b2"
+    },
+    {
+      "path": "test/gbizinfo.test.ts",
+      "bytes": 8013,
+      "lines": 247,
+      "nonblank_lines": 222,
+      "sha256": "f852b95876824f6cc2923fc64b771207ce5bcb8ca4772c2f8cb5a4a1058474ff"
+    },
+    {
+      "path": "test/gbizinfoActivities.test.ts",
+      "bytes": 8000,
+      "lines": 271,
+      "nonblank_lines": 255,
+      "sha256": "43bbb86116948f913e3ca5ad62cc511f6a1c392704979fb4f448e53d2ed70b58"
+    },
+    {
+      "path": "test/jgrants.test.ts",
+      "bytes": 6624,
+      "lines": 204,
+      "nonblank_lines": 181,
+      "sha256": "94dc231aa59850869fb2dfb12564b7dc30d14c67fbf7b80d2454850420a7ebdb"
+    },
+    {
+      "path": "test/matching.test.ts",
+      "bytes": 5023,
+      "lines": 161,
+      "nonblank_lines": 150,
+      "sha256": "7102ba7d6e2c005f779ab2574ac6d3401d96ddac7f0c3b1a23f2d4218e6ca0c6"
+    },
+    {
+      "path": "test/migrations.test.ts",
+      "bytes": 4477,
+      "lines": 152,
+      "nonblank_lines": 144,
+      "sha256": "086e88e3b1a1c343d3f5e21fbd1343f6d103847ef8ebaf1c5ee677ecc01c6c86"
+    },
+    {
+      "path": "test/professionalConsultation.test.ts",
+      "bytes": 4227,
+      "lines": 98,
+      "nonblank_lines": 91,
+      "sha256": "083f5f46c0dd8203dd4b421dd3ac64452fcb197b28586591023a1cc0df8d1c7e"
+    },
+    {
+      "path": "test/selectionStatistics.test.ts",
+      "bytes": 10687,
+      "lines": 347,
+      "nonblank_lines": 310,
+      "sha256": "701efced1765af1434e5f29c8a7851040c92a4562655788f4e99977df15526ac"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 289,
+      "lines": 13,
+      "nonblank_lines": 13,
+      "sha256": "ed3906b28130d28b4709a5e0659db558b43f7041355918c9ced333eeaabe5988"
+    },
+    {
+      "path": "wrangler.jsonc",
+      "bytes": 432,
+      "lines": 17,
+      "nonblank_lines": 17,
+      "sha256": "4816b2fb89bcffafe5b26944acad28374b55b166df169f8269ef80bcff1076a1"
+    }
+  ],
+  "commits": [
+    {
+      "sha": "145b9f1bfdbf66ebc0fc45c19f47408149fc0182",
+      "authored": "2026-08-31T16:43:06+09:00",
+      "committed": "2026-08-31T16:43:06+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [],
+      "subject": "初期コミット"
+    },
+    {
+      "sha": "61be063db12501d38e99c57c08a645bf0169a741",
+      "authored": "2026-08-31T17:41:26+09:00",
+      "committed": "2026-08-31T17:41:26+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "145b9f1bfdbf66ebc0fc45c19f47408149fc0182"
+      ],
+      "subject": "JグランツAPIに対応"
+    },
+    {
+      "sha": "08f77a24bee71bf9c80a99b5a05448fe2feac254",
+      "authored": "2026-08-31T17:48:07+09:00",
+      "committed": "2026-08-31T17:48:07+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "61be063db12501d38e99c57c08a645bf0169a741"
+      ],
+      "subject": "プラグイン配布に対応"
+    },
+    {
+      "sha": "47b9a8033d3ea45590cf833b149266282752c8af",
+      "authored": "2026-09-02T19:40:23+09:00",
+      "committed": "2026-09-02T19:40:23+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "08f77a24bee71bf9c80a99b5a05448fe2feac254"
+      ],
+      "subject": "企業プロフィールとの照合"
+    },
+    {
+      "sha": "c789f176f55459f39f74d8b2abbb1f6b41d79cfd",
+      "authored": "2026-09-02T20:12:46+09:00",
+      "committed": "2026-09-02T20:12:46+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "47b9a8033d3ea45590cf833b149266282752c8af"
+      ],
+      "subject": "Add clear subsidy search plugin icon"
+    },
+    {
+      "sha": "81b4199646f7dc4d2614318a9df014267f1a0403",
+      "authored": "2026-09-02T20:16:27+09:00",
+      "committed": "2026-09-02T20:16:27+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "c789f176f55459f39f74d8b2abbb1f6b41d79cfd"
+      ],
+      "subject": "Remove hello action and release 0.3.0"
+    },
+    {
+      "sha": "7a6e72ff1324b00f4d09b178b8527c5c53375b1a",
+      "authored": "2026-09-02T20:34:32+09:00",
+      "committed": "2026-09-02T20:34:32+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "81b4199646f7dc4d2614318a9df014267f1a0403"
+      ],
+      "subject": "Link workspace plugin to existing ChatGPT app"
+    },
+    {
+      "sha": "be94bef74bf31815637e7019f27ad22d22938e4b",
+      "authored": "2026-09-02T20:50:49+09:00",
+      "committed": "2026-09-02T20:50:49+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "7a6e72ff1324b00f4d09b178b8527c5c53375b1a"
+      ],
+      "subject": "Add gBizINFO company profile integration"
+    },
+    {
+      "sha": "7506b0881315fd6ae603f0b8767c16b9c0fec9aa",
+      "authored": "2026-09-02T21:43:33+09:00",
+      "committed": "2026-09-02T21:43:33+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "be94bef74bf31815637e7019f27ad22d22938e4b"
+      ],
+      "subject": "docs: OSS公開方針とAGPL-3.0ライセンスを追加"
+    },
+    {
+      "sha": "aaad16dbfbef1dc828670e5922b756dceb7fa983",
+      "authored": "2026-09-03T10:27:45+09:00",
+      "committed": "2026-09-03T10:27:45+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "7506b0881315fd6ae603f0b8767c16b9c0fec9aa"
+      ],
+      "subject": "gbiz APIキーを参照する対応"
+    },
+    {
+      "sha": "9f9d52335262b0cd0861a782b7889d79ad909850",
+      "authored": "2026-09-03T10:29:26+09:00",
+      "committed": "2026-09-03T10:29:26+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "7a6e72ff1324b00f4d09b178b8527c5c53375b1a",
+        "aaad16dbfbef1dc828670e5922b756dceb7fa983"
+      ],
+      "subject": "Merge pull request #1 from mkisama94/codex/gbizinfo-integration"
+    },
+    {
+      "sha": "9b85632ddca2a73deab8cca43f1aa95ca943a15f",
+      "authored": "2026-09-03T11:08:32+09:00",
+      "committed": "2026-09-03T11:08:32+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "9f9d52335262b0cd0861a782b7889d79ad909850"
+      ],
+      "subject": "gbizで法人番号を検索できるように改善"
+    },
+    {
+      "sha": "43278a6f18d8984961307561a4877370887da8e6",
+      "authored": "2026-09-03T11:14:28+09:00",
+      "committed": "2026-09-03T11:14:28+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "9f9d52335262b0cd0861a782b7889d79ad909850",
+        "9b85632ddca2a73deab8cca43f1aa95ca943a15f"
+      ],
+      "subject": "Merge pull request #2 from mkisama94/codex/gbizinfo-sme-improvements"
+    },
+    {
+      "sha": "8801641e46c85033a8eee7f104ba2f4bb319db91",
+      "authored": "2026-09-03T12:27:04+09:00",
+      "committed": "2026-09-03T12:27:04+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "43278a6f18d8984961307561a4877370887da8e6"
+      ],
+      "subject": "前回のテストで見つかった3点を修正しています。 - 所在地の階層比較   - 東京都千代田区 と 東京都千代田区神田鍛冶町… は compatible   - 異なる都道府県・市区町村は conflict   - 番地以降の曖昧な部分一致は、安全側に倒して unknown - 法人状態の断定防止   - statusAvailability: provided | not_provided を追加   - not_provided の場合は「登記中」「存続中」と断定しない方針をレスポンスとアクション説明に明記 - 法人検索のページング   - 返却件数が上限に達した場合は mayHaveMore: true   - 「先頭ページ」であり、検索結果が網羅的でない可能性を表示   - limit: 1 で1件だけ返った場合も「唯一の候補」と誤判定しない"
+    },
+    {
+      "sha": "e58f5752b44481ad21ed2d83c046d083f01a9be7",
+      "authored": "2026-09-03T14:09:02+09:00",
+      "committed": "2026-09-03T14:09:02+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "8801641e46c85033a8eee7f104ba2f4bb319db91"
+      ],
+      "subject": "活動情報を正しく取得出来るように修正"
+    },
+    {
+      "sha": "76e1389fea95976a7280a07a79a90364a3234288",
+      "authored": "2026-09-03T15:05:26+09:00",
+      "committed": "2026-09-03T15:05:26+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "e58f5752b44481ad21ed2d83c046d083f01a9be7"
+      ],
+      "subject": "金融庁EDINETのAPIに対応"
+    },
+    {
+      "sha": "eaa8a80d4dfe05651ac2862d382c7a32fa8f92dd",
+      "authored": "2026-09-03T15:07:56+09:00",
+      "committed": "2026-09-03T15:07:56+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "8801641e46c85033a8eee7f104ba2f4bb319db91",
+        "76e1389fea95976a7280a07a79a90364a3234288"
+      ],
+      "subject": "Merge pull request #4 from mkisama94/codex/edinet-verification-0.7.0"
+    },
+    {
+      "sha": "3d778c959c775ed2ea84dc5f36d2c4462b8c3d48",
+      "authored": "2026-09-03T15:38:50+09:00",
+      "committed": "2026-09-03T15:38:50+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "76e1389fea95976a7280a07a79a90364a3234288"
+      ],
+      "subject": "EDINETを「高信頼だが扱いにくい証拠確認装置」として限定利用する修正"
+    },
+    {
+      "sha": "aa1933befd2759b0b7dbacff5db59beb27e00f54",
+      "authored": "2026-09-03T15:39:39+09:00",
+      "committed": "2026-09-03T15:39:39+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "eaa8a80d4dfe05651ac2862d382c7a32fa8f92dd",
+        "3d778c959c775ed2ea84dc5f36d2c4462b8c3d48"
+      ],
+      "subject": "Merge pull request #5 from mkisama94/codex/edinet-evidence-0.7.1"
+    },
+    {
+      "sha": "d577f4e67cd39f84b2f07c891a06699983bc9f03",
+      "authored": "2026-09-03T19:22:47+09:00",
+      "committed": "2026-09-03T19:22:47+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "3d778c959c775ed2ea84dc5f36d2c4462b8c3d48"
+      ],
+      "subject": "D1データアクセス層の実装"
+    },
+    {
+      "sha": "14398b793b9197730e25f2926e148465423b6ffc",
+      "authored": "2026-09-03T20:31:47+09:00",
+      "committed": "2026-09-03T20:31:47+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "aa1933befd2759b0b7dbacff5db59beb27e00f54",
+        "d577f4e67cd39f84b2f07c891a06699983bc9f03"
+      ],
+      "subject": "Merge pull request #6 from mkisama94/codex/edinet-evidence-0.7.1"
+    },
+    {
+      "sha": "d09351394fb974eb073ae694ea9fc789a9661afd",
+      "authored": "2026-09-03T20:43:22+09:00",
+      "committed": "2026-09-03T20:43:22+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "d577f4e67cd39f84b2f07c891a06699983bc9f03"
+      ],
+      "subject": "公式EDINETの検証結果をD1へ保存する連携処理を実装"
+    },
+    {
+      "sha": "116192d4139c4b14ae1c6a8a97fcf8394e127c9c",
+      "authored": "2026-09-03T20:45:51+09:00",
+      "committed": "2026-09-03T20:45:51+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "14398b793b9197730e25f2926e148465423b6ffc",
+        "d09351394fb974eb073ae694ea9fc789a9661afd"
+      ],
+      "subject": "Merge pull request #7 from mkisama94/codex/edinet-evidence-0.7.1"
+    },
+    {
+      "sha": "e9c588324a63b604f366888e8b7f8d7b51b5d98d",
+      "authored": "2026-09-03T22:08:58+09:00",
+      "committed": "2026-09-03T22:08:58+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "9f9d52335262b0cd0861a782b7889d79ad909850"
+      ],
+      "subject": "より包括的なキャッシュ機能の実装"
+    },
+    {
+      "sha": "d94867a635b810aabb80856987dfb0fc7133d12d",
+      "authored": "2026-09-03T22:14:16+09:00",
+      "committed": "2026-09-03T22:14:16+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "e9c588324a63b604f366888e8b7f8d7b51b5d98d",
+        "116192d4139c4b14ae1c6a8a97fcf8394e127c9c"
+      ],
+      "subject": "Merge branch 'main' of https://github.com/mkisama94/subsidy_ai_plugin"
+    },
+    {
+      "sha": "3e8e5c6c2370e45e0477e051766a715f164d18cd",
+      "authored": "2026-09-03T22:59:36+09:00",
+      "committed": "2026-09-03T22:59:36+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "d94867a635b810aabb80856987dfb0fc7133d12d"
+      ],
+      "subject": "みなし大企業判定の改善"
+    },
+    {
+      "sha": "0be5d0d5dc1f5d6a9f6951685dc32f75ce52fc77",
+      "authored": "2026-09-03T23:14:04+09:00",
+      "committed": "2026-09-03T23:14:04+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "3e8e5c6c2370e45e0477e051766a715f164d18cd"
+      ],
+      "subject": "採択率推定の実装"
+    },
+    {
+      "sha": "8a0dfe79545d1cad57506b2c30125980f52520e0",
+      "authored": "2026-09-03T23:52:52+09:00",
+      "committed": "2026-09-03T23:52:52+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "0be5d0d5dc1f5d6a9f6951685dc32f75ce52fc77"
+      ],
+      "subject": "軽微な機能改善と、公式申請版化"
+    },
+    {
+      "sha": "399e62786642bbe760d99dc65f555b8e60e3161c",
+      "authored": "2026-09-04T08:55:37+09:00",
+      "committed": "2026-09-04T08:55:37+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "8a0dfe79545d1cad57506b2c30125980f52520e0"
+      ],
+      "subject": "世間様にソースをお見せして恥ずかしくないように、ソースコード以外のドキュメントを整理整頓"
+    },
+    {
+      "sha": "6c9599bc294cd9009c315c711dce274292592abd",
+      "authored": "2026-09-04T09:02:49+09:00",
+      "committed": "2026-09-04T09:02:49+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "399e62786642bbe760d99dc65f555b8e60e3161c"
+      ],
+      "subject": "公開情報の整理整頓"
+    },
+    {
+      "sha": "7ae5931b0bbfb589eb9aa367be6375c760f75bb4",
+      "authored": "2026-09-04T09:17:54+09:00",
+      "committed": "2026-09-04T09:17:54+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "6c9599bc294cd9009c315c711dce274292592abd"
+      ],
+      "subject": "プロジェクト名称を変更 「日本の補助金検索」"
+    },
+    {
+      "sha": "46c7c25bd55abdc97c99c508b24e7fe6af25cdb9",
+      "authored": "2026-09-04T09:32:49+09:00",
+      "committed": "2026-09-04T09:32:49+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "7ae5931b0bbfb589eb9aa367be6375c760f75bb4"
+      ],
+      "subject": "キャッシュの技術的保存ポリシー表記の誤りを修正"
+    },
+    {
+      "sha": "168d985be01059c6448e15355e7ed92f4b1b64d0",
+      "authored": "2026-09-05T09:13:56+09:00",
+      "committed": "2026-09-05T09:13:56+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "46c7c25bd55abdc97c99c508b24e7fe6af25cdb9"
+      ],
+      "subject": "OpenAI platformへの対応"
+    },
+    {
+      "sha": "e0768e0651a798cd810b9f3fde8231cd4f8a261f",
+      "authored": "2026-09-05T10:06:23+09:00",
+      "committed": "2026-09-05T10:06:23+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "168d985be01059c6448e15355e7ed92f4b1b64d0"
+      ],
+      "subject": "社労士、行政書士に相談しやすいように改善"
+    },
+    {
+      "sha": "da0c03e8b1142e5d0a4d5d632c8e63fb44d9a4df",
+      "authored": "2026-09-05T12:44:49+09:00",
+      "committed": "2026-09-05T12:44:49+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "e0768e0651a798cd810b9f3fde8231cd4f8a261f"
+      ],
+      "subject": "曖昧さの残っていたテストケースを改善"
+    },
+    {
+      "sha": "f8a5d5a702c3dc420bef64709d8387f9aee8564e",
+      "authored": "2026-09-05T13:11:50+09:00",
+      "committed": "2026-09-05T13:11:50+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "da0c03e8b1142e5d0a4d5d632c8e63fb44d9a4df"
+      ],
+      "subject": "テストケース実行時に他のプラグインが読み込まれないように改善"
+    },
+    {
+      "sha": "8d1d45fda938dcdc62132affa2790d96dbcce9aa",
+      "authored": "2026-09-05T20:35:56+09:00",
+      "committed": "2026-09-05T20:35:56+09:00",
+      "author": "Masaki Yamamoto",
+      "parents": [
+        "f8a5d5a702c3dc420bef64709d8387f9aee8564e"
+      ],
+      "subject": "OpenAI 初回申請版"
+    }
+  ],
+  "tools": [
+    {
+      "name": "search_companies",
+      "line": 142
+    },
+    {
+      "name": "get_company_profile",
+      "line": 187
+    },
+    {
+      "name": "get_company_activities",
+      "line": 226
+    },
+    {
+      "name": "verify_corporate_relationship",
+      "line": 273
+    },
+    {
+      "name": "prepare_professional_consultation",
+      "line": 351
+    },
+    {
+      "name": "assess_deemed_large_enterprise_eligibility",
+      "line": 425
+    },
+    {
+      "name": "record_official_selection_statistics",
+      "line": 558
+    },
+    {
+      "name": "get_official_selection_statistics",
+      "line": 690
+    },
+    {
+      "name": "estimate_program_selection_outlook",
+      "line": 724
+    },
+    {
+      "name": "evaluate_subsidy_fit_for_company",
+      "line": 803
+    },
+    {
+      "name": "search_subsidies",
+      "line": 887
+    },
+    {
+      "name": "get_subsidy_detail",
+      "line": 979
+    },
+    {
+      "name": "evaluate_subsidy_fit",
+      "line": 1006
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+﻿work_item,low_person_days,standard_person_days,high_person_days,scope
+要件整理と公的仕様の調査,6,10,14,業務フロー・例外条件・対象APIを定義
+MCP基盤とツール定義,5,8,12,13ツールのスキーマ・応答・設定
+Jグランツの検索と詳細,5,8,11,検索統合・期間判定・詳細の正規化
+gBizINFOと法人照合,10,15,20,基本情報・名称・住所・8種活動API
+EDINETの根拠抽出,10,16,24,コード一覧・書類探索・CSV・根拠
+制度適合と相談支援,7,11,16,条件照合・不足・専門家向け整理
+採択実績と参考見通し,7,11,16,出典照合・件数計算・ルール算定
+D1と公開情報キャッシュ,6,9,13,3変更定義・保存層・障害時動作
+結合検証と引き渡し,10,16,22,横断シナリオ・修正・資料・説明
+TOTAL_DAYS,66,104,148,
+DAILY_RATE_JPY,50000,55000,65000,Includes overhead and profit
+CONTINGENCY_RATE,0.1,0.1,0.1,Assumed fixed-price allowance
+TOTAL_JPY,3630000,6292000,10582000,Tax excluded

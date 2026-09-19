@@ -1,0 +1,21 @@
+{
+  "scope": "Local mocked functions only; no live service or D1 writes",
+  "documentCounts": {
+    "applications": 100,
+    "selected": 40
+  },
+  "submittedCounts": {
+    "applications": 100,
+    "selected": 90
+  },
+  "sourceCheckPassed": true,
+  "calculation": {
+    "status": "official_rate_available",
+    "statusLabel": "過去の公式採択率を確認できました",
+    "officialRate": 0.9,
+    "officialRatePercent": 90,
+    "applicationsCount": 100,
+    "selectedCount": 90,
+    "explanation": "申請件数100件に対し、採択件数90件として計算しました。"
+  }
+}

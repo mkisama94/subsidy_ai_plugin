@@ -1,0 +1,673 @@
+{
+  "sections": [
+    {
+      "width": 612.0,
+      "height": 792.0,
+      "left": 72.0,
+      "right": 72.0,
+      "top": 72.0,
+      "bottom": 72.0
+    }
+  ],
+  "paragraphs": [
+    {
+      "text": "",
+      "style": "Title"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "Title"
+    },
+    {
+      "text": "Investment Committee Memo",
+      "style": "Title"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "[Company / Asset / Transaction]  ·  [Investment / Transaction Type]",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "1.   Executive Summary, Recommendation, and Decision Requested",
+      "style": "Heading 1"
+    },
+    {
+      "text": "Recommendation:  [Approve / decline / defer the specific decision requested now. Summarize the principal underwriting rationale and any conditions.]",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "Capital definitions:  Current Commitment is capital approved, committed, or funded before this decision. Amount Requested Now is the incremental authorization sought at this meeting. Future capital is conditional and is not authorized by this decision. Total Potential Exposure includes all components unless explicitly stated otherwise.",
+      "style": "normal"
+    },
+    {
+      "text": "Decision and exposure",
+      "style": "Heading 2"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "Underwriting at a glance",
+      "style": "Heading 2"
+    },
+    {
+      "text": "Why invest?  [State the core opportunity and why it is attractive now.]",
+      "style": "normal"
+    },
+    {
+      "text": "What supports the case?  [Identify the strongest evidence supporting the thesis.]",
+      "style": "normal"
+    },
+    {
+      "text": "What could break it?  [Identify the failure mode with the greatest effect on value or returns.]",
+      "style": "normal"
+    },
+    {
+      "text": "Do terms and returns compensate for risk?  [State the conclusion and supporting evidence.]",
+      "style": "normal"
+    },
+    {
+      "text": "Key highlights:  [Highlight 1] · [Highlight 2] · [Highlight 3]",
+      "style": "normal"
+    },
+    {
+      "text": "Top risks:  [Risk 1 and impact] · [Risk 2 and impact] · [Risk 3 and impact]",
+      "style": "normal"
+    },
+    {
+      "text": "2.   Investment Thesis",
+      "style": "Heading 1"
+    },
+    {
+      "text": "[Thesis 1: short title]",
+      "style": "Heading 2"
+    },
+    {
+      "text": "We believe [state the thesis in one sentence]. This view is supported by [specific evidence], based on [source and as-of date]. The thesis requires [testable condition]; if that condition fails, [underwriting impact]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "[Thesis 2: short title]",
+      "style": "Heading 2"
+    },
+    {
+      "text": "We believe [state the thesis in one sentence]. This view is supported by [specific evidence], based on [source and as-of date]. The thesis requires [testable condition]; if that condition fails, [underwriting impact]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "[Thesis 3: short title]",
+      "style": "Heading 2"
+    },
+    {
+      "text": "We believe [state the thesis in one sentence]. This view is supported by [specific evidence], based on [source and as-of date]. The thesis requires [testable condition]; if that condition fails, [underwriting impact]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "3.   Company and Product",
+      "style": "Heading 1"
+    },
+    {
+      "text": "Business overview",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe what the company or asset does, how it creates value, its current stage, and the parts of the business most relevant to the investment case.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Product and customer value",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe the product or service, the problem it solves, the primary user and buyer, and the measurable reason customers choose it.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Customer and use case",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Explain the priority customer segments, purchase process, use cases, and any material concentration or adoption constraints.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Differentiation and defensibility",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Explain why the offering is meaningfully different, how durable that advantage is, and what could erode it.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Operating model",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe how the company delivers and supports the offering, the resources required to scale it, and any material operational dependencies.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Sources:  [List supporting sources and as-of dates.]",
+      "style": "normal"
+    },
+    {
+      "text": "4.   TAM and Market Opportunity",
+      "style": "Heading 1"
+    },
+    {
+      "text": "Market definition and size",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Define the market precisely, including customer, product boundary, geography, and period. State the estimated TAM, method, source, and as-of date.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "Figure 1. Illustrative market-sizing structure. Placeholder values only; replace with sourced data, methodology, geography, period, and as-of date.",
+      "style": "normal"
+    },
+    {
+      "text": "Reachable market",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Explain how SAM and near-term obtainable market are derived from TAM, which segments can realistically be served, and the timing of capture.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Growth and demand drivers",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe expected growth, structural and cyclical demand drivers, adoption constraints, and which evidence is independent versus management-provided.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Underwriting implication",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Explain how market size and growth translate into the operating assumptions in the investment case, and identify the market assumption to which returns are most sensitive.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "5.   Capitalization, Market Cap, and Ownership",
+      "style": "Heading 1"
+    },
+    {
+      "text": "Applicability:  Complete where relevant. If not applicable, state why.",
+      "style": "normal"
+    },
+    {
+      "text": "Current capitalization",
+      "style": "Heading 2"
+    },
+    {
+      "text": "As of [date], the current capital structure consists of [material equity classes, debt, options, warrants, or other claims]. On a [basic / fully diluted] basis, this implies [equity value / market capitalization], [enterprise value], and [net debt or cash], based on [source and method]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Pro forma capitalization",
+      "style": "Heading 2"
+    },
+    {
+      "text": "After the proposed transaction, the capital structure would change by [new securities, dilution, debt, or other effects]. Pro forma [equity value / enterprise value / share count] would be [value], and the principal change in economic or control rights would be [change]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "Figure 2. Illustrative current and pro forma ownership mix. Placeholder values only; replace with the verified cap table and as-of date.",
+      "style": "normal"
+    },
+    {
+      "text": "Ownership and governance",
+      "style": "Heading 2"
+    },
+    {
+      "text": "Current ownership is concentrated among [holders or classes]. Following the transaction, [investor / sponsor / management / other holders] would own [interest or range], with [board, voting, consent, or control implications]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Underwriting implication",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Explain whether dilution, leverage, ownership concentration, or governance alignment strengthens or weakens the investment case.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "6.   Competitive Landscape and Public or Transaction Comps",
+      "style": "Heading 1"
+    },
+    {
+      "text": "Competitive landscape",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe the relevant competitive set, basis of competition, and where the company is advantaged or disadvantaged. Identify the competitor or substitute most capable of impairing the thesis.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "Figure 3. Illustrative competitive positioning. Placeholder locations only; replace with consistently defined operating or valuation benchmarks and cite sources.",
+      "style": "normal"
+    },
+    {
+      "text": "Public and transaction comparables",
+      "style": "Heading 2"
+    },
+    {
+      "text": "The most relevant public or transaction comparables are [names or categories] because [basis of relevance]. They indicate [operating or valuation benchmark], based on [source and date], with limitations from [scale, growth, margin, geography, model, timing, or market conditions]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Underwriting takeaway",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Explain what the competitive and comparable evidence supports, what it does not support, and how it affects entry price, operating assumptions, or expected return.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "7.   Team",
+      "style": "Heading 1"
+    },
+    {
+      "text": "Leadership and execution fit",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe the leaders most important to the case, the experience that makes them suited to the plan, and the evidence that they can execute at the required scale.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Ownership, incentives, and governance",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Explain management ownership, incentive alignment, board structure, decision rights, and governance features that materially affect execution or investor protection.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Capability gaps and key-person risk",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Identify missing capabilities, planned hires, succession concerns, or individuals on whom the case depends disproportionately. State the timing and consequence of closing or failing to close each gap.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Underwriting conclusion",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[State whether the team is a source of advantage, an acceptable execution risk, or a condition to investment, and explain why.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "8.   Traction and Key Operating Metrics",
+      "style": "Heading 1"
+    },
+    {
+      "text": "Operating trajectory",
+      "style": "Heading 2"
+    },
+    {
+      "text": "From [starting period] through [current period], [primary KPI] changed from [value] to [value], driven by [principal factors]. Over the same period, [secondary measure] changed from [value] to [value]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "Figure 4. Illustrative operating trajectory. Placeholder indices only; replace with sourced KPI history, definitions, actual-versus-forecast boundary, and as-of date.",
+      "style": "normal"
+    },
+    {
+      "text": "Quality of traction",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Explain whether growth is broad-based, repeatable, and economically attractive. Address cohorts, retention, customer concentration, seasonality, and contracted versus recognized activity.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Benchmarks and targets",
+      "style": "Heading 2"
+    },
+    {
+      "text": "Current performance is [above / in line with / below] [target or benchmark] on [metric], based on [source and date]. Reaching the underwriting case requires [future metric and timing]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Underwriting implication and limitations",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Explain what the operating evidence proves, what remains uncertain, and which KPI should trigger a reassessment of the investment case.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "9.   Business Model and Unit Economics",
+      "style": "Heading 1"
+    },
+    {
+      "text": "Revenue model and pricing",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Explain who pays, what they pay for, how pricing is set, when revenue is recognized, and what changes revenue per customer, transaction, or unit.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Unit economics",
+      "style": "Heading 2"
+    },
+    {
+      "text": "At the current scale, [relevant unit] generates [revenue or gross value] and [gross or contribution profit], with [acquisition cost], [customer or unit value], and [payback period]. State definitions, source, cohort or period, and as-of date. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Retention and durability",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Explain retention, repeat use, utilization, renewal, churn, or another durability measure and how it affects lifetime economics.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Scaling and mature-state assumptions",
+      "style": "Heading 2"
+    },
+    {
+      "text": "The case assumes [pricing, margin, acquisition efficiency, retention, utilization, or capacity] reaches [target or range] by [period]. The principal constraint is [constraint], supported by [evidence and source]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "10.   Historical Financials and Outlook",
+      "style": "Heading 1"
+    },
+    {
+      "text": "Summary only:  Keep detailed calculations in the linked external model. Label actual periods 'A' and forecast periods 'E'.",
+      "style": "normal"
+    },
+    {
+      "text": "Historical performance",
+      "style": "Heading 2"
+    },
+    {
+      "text": "From [first actual period] through [current actual period], revenue changed from [value] to [value], driven by [factors]. Over the same period, [margin] changed from [value] to [value], while [profitability or cash measure] changed from [value] to [value]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "Figure 5. Illustrative historical and forecast outlook. Placeholder indices only; replace with linked-model outputs, currency and scale, version, owner, and as-of date.",
+      "style": "normal"
+    },
+    {
+      "text": "Forecast and key drivers",
+      "style": "Heading 2"
+    },
+    {
+      "text": "From [first forecast period] through [last forecast period], the model assumes revenue reaches [value] and [profitability or cash measure] reaches [value]. The forecast is driven by [volume, pricing, retention, margin, hiring, capacity, or other drivers]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Liquidity and capital needs",
+      "style": "Heading 2"
+    },
+    {
+      "text": "As of [date], the company has [cash / liquidity] and [debt or obligations]. Under the [selected] case, the business reaches [cash-flow milestone or next funding need] in [period], including [current commitment, amount requested now, and conditional future capital treatment]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Model tie-out",
+      "style": "Heading 2"
+    },
+    {
+      "text": "Detailed calculations remain in [linked external model], owned by [owner], version [version], as of [date], in [currency and scale]. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "11.   Valuation and Return Scenarios",
+      "style": "Heading 1"
+    },
+    {
+      "text": "Decision role:  Valuation is supporting evidence for the decision, not the organizing thesis. Use this section to test whether the underwriting case and proposed terms produce acceptable risk-adjusted returns. Keep detailed calculations in the linked external model.",
+      "style": "normal"
+    },
+    {
+      "text": "Model reference and return definition",
+      "style": "Heading 2"
+    },
+    {
+      "text": "The analysis is based on [linked model], owned by [owner], version [version], as of [date], in [currency and scale]. Returns are presented on a [gross / net], [levered / unlevered], [pre-tax / post-tax] basis over [hold period or timing convention].",
+      "style": "normal"
+    },
+    {
+      "text": "Key valuation and return assumptions",
+      "style": "Heading 2"
+    },
+    {
+      "text": "The analysis assumes an entry price or valuation of [value], operating performance of [summary], an exit or terminal assumption of [value], and [dilution, follow-on funding, debt, cash, or other assumptions]. Cite sources and identify the input to which returns are most sensitive.",
+      "style": "normal"
+    },
+    {
+      "text": "Downside case",
+      "style": "Heading 2"
+    },
+    {
+      "text": "The downside case assumes [operating and valuation conditions]. It includes [current commitment], [amount requested now], and [state whether conditional future capital is included; if included, give amount and timing]. Total capital included is [value]. Resulting [proceeds], [MOIC], and [IRR] are [values]; the principal failure driver is [driver].",
+      "style": "normal"
+    },
+    {
+      "text": "Base case",
+      "style": "Heading 2"
+    },
+    {
+      "text": "The base case assumes [operating and valuation conditions]. It includes [current commitment], [amount requested now], and [state whether conditional future capital is included; if included, give amount and timing]. Total capital included is [value]. Resulting [proceeds], [MOIC], and [IRR] are [values]; the principal outcome driver is [driver].",
+      "style": "normal"
+    },
+    {
+      "text": "Upside case",
+      "style": "Heading 2"
+    },
+    {
+      "text": "The upside case assumes [operating and valuation conditions]. It includes [current commitment], [amount requested now], and [state whether conditional future capital is included; if included, give amount and timing]. Total capital included is [value]. Resulting [proceeds], [MOIC], and [IRR] are [values]; the principal outcome driver is [driver].",
+      "style": "normal"
+    },
+    {
+      "text": "Required reconciliation:  Reconcile the capital included in each scenario to Current Commitment, Amount Requested Now, Conditional Future Capital, and Total Potential Exposure. Explain any excluded capital rather than leaving it implicit.",
+      "style": "normal"
+    },
+    {
+      "text": "3 x 3 sensitivity",
+      "style": "Heading 2"
+    },
+    {
+      "text": "Return metric:  [MOIC / IRR / other]   Row variable: [Operating assumption]   Column variable: [Exit / terminal assumption]",
+      "style": "normal"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "[State the decision-relevant conclusion from the sensitivity range.]",
+      "style": "normal"
+    },
+    {
+      "text": "12.   Deal Terms",
+      "style": "Heading 1"
+    },
+    {
+      "text": "Transaction structure and economics",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe the security or transaction structure, amount requested now, entry price or valuation, ownership or dilution, economic priority, liquidation terms, and use of proceeds.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Governance and investor protections",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe board representation, voting or consent rights, information rights, protective provisions, transfer restrictions, and other terms material to control or downside protection.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Closing conditions and key dates",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe the conditions required before signing, closing, or funding; the responsible party for each material condition; and expected timing.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Term assessment",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Compare the proposed terms with relevant alternatives or benchmarks and explain whether the package adequately compensates for underwriting risk.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Staged capital",
+      "style": "Heading 2"
+    },
+    {
+      "text": "",
+      "style": "normal"
+    },
+    {
+      "text": "13.   Key Risks, Diligence Items, and What Needs to Be True",
+      "style": "Heading 1"
+    },
+    {
+      "text": "[Risk 1: short title]",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe the risk or condition, evidence and source, magnitude and timing of effect, and what must be true for the case to remain intact. State remaining diligence or mitigation, owner, status, due date, and whether the item is a blocker, approval condition, or monitoring item.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "[Risk 2: short title]",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe the risk or condition, evidence and source, magnitude and timing of effect, and what must be true for the case to remain intact. State remaining diligence or mitigation, owner, status, due date, and whether the item is a blocker, approval condition, or monitoring item.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "[Risk 3: short title]",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[Describe the risk or condition, evidence and source, magnitude and timing of effect, and what must be true for the case to remain intact. State remaining diligence or mitigation, owner, status, due date, and whether the item is a blocker, approval condition, or monitoring item.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    },
+    {
+      "text": "Decision blockers and conditions to approval",
+      "style": "Heading 2"
+    },
+    {
+      "text": "[State the unresolved items that must be completed, waived, or explicitly accepted before approval or funding. If none remain, state 'None'.] Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      "style": "normal"
+    }
+  ],
+  "styles": {
+    "normal": {
+      "font": null,
+      "size": null,
+      "bold": null
+    },
+    "Heading 1": {
+      "font": null,
+      "size": 20.0,
+      "bold": null
+    },
+    "Heading 2": {
+      "font": null,
+      "size": 16.0,
+      "bold": null
+    },
+    "Heading 3": {
+      "font": null,
+      "size": 14.0,
+      "bold": null
+    },
+    "Heading 4": {
+      "font": null,
+      "size": 12.0,
+      "bold": null
+    },
+    "Heading 5": {
+      "font": null,
+      "size": null,
+      "bold": null
+    },
+    "Heading 6": {
+      "font": null,
+      "size": null,
+      "bold": null
+    },
+    "Title": {
+      "font": null,
+      "size": 26.0,
+      "bold": null
+    },
+    "Subtitle": {
+      "font": null,
+      "size": 15.0,
+      "bold": null
+    }
+  }
+}

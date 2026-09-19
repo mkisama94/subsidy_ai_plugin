@@ -1,0 +1,50 @@
+[
+  {
+    "query": "新事業進出・ものづくり商業サービス補助金",
+    "acceptance": "0",
+    "url": "https://api.jgrants-portal.go.jp/exp/v1/public/subsidies?keyword=%E6%96%B0%E4%BA%8B%E6%A5%AD%E9%80%B2%E5%87%BA%E3%83%BB%E3%82%82%E3%81%AE%E3%81%A5%E3%81%8F%E3%82%8A%E5%95%86%E6%A5%AD%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9%E8%A3%9C%E5%8A%A9%E9%87%91&sort=acceptance_end_datetime&order=ASC&acceptance=0",
+    "error": "The SSL connection could not be established, see inner exception."
+  },
+  {
+    "query": "新事業進出・ものづくり商業サービス補助金",
+    "acceptance": "1",
+    "url": "https://api.jgrants-portal.go.jp/exp/v1/public/subsidies?keyword=%E6%96%B0%E4%BA%8B%E6%A5%AD%E9%80%B2%E5%87%BA%E3%83%BB%E3%82%82%E3%81%AE%E3%81%A5%E3%81%8F%E3%82%8A%E5%95%86%E6%A5%AD%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9%E8%A3%9C%E5%8A%A9%E9%87%91&sort=acceptance_end_datetime&order=ASC&acceptance=1",
+    "error": "The SSL connection could not be established, see inner exception."
+  },
+  {
+    "query": "新事業進出",
+    "acceptance": "0",
+    "url": "https://api.jgrants-portal.go.jp/exp/v1/public/subsidies?keyword=%E6%96%B0%E4%BA%8B%E6%A5%AD%E9%80%B2%E5%87%BA&sort=acceptance_end_datetime&order=ASC&acceptance=0",
+    "error": "The SSL connection could not be established, see inner exception."
+  },
+  {
+    "query": "新事業進出",
+    "acceptance": "1",
+    "url": "https://api.jgrants-portal.go.jp/exp/v1/public/subsidies?keyword=%E6%96%B0%E4%BA%8B%E6%A5%AD%E9%80%B2%E5%87%BA&sort=acceptance_end_datetime&order=ASC&acceptance=1",
+    "error": "The SSL connection could not be established, see inner exception."
+  },
+  {
+    "query": "ものづくり",
+    "acceptance": "0",
+    "url": "https://api.jgrants-portal.go.jp/exp/v1/public/subsidies?keyword=%E3%82%82%E3%81%AE%E3%81%A5%E3%81%8F%E3%82%8A&sort=acceptance_end_datetime&order=ASC&acceptance=0",
+    "error": "The SSL connection could not be established, see inner exception."
+  },
+  {
+    "query": "ものづくり",
+    "acceptance": "1",
+    "url": "https://api.jgrants-portal.go.jp/exp/v1/public/subsidies?keyword=%E3%82%82%E3%81%AE%E3%81%A5%E3%81%8F%E3%82%8A&sort=acceptance_end_datetime&order=ASC&acceptance=1",
+    "error": "The SSL connection could not be established, see inner exception."
+  },
+  {
+    "query": "新事業進出 ものづくり 商業 サービス",
+    "acceptance": "0",
+    "url": "https://api.jgrants-portal.go.jp/exp/v1/public/subsidies?keyword=%E6%96%B0%E4%BA%8B%E6%A5%AD%E9%80%B2%E5%87%BA%20%E3%82%82%E3%81%AE%E3%81%A5%E3%81%8F%E3%82%8A%20%E5%95%86%E6%A5%AD%20%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9&sort=acceptance_end_datetime&order=ASC&acceptance=0",
+    "error": "The SSL connection could not be established, see inner exception."
+  },
+  {
+    "query": "新事業進出 ものづくり 商業 サービス",
+    "acceptance": "1",
+    "url": "https://api.jgrants-portal.go.jp/exp/v1/public/subsidies?keyword=%E6%96%B0%E4%BA%8B%E6%A5%AD%E9%80%B2%E5%87%BA%20%E3%82%82%E3%81%AE%E3%81%A5%E3%81%8F%E3%82%8A%20%E5%95%86%E6%A5%AD%20%E3%82%B5%E3%83%BC%E3%83%93%E3%82%B9&sort=acceptance_end_datetime&order=ASC&acceptance=1",
+    "error": "The SSL connection could not be established, see inner exception."
+  }
+]

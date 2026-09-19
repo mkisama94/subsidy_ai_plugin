@@ -1,0 +1,119 @@
+8d1d45fda938dcdc62132affa2790d96dbcce9aa 2026-09-05T20:35:56+09:00 OpenAI 初回申請版
+
+25	0	src/index.ts
+21	0	test/domainVerification.test.ts
+e0768e0651a798cd810b9f3fde8231cd4f8a261f 2026-09-05T10:06:23+09:00 社労士、行政書士に相談しやすいように改善
+
+9	1	src/index.ts
+30	3	src/professionalConsultation.ts
+43	0	test/professionalConsultation.test.ts
+399e62786642bbe760d99dc65f555b8e60e3161c 2026-09-04T08:55:37+09:00 世間様にソースをお見せして恥ずかしくないように、ソースコード以外のドキュメントを整理整頓
+
+37	0	src/index.ts
+8a0dfe79545d1cad57506b2c30125980f52520e0 2026-09-03T23:52:52+09:00 軽微な機能改善と、公式申請版化
+
+35	0	src/deemedLargeEnterprise.ts
+73	4	src/index.ts
+48	0	src/matching.ts
+157	0	src/professionalConsultation.ts
+9	0	test/deemedLargeEnterprise.test.ts
+17	0	test/matching.test.ts
+55	0	test/professionalConsultation.test.ts
+0be5d0d5dc1f5d6a9f6951685dc32f75ce52fc77 2026-09-03T23:14:04+09:00 採択率推定の実装
+
+122	0	migrations/0003_subsidy_research_schema.sql
+252	2	src/index.ts
+815	0	src/selectionStatistics.ts
+152	0	test/migrations.test.ts
+347	0	test/selectionStatistics.test.ts
+3e8e5c6c2370e45e0477e051766a715f164d18cd 2026-09-03T22:59:36+09:00 みなし大企業判定の改善
+
+1	1	src/companyMatching.ts
+238	0	src/deemedLargeEnterprise.ts
+4	1	src/edinet.ts
+15	13	src/gbizinfo.ts
+9	9	src/gbizinfoActivities.ts
+145	12	src/index.ts
+39	1	src/matching.ts
+8	0	test/companyMatching.test.ts
+116	0	test/deemedLargeEnterprise.test.ts
+9	0	test/edinet.test.ts
+4	0	test/gbizinfo.test.ts
+4	0	test/gbizinfoActivities.test.ts
+15	0	test/matching.test.ts
+e9c588324a63b604f366888e8b7f8d7b51b5d98d 2026-09-03T22:08:58+09:00 より包括的なキャッシュ機能の実装
+
+16	0	migrations/0001_public_api_cache.sql
+224	0	src/cache.ts
+15	9	src/companyMatching.ts
+46	29	src/index.ts
+112	16	src/jgrants.ts
+11	2	src/matching.ts
+94	0	test/cache.test.ts
+126	0	test/jgrants.test.ts
+d09351394fb974eb073ae694ea9fc789a9661afd 2026-09-03T20:43:22+09:00 公式EDINETの検証結果をD1へ保存する連携処理を実装
+
+206	0	src/edinetRelationsService.ts
+12	6	src/index.ts
+199	0	test/edinetRelationsService.test.ts
+d577f4e67cd39f84b2f07c891a06699983bc9f03 2026-09-03T19:22:47+09:00 D1データアクセス層の実装
+
+138	0	migrations/0001_initial_schema.sql
+697	0	src/d1Relations.ts
+294	0	test/d1Relations.test.ts
+3d778c959c775ed2ea84dc5f36d2c4462b8c3d48 2026-09-03T15:38:50+09:00 EDINETを「高信頼だが扱いにくい証拠確認装置」として限定利用する修正
+
+90	42	src/edinet.ts
+1	1	src/index.ts
+105	0	test/edinetEvidence.test.ts
+76e1389fea95976a7280a07a79a90364a3234288 2026-09-03T15:05:26+09:00 金融庁EDINETのAPIに対応
+
+587	0	src/edinet.ts
+91	5	src/index.ts
+190	0	test/edinet.test.ts
+63	0	test/edinetDocumentValidation.test.ts
+24	0	test/edinetFilingDates.test.ts
+e58f5752b44481ad21ed2d83c046d083f01a9be7 2026-09-03T14:09:02+09:00 活動情報を正しく取得出来るように修正
+
+12	49	src/gbizinfo.ts
+387	0	src/gbizinfoActivities.ts
+55	3	src/index.ts
+6	5	test/gbizinfo.test.ts
+267	0	test/gbizinfoActivities.test.ts
+8801641e46c85033a8eee7f104ba2f4bb319db91 2026-09-03T12:27:04+09:00 前回のテストで見つかった3点を修正しています。 - 所在地の階層比較   - 東京都千代田区 と 東京都千代田区神田鍛冶町… は compatible   - 異なる都道府県・市区町村は conflict   - 番地以降の曖昧な部分一致は、安全側に倒して unknown - 法人状態の断定防止   - statusAvailability: provided | not_provided を追加   - not_provided の場合は「登記中」「存続中」と断定しない方針をレスポンスとアクション説明に明記 - 法人検索のページング   - 返却件数が上限に達した場合は mayHaveMore: true   - 「先頭ページ」であり、検索結果が網羅的でない可能性を表示   - limit: 1 で1件だけ返った場合も「唯一の候補」と誤判定しない
+
+110	1	src/companyMatching.ts
+21	4	src/gbizinfo.ts
+3	3	src/index.ts
+44	0	test/companyMatching.test.ts
+59	0	test/gbizinfo.test.ts
+9b85632ddca2a73deab8cca43f1aa95ca943a15f 2026-09-03T11:08:32+09:00 gbizで法人番号を検索できるように改善
+
+80	7	src/companyMatching.ts
+232	31	src/gbizinfo.ts
+94	4	src/index.ts
+124	0	test/companyMatching.test.ts
+90	2	test/gbizinfo.test.ts
+be94bef74bf31815637e7019f27ad22d22938e4b 2026-09-02T20:50:49+09:00 Add gBizINFO company profile integration
+
+44	0	src/companyMatching.ts
+269	0	src/gbizinfo.ts
+95	19	src/index.ts
+73	0	test/companyMatching.test.ts
+95	0	test/gbizinfo.test.ts
+81b4199646f7dc4d2614318a9df014267f1a0403 2026-09-02T20:16:27+09:00 Remove hello action and release 0.3.0
+
+1	18	src/index.ts
+47b9a8033d3ea45590cf833b149266282752c8af 2026-09-02T19:40:23+09:00 企業プロフィールとの照合
+
+54	1	src/index.ts
+296	0	src/matching.ts
+78	0	test/jgrants.test.ts
+129	0	test/matching.test.ts
+61be063db12501d38e99c57c08a645bf0169a741 2026-08-31T17:41:26+09:00 JグランツAPIに対応
+
+152	0	src/index.ts
+413	0	src/jgrants.ts
+145b9f1bfdbf66ebc0fc45c19f47408149fc0182 2026-08-31T16:43:06+09:00 初期コミット
+
+60	0	src/index.ts

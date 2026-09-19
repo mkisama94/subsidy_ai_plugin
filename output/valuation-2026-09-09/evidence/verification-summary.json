@@ -1,0 +1,24 @@
+{
+  "target_sha": "8d1d45fda938dcdc62132affa2790d96dbcce9aa",
+  "pdf_pages": 11,
+  "source_references_validated": 40,
+  "pdf_annotations": 64,
+  "commits": 37,
+  "tools": 13,
+  "tests_passed": 80,
+  "typecheck": "passed",
+  "valuation_calculations": "passed",
+  "visual_review": "all pages inspected; final pages 1-10 pixel-identical to inspected prior render; final page 11 inspected",
+  "identical_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ]
+}

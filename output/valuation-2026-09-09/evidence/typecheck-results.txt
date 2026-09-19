@@ -1,0 +1,4 @@
+
+> subsidy-ai-mcp@0.10.0 typecheck
+> tsc --noEmit
+

@@ -4,6 +4,8 @@ import {
   readThroughPublicCache,
 } from "./cache";
 
+import { RESPONSE_GUIDANCE, SEARCH_GUIDANCE } from "./responseGuidance";
+
 const JGRANTS_SEARCH_URL =
   "https://api.jgrants-portal.go.jp/exp/v1/public/subsidies";
 const JGRANTS_DETAIL_URL =
@@ -346,6 +348,8 @@ export async function searchSubsidies(
   return {
     ...cached.value,
     query,
+    searchGuidance: SEARCH_GUIDANCE,
+    responseGuidance: RESPONSE_GUIDANCE,
     servedAt: new Date((cacheOptions.now ?? Date.now)()).toISOString(),
     cache: {
       status: cached.status,
@@ -496,6 +500,7 @@ export async function getSubsidyDetail(
 
   return {
     ...cached.value,
+    responseGuidance: RESPONSE_GUIDANCE,
     servedAt: new Date((cacheOptions.now ?? Date.now)()).toISOString(),
     cache: {
       status: cached.status,

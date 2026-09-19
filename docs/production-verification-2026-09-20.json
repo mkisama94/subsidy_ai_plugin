@@ -1,0 +1,195 @@
+{
+  "checkedAt": "2026-09-19T16:42:08.662Z",
+  "endpoint": "https://subsidy.ai-orchestration.jp/mcp",
+  "checks": [
+    {
+      "name": "tools/list matches submission",
+      "ok": true
+    },
+    {
+      "name": "get_corporate_identity",
+      "ok": true
+    },
+    {
+      "name": "search_corporate_identities",
+      "ok": true
+    },
+    {
+      "name": "get_company_profile",
+      "ok": true
+    },
+    {
+      "name": "search_subsidies",
+      "ok": true
+    },
+    {
+      "name": "prepare_professional_consultation",
+      "ok": true
+    },
+    {
+      "name": "get_official_selection_statistics",
+      "ok": true
+    }
+  ],
+  "server": {
+    "name": "subsidy-ai-mcp",
+    "version": "0.11.0"
+  },
+  "tools": [
+    {
+      "name": "search_corporate_identities",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_corporate_identity",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "search_companies",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_company_profile",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_company_activities",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "verify_corporate_relationship",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "prepare_professional_consultation",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "assess_deemed_large_enterprise_eligibility",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "record_official_selection_statistics",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_official_selection_statistics",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "estimate_program_selection_outlook",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "evaluate_subsidy_fit_for_company",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "search_subsidies",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_subsidy_detail",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "evaluate_subsidy_fit",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
+    }
+  ],
+  "nta": {
+    "name": "トヨタ自動車株式会社",
+    "location": "愛知県豊田市トヨタ町１番地",
+    "notice": "このサービスは、国税庁法人番号システムのWeb-API機能を利用して取得した情報をもとに作成しているが、サービスの内容は国税庁によって保証されたものではない"
+  },
+  "subsidySearchKeys": [
+    "source",
+    "retrievedAt",
+    "upstreamCount",
+    "matchingCount",
+    "returnedCount",
+    "hasMore",
+    "subsidies",
+    "caution",
+    "query",
+    "searchGuidance",
+    "responseGuidance",
+    "servedAt",
+    "cache"
+  ]
+}

@@ -11,12 +11,14 @@
 
 ## 現在地
 
-- Cloudflare Workersで動作するMCPサーバーと13のツールを実装済みです
-- Jグランツ、経済産業省の法人情報データベース、EDINETの公開情報を扱います
+- Cloudflare Workersで動作するMCPサーバーと15のツールを実装済みです
+- Jグランツ、国税庁法人番号システム、経済産業省の法人情報データベース、EDINETの公開情報を扱います
 - 自動テストでは、正常系だけでなく曖昧な企業名、情報不足、外部API障害、誤った断定の防止も検証します
 - OpenAIの公開プラグイン審査に向けて、ポリシー、ツール注釈、再現可能な審査シナリオを整備しています
 
 公開文書: [プライバシーポリシー](PRIVACY.md)・[利用規約](TERMS.md)・[セキュリティポリシー](SECURITY.md)・[コントリビューションガイド](CONTRIBUTING.md)・[行動規範](CODE_OF_CONDUCT.md)
+
+0.11.0の再審査用資料: [修正・検証記録](docs/review-resubmission-2026-09-20.md)・[ツール注釈の理由](docs/tool-annotation-justifications.md)。`npm run verify:production`は公開MCPのツール一覧と申請用JSONの一致を検査します。`npm run verify:production -- --smoke`は公的API参照と相談文生成も検査し、補助金の一時キャッシュ以外の保存・上書きは実行しません。
 
 ## このプロジェクトが解決したい問題
 
@@ -166,6 +168,7 @@ EDINETを未知の親会社を自動発見するデータベースとしては�
 - 補助金詳細の取得
 - 受付中制度、対象地域、業種、利用目的などによる候補整理
 - gBizINFO連携の基本実装
+- 国税庁法人番号API Ver.4の法人名検索・法人番号照会（実IDによる接続検証は未実施）
 - 法人情報と補助金情報を用いた適合度評価の基本実装
 - gBizINFOによる法人名・都道府県・市区町村検索
 - 同名法人の候補提示と、曖昧な場合に自動決定しない制御
@@ -186,7 +189,6 @@ EDINETを未知の親会社を自動発見するデータベースとしては�
 
 ### 今後の予定
 
-- 国税庁法人番号システムWeb-APIとの統合
 - 法人の正式情報とgBizINFO情報の統合
 - 国税庁データとgBizINFOの情報差分の明示
 - 補助金情報の変更検知と定期通知
@@ -211,7 +213,8 @@ EDINETを未知の親会社を自動発見するデータベースとしては�
 | `record_official_selection_statistics` | 公募回別の申請件数・採択件数を公的出典とともに保存し、比較可能な場合だけ公式採択率を計算する | 実装済み |
 | `get_official_selection_statistics` | JグランツIDから過去の公式採択実績と出典を参照する | 実装済み |
 | `estimate_program_selection_outlook` | 過去最大3回の公式実績から制度全体の参考範囲をルール算定する | 実装済み |
-| `get_corporate_identity` | 法人番号から正式名称・所在地・法人状態を取得する | 計画中 |
+| `search_corporate_identities` | 国税庁で法人名・所在地コードから法人候補を検索する | 実装済み・実API検証待ち |
+| `get_corporate_identity` | 国税庁で法人番号から最新の正式名称・所在地・閉鎖情報を取得する | 実装済み・実API検証待ち |
 
 ツールの返却結果は候補選定や確認作業を支援するものであり、採択や受給資格を保証しません。みなし大企業については、100%子会社という事実だけで全制度から除外せず、候補制度の最新の公募要領や公式FAQにある扱いと照合します。課税所得や役員兼務など、公開情報で確認できない事項は推定しません。
 
@@ -227,7 +230,7 @@ Cloudflare Workers上のMCPサーバー
         ├─ gBizINFO
         ├─ Cloudflare D1（Jグランツ公開情報のキャッシュ、任意）
         ├─ EDINET
-        └─ 国税庁 法人番号システムWeb-API（計画中）
+        └─ 国税庁 法人番号システムWeb-API
 ```
 
 ### 公開情報キャッシュ
@@ -261,7 +264,7 @@ D1またはキャッシュ用Secretが未設定の場合や、キャッシュの
 - Cloudflare Workers / Wrangler
 - gBizINFO APIトークン（gBizINFO機能の実行時）
 - EDINET APIキー（資本関係検証の実行時）
-- 国税庁法人番号システムWeb-APIのアプリケーションID（統合後）
+- 国税庁法人番号システムWeb-APIのアプリケーションID（国税庁機能の実行時）
 
 ### セットアップ
 
@@ -285,6 +288,7 @@ APIトークンやアプリケーションIDは、ソースコードやGit履歴
 
 ```text
 GBIZINFO_API_TOKEN
+NTA_APPLICATION_ID
 CACHE_KEY_SECRET
 EDINET_API_KEY
 OPENAI_APPS_CHALLENGE_TOKEN
@@ -299,7 +303,28 @@ npm run deploy
 
 デプロイ後、`https://<MCPサーバーのホスト>/.well-known/openai-apps-challenge`が検証トークンだけをプレーンテキストで返すことを確認してから、OpenAI Platformで検証を実行します。未設定時、このURLは404を返します。
 
-国税庁法人番号システムWeb-APIとの統合時には、専用のアプリケーションID用環境変数を追加します。
+### 国税庁APIの設定と利用
+
+発行された13桁のIDを`NTA_APPLICATION_ID`へ設定します。ローカル開発ではGit管理対象外の`.dev.vars`に`NTA_APPLICATION_ID=発行されたID`を記入してください。本番では次のコマンドの入力プロンプトにIDを入力します（IDそのものをコマンド引数やGitへ記録しないでください）。
+
+```bash
+npx wrangler secret put NTA_APPLICATION_ID
+```
+
+コードを公開する際は`npm run deploy`を実行します。ID未設定の場合、国税庁ツールは設定エラーを返します。他のデータソース用のIDとは別の設定です。
+
+- `search_corporate_identities`: `name`、任意の`address_code`（東京都なら`13`、千代田区なら`13101`）、`page`（1から）を指定。部分一致検索で、閉鎖法人も含めます。名称の半角英数字等は全角化して送信します。
+- 検索結果はAPIの分割単位で返します。`mayHaveMore`がtrueの場合は同じ条件で`nextPage`を指定します。候補を自動決定せず所在地と法人番号で確認してください。
+- `get_corporate_identity`: `corporate_number`に13桁の法人番号を指定。履歴を含めず最新情報を取得します。該当なしは`not_found`です。
+- 閉鎖情報、承継先、国外所在地、検索対象除外、名称・所在地のイメージIDも返します。「閉鎖情報なし」は営業実態や申請資格を保証しません。
+- 確定した法人番号を既存の`get_company_profile`へ渡すとgBizINFOの企業情報を取得できます。両データソースの自動統合・差分判定は今後の実装です。
+- 15秒のタイムアウト、HTTPエラー分類、応答検証を行います。上流応答本文・例外・ID付きURLをエラー応答へ転記しません。国税庁の仕様上IDは送信URLに含まれるため、外向きリクエストURLを独自のログや監視へ記録しないでください。
+
+利用者への回答では結果の`source`と`notice`を表示します。
+
+> このサービスは、国税庁法人番号システムのWeb-API機能を利用して取得した情報をもとに作成しているが、サービスの内容は国税庁によって保証されたものではない
+
+仕様参照: [国税庁Web-API](https://www.houjin-bangou.nta.go.jp/webapi/)、[Ver.4仕様書](https://www.houjin-bangou.nta.go.jp/pc/webapi/images/k-web-api-kinou-ver4.pdf)、[共通のリクエスト・応答仕様](https://www.houjin-bangou.nta.go.jp/pc/webapi/images/k-web-api-kinou-gaiyo.pdf)。CSV/UTF-8の30項目を解析します。モックテストは`npm test`で実行できます。実ID設定後は、既知の法人番号の名称・所在地を公式サイトと比較し、名称検索と該当なしも確認してください。
 
 ## テスト方針
 

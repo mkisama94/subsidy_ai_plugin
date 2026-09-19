@@ -139,6 +139,13 @@ test("検索結果を再利用し、検索条件をキャッシュ本文やキ�
   assert.equal(key.includes(input.keyword), false);
   assert.equal(JSON.stringify(entry.value).includes(input.keyword), false);
   assert.equal("query" in (entry.value as object), false);
+  // Guidance is attached after cache retrieval, including pre-update cache entries.
+  assert.equal("responseGuidance" in (entry.value as object), false);
+  assert.equal("searchGuidance" in (entry.value as object), false);
+  assert.deepEqual(second.responseGuidance, first.responseGuidance);
+  assert.equal(second.searchGuidance, first.searchGuidance);
+  assert.ok(second.responseGuidance.funding);
+  assert.ok(second.searchGuidance);
   assert.equal(second.query.keyword, input.keyword);
 });
 
@@ -158,6 +165,9 @@ test("補助金詳細は公開ID単位でキャッシュする", async () => {
   assert.equal(second.cache.status, "hit");
   assert.equal(fetchCount, 1);
   assert.equal(cache.entries.has("jgrants:detail:v1:detail456"), true);
+  assert.equal("responseGuidance" in (cache.entries.get("jgrants:detail:v1:detail456")!.value as object), false);
+  assert.deepEqual(second.responseGuidance, first.responseGuidance);
+  assert.ok(second.responseGuidance.rescheduling);
 });
 
 test("秘密鍵がなければ検索条件をD1へ保存せずキャッシュを迂回する", async () => {

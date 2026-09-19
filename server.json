@@ -1,0 +1,17 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.mkisama94/subsidy-ai",
+  "title": "補助金AI",
+  "description": "Search Japanese subsidies and public company data using J-Grants, NTA, gBizINFO, and EDINET.",
+  "repository": {
+    "url": "https://github.com/mkisama94/subsidy_ai_plugin",
+    "source": "github"
+  },
+  "version": "0.11.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://subsidy.ai-orchestration.jp/mcp"
+    }
+  ]
+}

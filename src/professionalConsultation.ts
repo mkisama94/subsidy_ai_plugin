@@ -1,3 +1,5 @@
+import { RESPONSE_GUIDANCE } from "./responseGuidance";
+
 export type ConsultationTopic =
   | "location"
   | "industry"
@@ -151,6 +153,7 @@ export function createProfessionalConsultationBrief(
   } : null;
   return {
     recommended: input.issues.length > 0,
+    responseGuidance: RESPONSE_GUIDANCE,
     statusLabel: input.issues.length
       ? "専門家へ相談する論点を整理しました"
       : "現時点で個別の相談論点はありません",

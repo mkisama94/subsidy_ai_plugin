@@ -1,4 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/server";
+import { NtaApiError, getCorporateIdentity, searchCorporateIdentities } from "./nta";
 import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
 import { D1PublicApiCache } from "./cache";
@@ -31,23 +32,32 @@ import {
 } from "./professionalConsultation";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.10.0";
+const SERVER_VERSION = "0.11.0";
 const DOMAIN_VERIFICATION_PATH = "/.well-known/openai-apps-challenge";
 
 // OpenAI's public plugin review requires all three safety hints on every tool.
-// Read-only tools may query public services but never change external state.
+// Bounded computation and reads from the application's own database.
 const READ_ONLY_ANNOTATIONS = {
   readOnlyHint: true,
   openWorldHint: false,
   destructiveHint: false,
+  idempotentHint: true,
+} as const;
+
+// Public government APIs are open-world even when accessed only for reading.
+const PUBLIC_READ_ANNOTATIONS = {
+  ...READ_ONLY_ANNOTATIONS,
+  openWorldHint: true,
 } as const;
 
 // These tools can refresh an internal cache while performing a lookup. The
-// cache is not public state and refreshing it is safe to retry.
+// cache is disposable public data; refreshes also purge expired cache rows.
+// Timestamps/expiry and cleanup can change on retries, so do not claim idempotence.
 const INTERNAL_CACHE_ANNOTATIONS = {
   readOnlyHint: false,
-  openWorldHint: false,
+  openWorldHint: true,
   destructiveHint: false,
+  idempotentHint: false,
 } as const;
 
 // These tools upsert reviewable public evidence or derived records in our D1
@@ -56,6 +66,12 @@ const INTERNAL_UPSERT_ANNOTATIONS = {
   readOnlyHint: false,
   openWorldHint: false,
   destructiveHint: true,
+  idempotentHint: false,
+} as const;
+
+const PUBLIC_UPSERT_ANNOTATIONS = {
+  ...INTERNAL_UPSERT_ANNOTATIONS,
+  openWorldHint: true,
 } as const;
 
 function jsonToolResult(value: unknown) {
@@ -71,6 +87,7 @@ function jsonToolResult(value: unknown) {
 
 function errorToolResult(error: unknown) {
   const known =
+    error instanceof NtaApiError ||
     error instanceof JGrantsApiError ||
     error instanceof GBizInfoApiError ||
     error instanceof EdinetApiError ||
@@ -100,6 +117,7 @@ function errorToolResult(error: unknown) {
 }
 
 type Env = {
+  NTA_APPLICATION_ID?: string;
   GBIZINFO_API_TOKEN?: string;
   EDINET_API_KEY?: string;
   CACHE_KEY_SECRET?: string;
@@ -125,7 +143,7 @@ export function createDomainVerificationResponse(token?: string): Response {
   });
 }
 
-function createServer(env: Env): McpServer {
+export function createServer(env: Env): McpServer {
   const server = new McpServer({
     name: SERVER_NAME,
     version: SERVER_VERSION,
@@ -140,9 +158,39 @@ function createServer(env: Env): McpServer {
   };
 
   server.registerTool(
+    "search_corporate_identities",
+    {
+      annotations: PUBLIC_READ_ANNOTATIONS,
+      description: "国税庁の法人名検索で正式名称・法人番号・所在地・閉鎖情報を取得します。閉鎖法人も含みます。同名法人を自動決定せず、所在地で確認してください。mayHaveMoreがtrueならpageを進めてください。noticeの出典・非保証表示を利用者に提示してください。",
+      inputSchema: {
+        name: z.string().trim().min(1).max(200),
+        address_code: z.string().regex(/^(?:(?:0[1-9]|[1-3][0-9]|4[0-7])(?:\d{3})?|99)$/).optional().describe("都道府県2桁または都道府県＋市区町村5桁のJISコード。東京都=13、千代田区=13101、国外=99"),
+        page: z.number().int().min(1).max(99999).optional().default(1),
+      },
+    },
+    async ({ name, address_code, page }) => {
+      try { return jsonToolResult(await searchCorporateIdentities({ name, addressCode: address_code, page }, env.NTA_APPLICATION_ID)); }
+      catch (error) { return errorToolResult(error); }
+    },
+  );
+
+  server.registerTool(
+    "get_corporate_identity",
+    {
+      annotations: PUBLIC_READ_ANNOTATIONS,
+      description: "国税庁の法人番号照会で最新の正式名称・所在地・閉鎖情報・検索対象除外情報を取得します。閉鎖情報なしを営業中と断定せず、noticeの出典・非保証表示を利用者に提示してください。資本金・従業員数等はget_company_profileを使ってください。",
+      inputSchema: { corporate_number: z.string().trim().regex(/^\d{13}$/) },
+    },
+    async ({ corporate_number }) => {
+      try { return jsonToolResult(await getCorporateIdentity(corporate_number, env.NTA_APPLICATION_ID)); }
+      catch (error) { return errorToolResult(error); }
+    },
+  );
+
+  server.registerTool(
     "search_companies",
     {
-      annotations: READ_ONLY_ANNOTATIONS,
+      annotations: PUBLIC_READ_ANNOTATIONS,
       description:
         "経済産業省の法人情報データベース（gBizINFO）で法人名を検索し、法人番号・所在地を含む候補を返します。利用者向け回答では単に『gBizINFO』とせず、『経済産業省の法人情報データベース』と説明してください。同名法人など複数候補がある場合は自動決定せず、利用者に所在地や正式名称を確認してください。mayHaveMoreがtrueなら先頭ページだけであることを明示してください。statusAvailabilityがnot_providedの法人を登記中・存続中と断定しないでください。候補確定後はget_company_profileを使用します。",
       inputSchema: {
@@ -187,7 +235,7 @@ function createServer(env: Env): McpServer {
   server.registerTool(
     "get_company_profile",
     {
-      annotations: READ_ONLY_ANNOTATIONS,
+      annotations: PUBLIC_READ_ANNOTATIONS,
       description:
         "法人番号から経済産業省の法人情報データベース（gBizINFO）にある公開法人基本情報を取得します。利用者向け回答では単に『gBizINFO』とせず、『経済産業省の法人情報データベース』と説明してください。所在地、業種、従業員数、資本金などを返します。活動情報は完全性を保証できない基本情報レスポンスから数えず、not_fetchedとして返します。認定、特許、補助金などはget_company_activitiesを使用してください。未登録項目は推測せずnullまたは空配列で返し、statusAvailabilityがnot_providedの場合は登記中・存続中と断定しません。",
       inputSchema: {
@@ -226,7 +274,7 @@ function createServer(env: Env): McpServer {
   server.registerTool(
     "get_company_activities",
     {
-      annotations: READ_ONLY_ANNOTATIONS,
+      annotations: PUBLIC_READ_ANNOTATIONS,
       description:
         "法人番号から経済産業省の法人情報データベース（gBizINFO）にある活動情報を取得します。利用者向け回答では単に『gBizINFO』とせず、『経済産業省の法人情報データベース』と説明してください。届出・認定、表彰、事業所、財務、特許・意匠・商標、調達、補助金、職場情報を返します。法人名検索のactivityCountはこれらの総合指標であり、特定種類の件数とは限りません。種類別件数、取得失敗、検索APIの報告件数との差を分けて返します。",
       inputSchema: {
@@ -273,9 +321,9 @@ function createServer(env: Env): McpServer {
   server.registerTool(
     "verify_corporate_relationship",
     {
-      annotations: INTERNAL_UPSERT_ANNOTATIONS,
+      annotations: PUBLIC_UPSERT_ANNOTATIONS,
       description:
-        "利用者が申告した親会社候補を、金融庁EDINETの最新の有価証券報告書で検証します。親会社をゼロから推測するツールではありません。対象会社名が書類にない場合も資本関係なしとは断定しません。statusやpersistenceの英語値、relationIdなどは内部処理用です。利用者向け回答では自然な日本語に言い換え、保存状態や内部IDは求められない限り表示しないでください。関係が確認できても、資本関係だけで補助金候補から除外しないでください。候補制度の最新の公募要領または公式FAQを確認し、assess_deemed_large_enterprise_eligibilityで制度別に照合してください。",
+        "利用者が申告した親会社候補を、金融庁EDINETの最新の有価証券報告書で検証します。D1設定時は確認できた公開企業・文書・関係の記録を保存し、同じ識別条件の既存記録を上書きする場合があります。親会社をゼロから推測するツールではありません。対象会社名が書類にない場合も資本関係なしとは断定しません。statusやpersistenceの英語値、relationIdなどは内部処理用です。利用者向け回答では自然な日本語に言い換え、保存状態や内部IDは求められない限り表示しないでください。関係が確認できても、資本関係だけで補助金候補から除外しないでください。候補制度の最新の公募要領または公式FAQを確認し、assess_deemed_large_enterprise_eligibilityで制度別に照合してください。",
       inputSchema: {
         target_company_name: z
           .string()
@@ -558,9 +606,9 @@ function createServer(env: Env): McpServer {
   server.registerTool(
     "record_official_selection_statistics",
     {
-      annotations: INTERNAL_UPSERT_ANNOTATIONS,
+      annotations: PUBLIC_UPSERT_ANNOTATIONS,
       description:
-        "実施機関・政府が公開した同一公募回の申請件数と採択件数を、出典と計算根拠付きでD1へ保存します。割合は入力せず、コードが採択件数÷申請件数で計算します。同じ公募回・同じ枠・同じ審査段階と確認できない場合はcomparabilityをnot_confirmedまたはnot_comparableにし、公式採択率を算定しないでください。採択者一覧しかない場合もapplications_countを推測しません。根拠本文はハッシュ計算にだけ使い、DBへ保存しません。企業情報や利用者情報を入力しないでください。",
+        "実施機関・政府が公開した同一公募回の申請件数と採択件数を、出典と計算根拠付きでD1へ保存します。保存前に公式URLの本文と根拠を照合し、同じ制度・公募回・対象範囲等の既存記録を上書きする場合があります。割合は入力せず、コードが採択件数÷申請件数で計算します。同じ公募回・同じ枠・同じ審査段階と確認できない場合はcomparabilityをnot_confirmedまたはnot_comparableにし、公式採択率を算定しないでください。採択者一覧しかない場合もapplications_countを推測しません。根拠本文はハッシュ計算にだけ使い、DBへ保存しません。企業情報や利用者情報を入力しないでください。",
       inputSchema: {
         program: z.object({
           series_key: z.string().trim().min(1).max(100),
@@ -726,7 +774,7 @@ function createServer(env: Env): McpServer {
     {
       annotations: INTERNAL_UPSERT_ANNOTATIONS,
       description:
-        "同じ制度系列の過去最大3回の公式採択実績から、今回の制度全体の採択見通しを説明可能なルールで参考算定します。個別企業の採択確率ではありません。申請資格が未確定・条件付き・対象外可能性ありの場合は必ず計算を停止します。予算、補助上限、対象範囲の変化は公式資料で確認できる場合だけ入力してください。target_jgrants_subsidy_idに登録済み公募回を指定すると、算定結果と方法論バージョンをD1へ保存します。",
+        "同じ制度系列の過去最大3回の公式採択実績から、今回の制度全体の採択見通しを説明可能なルールで参考算定します。個別企業の採択確率ではありません。申請資格が未確定・条件付き・対象外可能性ありの場合は必ず計算を停止します。予算、補助上限、対象範囲の変化は公式資料で確認できる場合だけ入力してください。target_jgrants_subsidy_idに登録済み公募回を指定すると、算定結果と方法論バージョンをD1へ保存し、その公募回の既存推計を上書きする場合があります。保存しない場合はtarget_jgrants_subsidy_idを省略してください。",
       inputSchema: {
         program_series_key: z.string().trim().min(1).max(100),
         target_jgrants_subsidy_id: z
@@ -805,7 +853,7 @@ function createServer(env: Env): McpServer {
     {
       annotations: INTERNAL_CACHE_ANNOTATIONS,
       description:
-        "法人番号から経済産業省の法人情報データベース（gBizINFO）の企業プロフィールを取得し、指定したJグランツ補助金の公開条件と照合します。利用者向け回答では単に『gBizINFO』とせず、『経済産業省の法人情報データベース』と説明してください。公開情報で未登録または古い所在地、業種、従業員数、資本金は利用者の明示入力で補完でき、各値の出典と矛盾も返します。中小企業要件がある制度では親会社・大企業からの出資関係を利用者に確認し、親会社候補が示された場合はverify_corporate_relationshipで検証してください。ただし、資本関係だけで候補から除外せず、公式資料の制度別基準をassess_deemed_large_enterprise_eligibilityで照合してください。assessment.assessment.statusは内部処理用です。利用者向け回答には英語コードを表示せず、assessment.assessment.statusLabel、summary、assessment.professionalConsultationを使って、判定と専門家への具体的な相談事項を自然な日本語で説明してください。申請資格や採択を断定しません。",
+        "法人番号から経済産業省の法人情報データベース（gBizINFO）の企業プロフィールを取得し、指定したJグランツ補助金の公開条件と照合します。利用者向け回答では単に『gBizINFO』とせず、『経済産業省の法人情報データベース』と説明してください。公開情報で未登録または古い所在地、業種、従業員数、資本金は利用者の明示入力で補完でき、各値の出典と矛盾も返します。中小企業要件がある制度では親会社・大企業からの出資関係を利用者に確認し、親会社候補が示された場合はverify_corporate_relationshipで検証してください。ただし、資本関係だけで候補から除外せず、公式資料の制度別基準をassess_deemed_large_enterprise_eligibilityで照合してください。assessment.assessment.statusは内部処理用です。利用者向け回答には英語コードを表示せず、assessment.assessment.statusLabel、summary、assessment.professionalConsultationを使って、判定と専門家への具体的な相談事項を自然な日本語で説明してください。申請資格や採択を断定しません。assessment.responseGuidanceに従い、事業との相性・申請資格・実行可能性を分け、資金試算と申請延期の前提を再確認してください。",
       inputSchema: {
         subsidy_id: z
           .string()
@@ -889,7 +937,7 @@ function createServer(env: Env): McpServer {
     {
       annotations: INTERNAL_CACHE_ANNOTATIONS,
       description:
-        "Jグランツの公開APIから補助金候補を検索します。所在地が指定された場合は全国対象制度も含めます。検索結果だけで対象可否を断定せず、候補選定後にget_subsidy_detailを使用してください。",
+        "Jグランツの公開APIから補助金候補を検索します。検索範囲はJグランツに限られます。返却のsearchGuidanceとresponseGuidanceに従い、0件を制度不存在とせず、雇用・研修では利用可能な標準Web検索で厚労省公式情報を補完してください。所在地が指定された場合は全国対象制度も含めます。検索結果だけで対象可否を断定せず、候補選定後にget_subsidy_detailを使用してください。",
       inputSchema: {
         keyword: z
           .string()
@@ -981,7 +1029,7 @@ function createServer(env: Env): McpServer {
     {
       annotations: INTERNAL_CACHE_ANNOTATIONS,
       description:
-        "search_subsidiesが返した補助金IDからJグランツ詳細API V2を取得します。公募回ごとの受付期間と文書メタデータを返し、Base64文書本体は返しません。",
+        "search_subsidiesが返した補助金IDからJグランツ詳細API V2を取得します。公募回ごとの受付期間と文書メタデータを返し、Base64文書本体は返しません。responseGuidanceに従い、金額試算前に費用区分別の補助率・例外・交付先を公式資料で確認してください。",
       inputSchema: {
         subsidy_id: z
           .string()
@@ -1008,7 +1056,7 @@ function createServer(env: Env): McpServer {
     {
       annotations: INTERNAL_CACHE_ANNOTATIONS,
       description:
-        "指定した補助金のJグランツ詳細と企業プロフィールを照合し、明示的な一致、不一致、未確認事項を分けて返します。assessment.statusは内部処理用です。利用者向け回答にはstrong_candidate、needs_confirmation、potentially_ineligible、insufficient_informationなどの英語コードを表示せず、statusLabel、summary、professionalConsultationを使って、判定と専門家への具体的な相談事項を自然な日本語で説明してください。受給資格や採択を断定するツールではありません。",
+        "指定した補助金のJグランツ詳細と企業プロフィールを照合し、明示的な一致、不一致、未確認事項を分けて返します。assessment.statusは内部処理用です。利用者向け回答にはstrong_candidate、needs_confirmation、potentially_ineligible、insufficient_informationなどの英語コードを表示せず、statusLabel、summary、professionalConsultationを使って、判定と専門家への具体的な相談事項を自然な日本語で説明してください。受給資格や採択を断定するツールではありません。responseGuidanceに従い、事業との相性・申請資格・実行可能性を分け、後続の資金相談や申請延期でも前提を再確認してください。",
       inputSchema: {
         subsidy_id: z
           .string()

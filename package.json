@@ -1,6 +1,6 @@
 {
   "name": "subsidy-ai-mcp",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "license": "AGPL-3.0-only",
   "private": true,
   "type": "module",
@@ -8,6 +8,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "test": "tsx --test test/**/*.test.ts",
+    "verify:production": "node scripts/verify-production.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -18,9 +19,10 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "latest",
+    "@modelcontextprotocol/client": "2.0.0",
     "@types/node": "^24.0.0",
     "tsx": "^4.20.0",
     "typescript": "^5.9.0",
-    "wrangler": "^4.102.0"
+    "wrangler": "^4.135.0"
   }
 }

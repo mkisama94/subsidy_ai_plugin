@@ -1,4 +1,5 @@
 import { getSubsidyDetail, type JGrantsCacheOptions } from "./jgrants";
+import { RESPONSE_GUIDANCE } from "./responseGuidance";
 import {
   createProfessionalConsultationBrief,
   type ConsultationTopic,
@@ -316,6 +317,7 @@ export function evaluateSubsidyFitFromDetail(
 
   return {
     source: detail.source,
+    responseGuidance: RESPONSE_GUIDANCE,
     retrievedAt: detail.retrievedAt,
     servedAt: detail.servedAt ?? detail.retrievedAt,
     cache: detail.cache ?? null,

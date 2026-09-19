@@ -4,164 +4,218 @@
   "app_info": {
     "display_name": "補助金AI",
     "subtitle": "公的情報から補助金候補を整理",
-    "description": "補助金AIは、Jグランツの補助金情報と経済産業省の公開法人情報を検索し、企業ごとの候補条件、一致・不一致・未確認事項、公式な参照元を整理します。金融庁EDINETの公開資料を使った申告済み親会社候補の確認、制度ごとのみなし大企業要件の照合、過去の公式採択実績の参照、専門家へ相談するための論点整理にも対応します。検索結果や評価は申請資格・採択・補助額を保証するものではなく、申請前に最新の公募要領と実施機関の案内を確認する必要があります。",
+    "description": "補助金AIは、Jグランツの補助金情報、国税庁の法人番号・名称・所在地情報と経済産業省の公開法人情報を検索し、企業ごとの候補条件、一致・不一致・未確認事項、公式な参照元を整理します。金融庁EDINETの公開資料を使った申告済み親会社候補の確認、制度ごとのみなし大企業要件の照合、過去の公式採択実績の参照、専門家へ相談するための論点整理にも対応します。検索結果や評価は申請資格・採択・補助額を保証するものではなく、申請前に最新の公募要領と実施機関の案内を確認する必要があります。",
     "category": "PRODUCTIVITY"
   },
   "tools": {
     "search_companies": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "idempotentHint": true
       },
       "justifications": {
-        "read_only_justification": "Queries public corporate records and returns matching company candidates without modifying stored data.",
-        "open_world_justification": "Does not publish content or change any public or third-party system.",
-        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+        "read_only_justification": "Searches the public gBizINFO API by company name and optional location to return company candidates. The handler does not write to D1, enqueue jobs or change business records.",
+        "destructive_justification": "Only retrieves public data; no records are deleted or overwritten and no applications, messages or transactions are submitted.",
+        "open_world_justification": "Searches the public gBizINFO API by company name and optional location to return company candidates. This accesses public internet services, not a bounded private account or workspace, even though access is read-only.",
+        "idempotent_justification": "Repeated calls have no additional business-state effects. Upstream public data may change, so identical response content is not promised."
       }
     },
     "get_company_profile": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "idempotentHint": true
       },
       "justifications": {
-        "read_only_justification": "Retrieves a public company profile by corporate number without creating or updating records.",
-        "open_world_justification": "Does not publish content or change any public or third-party system.",
-        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+        "read_only_justification": "Retrieves a public company profile from the gBizINFO API for the supplied corporate number. The handler does not write to D1, enqueue jobs or change business records.",
+        "destructive_justification": "Only retrieves public data; no records are deleted or overwritten and no applications, messages or transactions are submitted.",
+        "open_world_justification": "Retrieves a public company profile from the gBizINFO API for the supplied corporate number. This accesses public internet services, not a bounded private account or workspace, even though access is read-only.",
+        "idempotent_justification": "Repeated calls have no additional business-state effects. Upstream public data may change, so identical response content is not promised."
       }
     },
     "get_company_activities": {
       "annotations": {
         "readOnlyHint": true,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "idempotentHint": true
       },
       "justifications": {
-        "read_only_justification": "Retrieves publicly available company activity records without modifying data.",
-        "open_world_justification": "Does not publish content or change any public or third-party system.",
-        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+        "read_only_justification": "Retrieves the requested categories of public corporate activity records from the gBizINFO API. The handler does not write to D1, enqueue jobs or change business records.",
+        "destructive_justification": "Only retrieves public data; no records are deleted or overwritten and no applications, messages or transactions are submitted.",
+        "open_world_justification": "Retrieves the requested categories of public corporate activity records from the gBizINFO API. This accesses public internet services, not a bounded private account or workspace, even though access is read-only.",
+        "idempotent_justification": "Repeated calls have no additional business-state effects. Upstream public data may change, so identical response content is not promised."
       }
     },
     "verify_corporate_relationship": {
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "openWorldHint": true,
+        "idempotentHint": false
       },
       "justifications": {
-        "read_only_justification": "Reads EDINET filings and upserts verified public corporate relationship evidence in the app's internal database.",
-        "open_world_justification": "Only changes the app's internal evidence database and does not modify EDINET or publish content.",
-        "destructive_justification": "An upsert can replace a previously stored relationship record for the same companies and source document."
+        "read_only_justification": "Retrieves EDINET public filings and, only after a relationship is confirmed and D1 is configured, upserts companies, edinet_documents and company_relations. Unconfirmed relationships are not persisted; persistence failures are reported separately.",
+        "destructive_justification": "Existing company and document fields and a relationship identified by source document, normalized parent/child names and relation type can be overwritten. The tool has no built-in undo/version restore. Scope is limited to verified public evidence; it does not modify EDINET or submit an application.",
+        "open_world_justification": "Accesses EDINET public internet APIs and public filing documents for the user-supplied parent candidate, even though all writes are to the application database.",
+        "idempotent_justification": "Repeated calls may retrieve changed evidence and update stored fields and timestamps; upsert is not a guarantee of no additional effects."
       }
     },
     "prepare_professional_consultation": {
       "annotations": {
         "readOnlyHint": true,
+        "destructiveHint": false,
         "openWorldHint": false,
-        "destructiveHint": false
+        "idempotentHint": true
       },
       "justifications": {
-        "read_only_justification": "Computes a consultation brief from supplied facts and issues without storing or transmitting the result.",
-        "open_world_justification": "Does not contact professionals, send messages, submit forms, or publish content.",
-        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+        "read_only_justification": "Builds a consultation brief in memory from the supplied facts and issues. It does not save the brief, contact professionals or send messages. URLs in the input are returned as references and are not fetched.",
+        "destructive_justification": "No persistent records are created, overwritten or deleted, and no messages, applications or transactions are sent.",
+        "open_world_justification": "Builds a consultation brief in memory from the supplied facts and issues. It does not save the brief, contact professionals or send messages. URLs in the input are returned as references and are not fetched. Execution is restricted to supplied inputs or the application database, not public internet retrieval.",
+        "idempotent_justification": "Repeated calls do not mutate persistent business state. For database reads, stored source records may independently change between calls."
       }
     },
     "assess_deemed_large_enterprise_eligibility": {
       "annotations": {
         "readOnlyHint": true,
+        "destructiveHint": false,
         "openWorldHint": false,
-        "destructiveHint": false
+        "idempotentHint": true
       },
       "justifications": {
-        "read_only_justification": "Computes an eligibility assessment from supplied official rules and confirmed affiliation facts without saving the inputs or result.",
-        "open_world_justification": "Does not submit an application or change any external system or public record.",
-        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+        "read_only_justification": "Computes an assessment in memory from supplied rules and affiliation facts. It neither fetches source URLs nor stores inputs or results.",
+        "destructive_justification": "No persistent records are created, overwritten or deleted, and no messages, applications or transactions are sent.",
+        "open_world_justification": "Computes an assessment in memory from supplied rules and affiliation facts. It neither fetches source URLs nor stores inputs or results. Execution is restricted to supplied inputs or the application database, not public internet retrieval.",
+        "idempotent_justification": "Repeated calls do not mutate persistent business state. For database reads, stored source records may independently change between calls."
       }
     },
     "record_official_selection_statistics": {
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": true
+        "destructiveHint": true,
+        "openWorldHint": true,
+        "idempotentHint": false
       },
       "justifications": {
-        "read_only_justification": "Validates an official public source and upserts reviewable selection statistics and provenance in the app's internal database.",
-        "open_world_justification": "Only changes the app's internal evidence database and does not modify the official source or publish content.",
-        "destructive_justification": "An upsert can replace previously stored statistics for the same program round and scope."
+        "read_only_justification": "Fetches and validates the supplied official source, then upserts program, round, research-source and selection-statistics records and links in D1.",
+        "destructive_justification": "Existing program/round/source fields and statistics for the same program round and scope can be overwritten without built-in undo. HTTPS official-domain checks, source-text matching and count validation restrict writes; unsupported PDF sources are rejected. There is no separate dry-run or confirmation parameter.",
+        "open_world_justification": "Fetches official public internet HTML, text or JSON from the supplied source URL. An official-domain allowlist does not make this a bounded private workspace.",
+        "idempotent_justification": "Retries can update values, source links, provenance and timestamps; no guarantee of no additional persistent effects is made."
       }
     },
     "get_official_selection_statistics": {
       "annotations": {
         "readOnlyHint": true,
+        "destructiveHint": false,
         "openWorldHint": false,
-        "destructiveHint": false
+        "idempotentHint": true
       },
       "justifications": {
-        "read_only_justification": "Reads previously stored official selection statistics and provenance without modifying records.",
-        "open_world_justification": "Does not publish content or change any public or third-party system.",
-        "destructive_justification": "Does not delete, overwrite, revoke, or otherwise irreversibly change data."
+        "read_only_justification": "Reads previously stored statistics and provenance from the application D1 database. It does not fetch source URLs or update records.",
+        "destructive_justification": "No persistent records are created, overwritten or deleted, and no messages, applications or transactions are sent.",
+        "open_world_justification": "Reads previously stored statistics and provenance from the application D1 database. It does not fetch source URLs or update records. Execution is restricted to supplied inputs or the application database, not public internet retrieval.",
+        "idempotent_justification": "Repeated calls do not mutate persistent business state. For database reads, stored source records may independently change between calls."
       }
     },
     "estimate_program_selection_outlook": {
       "annotations": {
         "readOnlyHint": false,
+        "destructiveHint": true,
         "openWorldHint": false,
-        "destructiveHint": true
+        "idempotentHint": false
       },
       "justifications": {
-        "read_only_justification": "Reads historical statistics and can save or replace a derived program-level outlook in the app's internal database.",
-        "open_world_justification": "Only changes the app's internal database and does not publish the outlook or modify third-party systems.",
-        "destructive_justification": "When a target round is supplied, saving the result can replace the previously stored estimate for that round."
+        "read_only_justification": "Reads historical rates from D1 and calculates an outlook. If target_jgrants_subsidy_id identifies an existing round and a valid estimate is produced, it saves the estimate; without a target or when an estimate is withheld it does not save.",
+        "destructive_justification": "For an existing target round, saving can replace the previous estimate, methodology, confidence, estimate basis and dates without built-in undo. Recorded official application/selection counts are preserved. Omitting the target avoids saving; uncertain eligibility withholds estimation.",
+        "open_world_justification": "Reads and writes only the application D1 database and computes from supplied parameters. It does not fetch public URLs, publish the estimate or contact third parties.",
+        "idempotent_justification": "With a target, retries may update the estimate and timestamps as historical data changes. The annotation covers the write-capable mode."
       }
     },
     "evaluate_subsidy_fit_for_company": {
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "idempotentHint": false
       },
       "justifications": {
-        "read_only_justification": "Retrieves public company and subsidy data and may refresh an internal public-data cache while computing the assessment.",
-        "open_world_justification": "Does not submit applications, publish content, or modify the public government data sources it queries.",
-        "destructive_justification": "Only performs retry-safe cache refreshes and does not delete or irreversibly change user data."
+        "read_only_justification": "Retrieves public gBizINFO company data and J-Grants subsidy details, then computes a non-binding assessment. With D1 configured, cache misses or expiry can insert/replace public_api_cache rows and purge up to 100 expired cache rows. Search caching additionally requires CACHE_KEY_SECRET. The annotation covers these write-capable paths, including indirect calls.",
+        "destructive_justification": "Writes and expiry cleanup affect only disposable public-data cache entries. No user-authored records, applications or evidence tables are deleted or overwritten. Public information can be fetched again; this cache is not an archival history of prior source versions.",
+        "open_world_justification": "Retrieves public gBizINFO company data and J-Grants subsidy details, then computes a non-binding assessment. Public internet access occurs on cache misses, bypasses or refreshes; a cache hit does not make the tool closed-world.",
+        "idempotent_justification": "Retries may refresh source content, fetched-at/expiry timestamps and remove additional expired cache entries. No guarantee of no additional state effects is made."
       }
     },
     "search_subsidies": {
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "idempotentHint": false
       },
       "justifications": {
-        "read_only_justification": "Queries J-Grants and may refresh an internal cache of public subsidy search results.",
-        "open_world_justification": "Does not apply for subsidies, submit forms, publish content, or modify J-Grants.",
-        "destructive_justification": "Only performs retry-safe cache refreshes and does not delete or irreversibly change user data."
+        "read_only_justification": "Searches the public J-Grants API for subsidy candidates. With D1 configured, cache misses or expiry can insert/replace public_api_cache rows and purge up to 100 expired cache rows. Search caching additionally requires CACHE_KEY_SECRET. The annotation covers these write-capable paths, including indirect calls.",
+        "destructive_justification": "Writes and expiry cleanup affect only disposable public-data cache entries. No user-authored records, applications or evidence tables are deleted or overwritten. Public information can be fetched again; this cache is not an archival history of prior source versions.",
+        "open_world_justification": "Searches the public J-Grants API for subsidy candidates. Public internet access occurs on cache misses, bypasses or refreshes; a cache hit does not make the tool closed-world.",
+        "idempotent_justification": "Retries may refresh source content, fetched-at/expiry timestamps and remove additional expired cache entries. No guarantee of no additional state effects is made."
       }
     },
     "get_subsidy_detail": {
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "idempotentHint": false
       },
       "justifications": {
-        "read_only_justification": "Retrieves J-Grants detail data and may refresh an internal cache of that public information.",
-        "open_world_justification": "Does not submit forms, publish content, or modify J-Grants or another third-party system.",
-        "destructive_justification": "Only performs retry-safe cache refreshes and does not delete or irreversibly change user data."
+        "read_only_justification": "Retrieves the specified subsidy from the public J-Grants detail API. With D1 configured, cache misses or expiry can insert/replace public_api_cache rows and purge up to 100 expired cache rows. Search caching additionally requires CACHE_KEY_SECRET. The annotation covers these write-capable paths, including indirect calls.",
+        "destructive_justification": "Writes and expiry cleanup affect only disposable public-data cache entries. No user-authored records, applications or evidence tables are deleted or overwritten. Public information can be fetched again; this cache is not an archival history of prior source versions.",
+        "open_world_justification": "Retrieves the specified subsidy from the public J-Grants detail API. Public internet access occurs on cache misses, bypasses or refreshes; a cache hit does not make the tool closed-world.",
+        "idempotent_justification": "Retries may refresh source content, fetched-at/expiry timestamps and remove additional expired cache entries. No guarantee of no additional state effects is made."
       }
     },
     "evaluate_subsidy_fit": {
       "annotations": {
         "readOnlyHint": false,
-        "openWorldHint": false,
-        "destructiveHint": false
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "idempotentHint": false
       },
       "justifications": {
-        "read_only_justification": "Retrieves public subsidy details, may refresh an internal public-data cache, and computes a non-binding fit assessment.",
-        "open_world_justification": "Does not apply for subsidies, submit forms, publish content, or modify external systems.",
-        "destructive_justification": "Only performs retry-safe cache refreshes and does not delete or irreversibly change user data."
+        "read_only_justification": "Retrieves public J-Grants detail data and computes a non-binding assessment against the supplied company facts. With D1 configured, cache misses or expiry can insert/replace public_api_cache rows and purge up to 100 expired cache rows. Search caching additionally requires CACHE_KEY_SECRET. The annotation covers these write-capable paths, including indirect calls.",
+        "destructive_justification": "Writes and expiry cleanup affect only disposable public-data cache entries. No user-authored records, applications or evidence tables are deleted or overwritten. Public information can be fetched again; this cache is not an archival history of prior source versions.",
+        "open_world_justification": "Retrieves public J-Grants detail data and computes a non-binding assessment against the supplied company facts. Public internet access occurs on cache misses, bypasses or refreshes; a cache hit does not make the tool closed-world.",
+        "idempotent_justification": "Retries may refresh source content, fetched-at/expiry timestamps and remove additional expired cache entries. No guarantee of no additional state effects is made."
+      }
+    },
+    "search_corporate_identities": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "idempotentHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Searches the National Tax Agency public corporate-number API by company name, optional location code and page; returns candidates without automatically selecting a company. The handler does not write to D1, enqueue jobs or change business records.",
+        "destructive_justification": "Only retrieves public data; no records are deleted or overwritten and no applications, messages or transactions are submitted.",
+        "open_world_justification": "Searches the National Tax Agency public corporate-number API by company name, optional location code and page; returns candidates without automatically selecting a company. This accesses public internet services, not a bounded private account or workspace, even though access is read-only.",
+        "idempotent_justification": "Repeated calls have no additional business-state effects. Upstream public data may change, so identical response content is not promised."
+      }
+    },
+    "get_corporate_identity": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": true,
+        "idempotentHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Retrieves the latest public corporate identity from the National Tax Agency API for the explicitly supplied corporate number. The handler does not write to D1, enqueue jobs or change business records.",
+        "destructive_justification": "Only retrieves public data; no records are deleted or overwritten and no applications, messages or transactions are submitted.",
+        "open_world_justification": "Retrieves the latest public corporate identity from the National Tax Agency API for the explicitly supplied corporate number. This accesses public internet services, not a bounded private account or workspace, even though access is read-only.",
+        "idempotent_justification": "Repeated calls have no additional business-state effects. Upstream public data may change, so identical response content is not promised."
       }
     }
   },
@@ -204,6 +258,14 @@
       "file_attachment_urls": null,
       "tools_triggered": "prepare_professional_consultation",
       "expected_output": "制度名と会社名を捏造せず、未確認論点ごとに相談先、具体的な質問、準備する資料名、申請締切、AIと専門家の判断境界を整理したコピー可能な相談メモを返します。非公開資料の内容は求めず、自動送信もしません。",
+      "expected_output_url": null
+    },
+    {
+      "description": "Search and verify corporate identity through the National Tax Agency public API.",
+      "user_prompt": "補助金AIを使って、国税庁の法人番号情報から「トヨタ自動車株式会社」を名称検索してください。所在地と法人番号で候補を確認し、一意に確認できる場合だけ、その候補の法人番号で最新情報を照会してください。同名候補が複数ある場合は自動決定しないでください。名称、法人番号、所在地、閉鎖情報、出典と国税庁の非保証表示を示してください。閉鎖情報がないことを営業実態や補助金の申請資格の保証としないでください。",
+      "file_attachment_urls": null,
+      "tools_triggered": "search_corporate_identities, get_corporate_identity",
+      "expected_output": "国税庁の公開情報から候補を提示し、一意に確認できた法人番号だけを照会します。検索の続きがあれば明示し、閉鎖情報、出典、非保証表示を返します。複数候補なら追加確認に留め、申請資格は断定しません。",
       "expected_output_url": null
     }
   ],

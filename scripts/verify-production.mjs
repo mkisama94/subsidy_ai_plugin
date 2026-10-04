@@ -1,11 +1,17 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { setDefaultResultOrder } from 'node:dns';
 import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/client';
 
 // Reads metadata by default. --smoke also calls public lookups, a consultation
 // calculation and subsidy lookups (which may refresh disposable caches).
 // Never invokes evidence/estimate upserts against production.
 const endpoint = new URL(process.env.MCP_VERIFY_URL ?? 'https://subsidy.ai-orchestration.jp/mcp');
+if (process.argv.includes('--ipv4-first')) setDefaultResultOrder('ipv4first');
+const documentsEnabled = process.argv.includes('--documents-enabled');
+if (process.env.DOCUMENT_VERIFY_REQUIRE_AVAILABLE === 'true' && !documentsEnabled) {
+  throw new Error('DOCUMENT_VERIFY_REQUIRE_AVAILABLE requires --documents-enabled');
+}
 const submission = JSON.parse(fs.readFileSync(new URL('../chatgpt-app-submission.json', import.meta.url), 'utf8'));
 const client = new Client({ name: 'subsidy-review-verification', version: '1.0.0' });
 const report = { checkedAt: new Date().toISOString(), endpoint: endpoint.href, checks: [] };
@@ -15,9 +21,10 @@ try {
   const { tools } = await client.listTools();
   report.tools = tools.map(({name,annotations})=>({name,annotations}));
   if (!process.argv.includes('--snapshot')) {
-    assert.deepEqual(tools.map(t=>t.name).sort(), Object.keys(submission.tools).sort());
+    const expectedNames = Object.keys(submission.tools).filter(name => documentsEnabled || name !== 'get_subsidy_documents');
+    assert.deepEqual(tools.map(t=>t.name).sort(), expectedNames.sort());
     for(const tool of tools) assert.deepEqual(tool.annotations,submission.tools[tool.name].annotations,tool.name);
-    report.checks.push({name:'tools/list matches submission',ok:true});
+    report.checks.push({name:documentsEnabled?'16 tools match enabled release':'15 tools match hidden-document release',ok:true});
   }
   if(process.argv.includes('--smoke')) {
     async function call(name,args,validate) {
@@ -49,6 +56,15 @@ try {
       assert.equal(v.recommended,true); assert.ok(v.readyToSendMessage); assert.ok(v.responseGuidance);
     });
     await call('get_official_selection_statistics',{jgrants_subsidy_id:'a0WJ200000CDdtlMAD'},v=>assert.ok(Array.isArray(v.statistics)));
+    if (documentsEnabled) await call('get_subsidy_documents',{subsidy_id:process.env.DOCUMENT_VERIFY_SUBSIDY_ID ?? 'a0WJ200000CDdtMMAT'},v=>{
+      assert.equal(v.schemaVersion,'1.0'); assert.equal(v.coverage.requiredSetVerified,false);
+      assert.ok(Array.isArray(v.documents));
+      if(process.env.DOCUMENT_VERIFY_REQUIRE_AVAILABLE==='true') {
+        assert.ok(['available','partial'].includes(v.status));
+        assert.ok(v.documents.length>0,'A confirmed document must be returned; an empty or reference-only response does not prove availability.');
+      }
+      report.documentRegistry={status:v.status,reasonCode:v.reasonCode??null,count:v.documents.length};
+    });
   }
   if(process.env.MCP_VERIFY_REPORT) fs.writeFileSync(process.env.MCP_VERIFY_REPORT,JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify(report,null,2));

@@ -2,9 +2,9 @@
   "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
   "schema_version": 1,
   "app_info": {
-    "display_name": "補助金AI",
-    "subtitle": "公的情報から補助金候補を整理",
-    "description": "補助金AIは、Jグランツの補助金情報、国税庁の法人番号・名称・所在地情報と経済産業省の公開法人情報を検索し、企業ごとの候補条件、一致・不一致・未確認事項、公式な参照元を整理します。金融庁EDINETの公開資料を使った申告済み親会社候補の確認、制度ごとのみなし大企業要件の照合、過去の公式採択実績の参照、専門家へ相談するための論点整理にも対応します。検索結果や評価は申請資格・採択・補助額を保証するものではなく、申請前に最新の公募要領と実施機関の案内を確認する必要があります。",
+    "display_name": "日本の補助金・公的支援検索",
+    "subtitle": "公的機関データに基づく補助金検索",
+    "description": "デジタル庁や国税庁などの公的機関が公式に提供するデータと企業情報をもとに、自社で利用できそうな補助金や公的支援制度を探します。\n\n制度名を並べるだけでなく、企業情報と対象条件を照合し、一致している条件、不一致の条件、追加で確認が必要な項目を整理します。あわせて公式情報の参照元も提示するため、検索結果の根拠を確認しながら申請候補を検討できます。\n\n経営者や事業責任者による自社の制度探索はもちろん、社労士・行政書士などの専門家が、顧客企業に適した制度を調査したり、相談前の論点を整理したりする用途にも利用できます。\n\n過去の採択実績や企業情報も必要に応じて参照し、申請前の検討や専門家への相談準備を支援します。\n\n検索結果は申請資格や採択を保証するものではありません。申請前に最新の公募要領や実施機関の案内をご確認ください。\n\n【主な参照情報】\n・Jグランツ\n・gBizINFO\n・国税庁 法人番号公表サイト\n・金融庁 EDINET",
     "category": "PRODUCTIVITY"
   },
   "tools": {
@@ -217,28 +217,42 @@
         "open_world_justification": "Retrieves the latest public corporate identity from the National Tax Agency API for the explicitly supplied corporate number. This accesses public internet services, not a bounded private account or workspace, even though access is read-only.",
         "idempotent_justification": "Repeated calls have no additional business-state effects. Upstream public data may change, so identical response content is not promised."
       }
+    },
+    "get_subsidy_documents": {
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "openWorldHint": false,
+        "idempotentHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Reads pre-collected public document metadata from the internal D1 registry only. Does not fetch webpages, invoke a classifier, enqueue jobs, or write records.",
+        "destructive_justification": "No stored source, snapshot, document or business record is created, overwritten or deleted by this tool. Collection is a separate operator-managed process.",
+        "open_world_justification": "Execution is bounded to the internal public-document registry. Official URLs are returned as references but are not fetched during this call.",
+        "idempotent_justification": "Repeated reads have no persistent side effects. Independent scheduled updates and time-based freshness may change the returned information."
+      }
     }
   },
   "test_cases": [
     {
       "description": "Search J-Grants for energy-efficiency subsidies in Tokyo and inspect one result even when no program is currently accepting applications.",
-      "user_prompt": "補助金AIを使って、検索語を『民間建築物 省CO2 改修』、対象地域を『東京都』として、Jグランツ制度を最大3件探してください。まず現在受付中の制度を検索し、該当が0件なら受付終了を含む直近の制度を検索してください。見つかった件数が3件未満なら実際の件数を示してください。候補が1件以上あれば、受付中を優先して最も締切が近い1件、受付中がなければ最も新しい1件の詳細も取得し、Jグランツの補助金ID、制度名、受付期間、公式詳細URL、申請前に確認すべき点を示してください。申請資格や採択は断定しないでください。",
+      "user_prompt": "日本の補助金・公的支援検索を使って、検索語を『民間建築物 省CO2 改修』、対象地域を『東京都』として、Jグランツ制度を最大3件探してください。まず現在受付中の制度を検索し、該当が0件なら受付終了を含む直近の制度を検索してください。見つかった件数が3件未満なら実際の件数を示してください。候補が1件以上あれば、受付中を優先して最も締切が近い1件、受付中がなければ最も新しい1件の詳細も取得し、Jグランツの補助金ID、制度名、受付期間、公式詳細URL、申請前に確認すべき点を示してください。申請資格や採択は断定しないでください。",
       "file_attachment_urls": null,
       "tools_triggered": "search_subsidies, get_subsidy_detail",
       "expected_output": "現在受付中を優先して最大3件を返し、0件の場合は受付終了を含めて再検索します。候補があれば1件の詳細を取得し、補助金ID、制度名、受付期間、公式URL、確認事項を示します。該当件数が少ない場合は結果を捏造せず、申請資格や採択を断定しません。",
       "expected_output_url": null
     },
     {
-      "description": "Retrieve the public company profile and activity records for an explicitly identified Japanese corporation.",
-      "user_prompt": "補助金AIを使って、法人番号1180301018771の法人について、経済産業省の法人情報データベースから公開基本情報と公開活動情報を取得してください。基本情報では法人名、所在地、資本金、業種、従業員数について、確認できた値と未登録の項目を区別してください。活動情報では、認定、表彰、事業所、財務、特許等、調達、補助金、職場情報を種類別に整理し、各種類の表示は最大3件にしてください。取得失敗や件数差があれば明示してください。未登録情報を推測せず、この法人番号以外の法人へ置き換えないでください。",
+      "description": "Verify a specified corporate identity with the National Tax Agency, then retrieve its public gBizINFO profile and activity records.",
+      "user_prompt": "日本の補助金・公的支援検索を使って、トヨタ自動車株式会社（照会対象の法人番号1180301018771）を調べてください。まず国税庁の法人名検索で候補を取得し、指定した法人番号の候補を確認したうえで、同じ法人番号の最新情報を照会してください。名称・法人番号が一致しなければ別法人へ置き換えず、その旨を示して止めてください。名称、法人番号、所在地、閉鎖情報、出典と国税庁の非保証表示を示し、閉鎖情報なしを営業実態や申請資格の保証としないでください。確認できたら、同じ法人番号について経済産業省の法人情報データベースから公開基本情報と公開活動情報を取得してください。基本情報では資本金、業種、従業員数の確認できた値と未登録項目を区別し、国税庁の情報との相違があれば出典ごとに示してください。活動情報では認定、表彰、事業所、財務、特許等、調達、補助金、職場情報を種類別に整理し、各種類の表示は最大3件にしてください。取得失敗や件数差を明示し、未登録情報は推測しないでください。",
       "file_attachment_urls": null,
-      "tools_triggered": "get_company_profile, get_company_activities",
-      "expected_output": "指定された法人番号について、公開基本情報と8種類の活動情報を分け、各種類を最大3件に制限して返します。未登録項目、取得失敗、件数差を明示し、値を推測したり別法人へ置き換えたりしません。",
+      "tools_triggered": "search_corporate_identities, get_corporate_identity, get_company_profile, get_company_activities",
+      "expected_output": "国税庁の名称検索結果を指定された法人番号で確認し、その番号の最新公表情報と出典・非保証表示を返します。指定情報が一致しなければ自動で別法人を選ばず停止します。一致した場合は同じ番号のgBizINFO基本情報と8種類の活動情報を取得し、各種類最大3件を表示します。情報源間の相違、未登録項目、取得失敗、件数差、検索の続きの有無を明示し、営業実態や申請資格は断定しません。",
       "expected_output_url": null
     },
     {
       "description": "Evaluate a specifically identified company against a specifically identified J-Grants program without relying on prior conversation context.",
-      "user_prompt": "補助金AIを使って、法人番号1180301018771の法人と、Jグランツ補助金ID a0WJ200000CDdtlMADの制度を照合してください。検討中の事業は『国内の製造拠点にある既存の空調・照明設備を高効率設備へ更新する』です。経済産業省の公開法人情報とJグランツの公開条件を使い、一致する条件、不一致の可能性、公開情報だけでは確認できない事項、参照元を分けて説明してください。入力値と公開情報に矛盾があれば両方を示し、申請資格、補助対象、採択可能性を断定しないでください。",
+      "user_prompt": "日本の補助金・公的支援検索を使って、法人番号1180301018771の法人と、Jグランツ補助金ID a0WJ200000CDdtlMADの制度を照合してください。検討中の事業は『国内の製造拠点にある既存の空調・照明設備を高効率設備へ更新する』です。経済産業省の公開法人情報とJグランツの公開条件を使い、一致する条件、不一致の可能性、公開情報だけでは確認できない事項、参照元を分けて説明してください。入力値と公開情報に矛盾があれば両方を示し、申請資格、補助対象、採択可能性を断定しないでください。",
       "file_attachment_urls": null,
       "tools_triggered": "evaluate_subsidy_fit_for_company",
       "expected_output": "指定された法人番号と補助金IDを使って公開情報を照合し、一致、不一致の可能性、未確認事項、入力値との矛盾、公式参照元を分けて返します。申請資格、補助対象、採択可能性は断定しません。",
@@ -246,7 +260,7 @@
     },
     {
       "description": "Verify a user-supplied parent-company candidate using current public EDINET filings.",
-      "user_prompt": "補助金AIを使って、ダイハツ工業株式会社の親会社候補として私が申告したトヨタ自動車株式会社との資本関係だけを、EDINETの最新の有価証券報告書で確認してください。別の親会社候補を推測したり探索したりしないでください。対象会社名、書類管理番号、提出日、確認できた関係と比率、根拠となる記載、未確認事項を分けて示してください。書類に対象会社名が見つからない場合も、資本関係がないとは断定しないでください。資本関係だけを理由に、特定の補助金へ申請できないとも断定しないでください。",
+      "user_prompt": "日本の補助金・公的支援検索を使って、ダイハツ工業株式会社の親会社候補として私が申告したトヨタ自動車株式会社との資本関係だけを、EDINETの最新の有価証券報告書で確認してください。別の親会社候補を推測したり探索したりしないでください。対象会社名、書類管理番号、提出日、確認できた関係と比率、根拠となる記載、未確認事項を分けて示してください。書類に対象会社名が見つからない場合も、資本関係がないとは断定しないでください。資本関係だけを理由に、特定の補助金へ申請できないとも断定しないでください。",
       "file_attachment_urls": null,
       "tools_triggered": "verify_corporate_relationship",
       "expected_output": "申告された親会社候補だけを検証し、EDINETの公開資料について書類管理番号、提出日、対象会社名、確認できた関係・比率・根拠、未確認事項を分けて返します。未検出を関係なしと扱わず、補助金の申請可否も断定しません。",
@@ -254,25 +268,17 @@
     },
     {
       "description": "Turn unresolved subsidy eligibility questions into a practical consultation brief without collecting private documents.",
-      "user_prompt": "補助金AIを使って、事業者向け補助金を検討するための相談メモを作成してください。制度名と会社名はまだ確認できていないため、推測で補わないでください。資本関係、役員兼務、対象経費が未確認です。株主名簿や決算書など非公開資料の内容は入力せず、確認事項ごとに、社会保険労務士、税理士または公認会計士、補助金の実施機関のうち誰に何を質問し、どの資料を準備すべきか、コピーして使える形で整理してください。資料は内容ではなく資料名だけを挙げてください。申請締切は2026年10月31日です。申請資格や採択を断定せず、相談先へ自動送信しないでください。",
+      "user_prompt": "日本の補助金・公的支援検索を使って、事業者向け補助金を検討するための相談メモを作成してください。制度名と会社名はまだ確認できていないため、推測で補わないでください。資本関係、役員兼務、対象経費が未確認です。株主名簿や決算書など非公開資料の内容は入力せず、確認事項ごとに、社会保険労務士、税理士または公認会計士、補助金の実施機関のうち誰に何を質問し、どの資料を準備すべきか、コピーして使える形で整理してください。資料は内容ではなく資料名だけを挙げてください。申請締切は2026年10月31日です。申請資格や採択を断定せず、相談先へ自動送信しないでください。",
       "file_attachment_urls": null,
       "tools_triggered": "prepare_professional_consultation",
       "expected_output": "制度名と会社名を捏造せず、未確認論点ごとに相談先、具体的な質問、準備する資料名、申請締切、AIと専門家の判断境界を整理したコピー可能な相談メモを返します。非公開資料の内容は求めず、自動送信もしません。",
-      "expected_output_url": null
-    },
-    {
-      "description": "Search and verify corporate identity through the National Tax Agency public API.",
-      "user_prompt": "補助金AIを使って、国税庁の法人番号情報から「トヨタ自動車株式会社」を名称検索してください。所在地と法人番号で候補を確認し、一意に確認できる場合だけ、その候補の法人番号で最新情報を照会してください。同名候補が複数ある場合は自動決定しないでください。名称、法人番号、所在地、閉鎖情報、出典と国税庁の非保証表示を示してください。閉鎖情報がないことを営業実態や補助金の申請資格の保証としないでください。",
-      "file_attachment_urls": null,
-      "tools_triggered": "search_corporate_identities, get_corporate_identity",
-      "expected_output": "国税庁の公開情報から候補を提示し、一意に確認できた法人番号だけを照会します。検索の続きがあれば明示し、閉鎖情報、出典、非保証表示を返します。複数候補なら追加確認に留め、申請資格は断定しません。",
       "expected_output_url": null
     }
   ],
   "negative_test_cases": [
     {
       "description": "Do not trigger when the user asks the app to complete and submit a subsidy application.",
-      "user_prompt": "補助金AIの対応範囲だけを確認します。補助金AIは、利用者に代わってJグランツへログインし、申請書への入力や代理提出を行えますか。実際の申請作業、制度検索、資料収集は行わず、対応できるかどうかと、補助金AIが支援できる範囲だけを簡潔に説明してください。ログイン情報や申請資料も要求しないでください。",
+      "user_prompt": "日本の補助金・公的支援検索の対応範囲だけを確認します。日本の補助金・公的支援検索は、利用者に代わってJグランツへログインし、申請書への入力や代理提出を行えますか。実際の申請作業、制度検索、資料収集は行わず、対応できるかどうかと、日本の補助金・公的支援検索が支援できる範囲だけを簡潔に説明してください。ログイン情報や申請資料も要求しないでください。",
       "file_attachment_urls": null,
       "tools_triggered": null,
       "expected_output": "The plugin must not invoke any tool, request credentials or documents, or perform any external action. The response should state that logging in to J-Grants, completing application forms, and submitting on the user's behalf are unsupported, while briefly identifying the research and consultation-preparation assistance the plugin can provide.",
@@ -280,7 +286,7 @@
     },
     {
       "description": "Do not trigger for personal benefit or household welfare eligibility requests outside business subsidy research.",
-      "user_prompt": "補助金AIの対応範囲だけを確認します。補助金AIは、個人世帯の児童手当について受給資格を判定したり、個人向けの申請手続きを案内したりできますか。実際の制度検索、受給資格の判定、個人情報の収集は行わず、対応できるかどうかだけを簡潔に説明してください。",
+      "user_prompt": "日本の補助金・公的支援検索の対応範囲だけを確認します。日本の補助金・公的支援検索は、個人世帯の児童手当について受給資格を判定したり、個人向けの申請手続きを案内したりできますか。実際の制度検索、受給資格の判定、個人情報の収集は行わず、対応できるかどうかだけを簡潔に説明してください。",
       "file_attachment_urls": null,
       "tools_triggered": null,
       "expected_output": "The plugin must not invoke any tool, search for personal benefits, collect personal information, or assess eligibility. The response should explain that household benefits and personal application procedures are outside the plugin's business-subsidy and public-corporate-information scope.",
@@ -288,7 +294,7 @@
     },
     {
       "description": "Do not trigger for unrelated scheduling requests.",
-      "user_prompt": "補助金AIの対応範囲だけを確認します。補助金AIは、私のGoogleカレンダーを確認して空き時間を探したり、会議を登録したりできますか。実際にカレンダーを開いたり、予定を検索・登録したり、Google Calendarなど別のサービスへ接続したりせず、対応できるかどうかだけを簡潔に説明してください。",
+      "user_prompt": "日本の補助金・公的支援検索の対応範囲だけを確認します。日本の補助金・公的支援検索は、私のGoogleカレンダーを確認して空き時間を探したり、会議を登録したりできますか。実際にカレンダーを開いたり、予定を検索・登録したり、Google Calendarなど別のサービスへ接続したりせず、対応できるかどうかだけを簡潔に説明してください。",
       "file_attachment_urls": null,
       "tools_triggered": null,
       "expected_output": "The plugin must not invoke any tool, connect to a calendar service, inspect availability, or create an event. The response should state that calendar access and meeting scheduling are outside the plugin's supported scope.",

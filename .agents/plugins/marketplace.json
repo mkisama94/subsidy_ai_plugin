@@ -1,7 +1,7 @@
 {
   "name": "subsidy-ai",
   "interface": {
-    "displayName": "補助金AI"
+    "displayName": "日本の補助金・公的支援検索"
   },
   "plugins": [
     {

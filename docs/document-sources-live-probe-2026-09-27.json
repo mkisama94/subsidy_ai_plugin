@@ -1,0 +1,88 @@
+{
+  "checkedAt": "2026-09-27T05:03:46.803Z",
+  "scope": "extraction_and_reachability_only",
+  "roundsApproved": false,
+  "aiCalled": false,
+  "results": [
+    {
+      "sourcePageUrl": "https://portal.monodukuri-hojo.jp/about.html",
+      "status": "extracted",
+      "candidateCount": 40,
+      "ignoredCount": 0,
+      "samples": [
+        {
+          "title": "公募要領(23次締切分)",
+          "fileType": "pdf",
+          "fileUrl": "https://portal.monodukuri-hojo.jp/common/bunsho/ippan/23th/%E5%85%AC%E5%8B%9F%E8%A6%81%E9%A0%98_23%E6%AC%A1%E7%B7%A0%E5%88%87_20260206.pdf",
+          "sourcePageUrl": "https://portal.monodukuri-hojo.jp/about.html",
+          "linkStatus": "reachable",
+          "httpStatus": 200
+        },
+        {
+          "title": "CAGR算出ツール",
+          "fileType": "xlsx",
+          "fileUrl": "https://portal.monodukuri-hojo.jp/common/bunsho/ippan/CAGR%E7%AE%97%E5%87%BA%E3%83%84%E3%83%BC%E3%83%AB_20250314.xlsx",
+          "sourcePageUrl": "https://portal.monodukuri-hojo.jp/about.html",
+          "linkStatus": "reachable",
+          "httpStatus": 200
+        },
+        {
+          "title": "参考様式 事業計画書 記載項目(23次締切分)",
+          "fileType": "docx",
+          "fileUrl": "https://portal.monodukuri-hojo.jp/common/bunsho/ippan/23th/%E5%8F%82%E8%80%83%E6%A7%98%E5%BC%8F_%E4%BA%8B%E6%A5%AD%E8%A8%88%E7%94%BB%E6%9B%B8%E8%A8%98%E8%BC%89%E9%A0%85%E7%9B%AE_23%E6%AC%A1%E7%B7%A0%E5%88%87_20260225.docx",
+          "sourcePageUrl": "https://portal.monodukuri-hojo.jp/about.html",
+          "linkStatus": "reachable",
+          "httpStatus": 200
+        }
+      ]
+    },
+    {
+      "sourcePageUrl": "https://shinjigyou-shinshutsu.smrj.go.jp/downloads",
+      "status": "extracted",
+      "candidateCount": 22,
+      "ignoredCount": 0,
+      "samples": [
+        {
+          "title": "第4回 公募要領更新日:2026.3.27",
+          "fileType": "pdf",
+          "fileUrl": "https://shinjigyou-shinshutsu.smrj.go.jp/docs/shinjigyou_koubo_4.pdf?781773f1",
+          "sourcePageUrl": "https://shinjigyou-shinshutsu.smrj.go.jp/downloads",
+          "linkStatus": "reachable",
+          "httpStatus": 200
+        },
+        {
+          "title": "第4回 事業計画テンプレート更新日:2026.5.18",
+          "fileType": "docx",
+          "fileUrl": "https://shinjigyou-shinshutsu.smrj.go.jp/docs/shinjigyou_jigyoukeikaku_4.docx?781773f1",
+          "sourcePageUrl": "https://shinjigyou-shinshutsu.smrj.go.jp/downloads",
+          "linkStatus": "reachable",
+          "httpStatus": 200
+        },
+        {
+          "title": "第4回 応募申請画面インポート用フォーマット(スケジュール)更新日:2026.3.27",
+          "fileType": "xlsx",
+          "fileUrl": "https://shinjigyou-shinshutsu.smrj.go.jp/docs/shinjigyou_jigyoukeikaku_4_schedule.xlsx?781773f1",
+          "sourcePageUrl": "https://shinjigyou-shinshutsu.smrj.go.jp/downloads",
+          "linkStatus": "reachable",
+          "httpStatus": 200
+        }
+      ]
+    },
+    {
+      "sourcePageUrl": "https://official.jizokukanb.com/shinsei/",
+      "status": "extracted",
+      "candidateCount": 2,
+      "ignoredCount": 1,
+      "samples": [
+        {
+          "title": "公募要領(第8版)",
+          "fileType": "pdf",
+          "fileUrl": "https://official.jizokukanb.com/wp-content/uploads/2026/07/20_%E9%80%9A%E5%B8%B8%E6%9E%A0_%E5%85%AC%E5%8B%9F%E8%A6%81%E9%A0%98_%E7%AC%AC8%E7%89%88.pdf",
+          "sourcePageUrl": "https://official.jizokukanb.com/shinsei",
+          "linkStatus": "reachable",
+          "httpStatus": 200
+        }
+      ]
+    }
+  ]
+}

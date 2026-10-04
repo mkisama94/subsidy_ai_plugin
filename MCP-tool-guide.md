@@ -1,6 +1,6 @@
-# ツール注釈の理由（0.11.0）
+# ツール注釈の理由（0.12.0）
 
-本番の全15ツールに対応。Platformの各理由欄へ転記するための説明です。任意のidempotentHintも明示しています。
+ローカル0.12.0の全16ツールに対応。本番配備状況は別途確認してください。Platformの各理由欄へ転記するための説明です。任意のidempotentHintも明示しています。
 
 ## search_companies
 
@@ -360,3 +360,26 @@ Retrieves the latest public corporate identity from the National Tax Agency API 
 **idempotent_justification**
 
 Repeated calls have no additional business-state effects. Upstream public data may change, so identical response content is not promised.
+
+## get_subsidy_documents
+
+- readOnlyHint: true
+- destructiveHint: false
+- openWorldHint: false
+- idempotentHint: true
+
+### read_only_justification
+
+Reads pre-collected public document metadata from the internal D1 registry only. Does not fetch webpages, invoke a classifier, enqueue jobs, or write records.
+
+### destructive_justification
+
+No stored source, snapshot, document or business record is created, overwritten or deleted by this tool. Collection is a separate operator-managed process.
+
+### open_world_justification
+
+Execution is bounded to the internal public-document registry. Official URLs are returned as references but are not fetched during this call.
+
+### idempotent_justification
+
+Repeated reads have no persistent side effects. Independent scheduled updates and time-based freshness may change the returned information.

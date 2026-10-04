@@ -2,6 +2,9 @@ import { McpServer } from "@modelcontextprotocol/server";
 import { NtaApiError, getCorporateIdentity, searchCorporateIdentities } from "./nta";
 import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
+import { DocumentError, enabled, inputSchema as documentInputSchema, type DocumentEnv } from "./officialDocuments/types";
+import { getSubsidyDocuments } from "./officialDocuments/service";
+import { collectDueSources } from "./officialDocuments/collect";
 import { D1PublicApiCache } from "./cache";
 import { getSubsidyDetail, JGrantsApiError, searchSubsidies } from "./jgrants";
 import { evaluateSubsidyFit } from "./matching";
@@ -32,7 +35,7 @@ import {
 } from "./professionalConsultation";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.11.0";
+const SERVER_VERSION = "0.12.0";
 const DOMAIN_VERIFICATION_PATH = "/.well-known/openai-apps-challenge";
 
 // OpenAI's public plugin review requires all three safety hints on every tool.
@@ -87,6 +90,7 @@ function jsonToolResult(value: unknown) {
 
 function errorToolResult(error: unknown) {
   const known =
+    error instanceof DocumentError ||
     error instanceof NtaApiError ||
     error instanceof JGrantsApiError ||
     error instanceof GBizInfoApiError ||
@@ -116,7 +120,7 @@ function errorToolResult(error: unknown) {
   };
 }
 
-type Env = {
+type Env = DocumentEnv & {
   NTA_APPLICATION_ID?: string;
   GBIZINFO_API_TOKEN?: string;
   EDINET_API_KEY?: string;
@@ -1103,10 +1107,23 @@ export function createServer(env: Env): McpServer {
     },
   );
 
+  if (enabled(env.OFFICIAL_DOCUMENTS_ENABLED)) {
+    server.registerTool("get_subsidy_documents", {
+      annotations: READ_ONLY_ANNOTATIONS,
+      description: "登録済みの公式資料リンクを公募回別に取得します。内部D1の読み取りのみで、Web取得・AI分類・ジョブ登録を起こしません。未収集、古い情報、公募回の選択待ちを区別してください。必要書類一式や個別企業への提出義務は判定しません。直リンクがない場合はsourcePageUrlを案内し、recommendedActionとresponseGuidanceに従ってください。",
+      inputSchema: documentInputSchema.shape,
+    }, async input => {
+      try { return jsonToolResult(await getSubsidyDocuments(input,env)); }
+      catch(error) { return errorToolResult(error); }
+    });
+  }
   return server;
 }
 
 export default {
+  async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(collectDueSources(env).then(result => { console.log(JSON.stringify({event:"document_discovery",...result})); }));
+  },
   async fetch(
     request: Request,
     env: Env,

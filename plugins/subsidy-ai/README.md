@@ -1,4 +1,4 @@
-# 補助金AI
+# 日本の補助金・公的支援検索
 
 Jグランツの最新公開データと公募要領を参照し、日本の補助金について根拠付きで回答するためのプラグインです。
 
@@ -64,7 +64,7 @@ EDINETで確認した資本関係と、補助金制度上のみなし大企業�
 codex plugin marketplace add mkisama94/subsidy_ai_plugin --ref main
 ```
 
-続いて、補助金AIをインストールします。
+続いて、日本の補助金・公的支援検索をインストールします。
 
 ```powershell
 codex plugin add subsidy-ai@subsidy-ai
@@ -83,3 +83,7 @@ codex plugin add subsidy-ai@subsidy-ai
 - `get_subsidy_detail` が呼び出される
 - Jグランツの制度ID、受付期間、公式詳細URLが表示される
 - 検索結果だけで申請資格を断定しない
+
+## サーバー0.12.0の追加機能
+
+get_subsidy_documentsで登録済みの公募回別公式資料リンクを取得できます。初期設定は無効です。本番利用には配備・設定・掲載元登録が必要です。利用者ごとの必要書類は判断しません。

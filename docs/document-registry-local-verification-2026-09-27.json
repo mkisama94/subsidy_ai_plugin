@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-09-27T05:05:43.245Z",
+  "environment": "local_wrangler_workerd_d1",
+  "testData": true,
+  "roundMappingVerified": false,
+  "aiLiveVerified": false,
+  "tools": 16,
+  "status": "partial",
+  "coverage": {
+    "scope": "registered_sources_only",
+    "requiredSetVerified": false,
+    "registeredSourceCount": 1,
+    "successfulSourceCount": 1,
+    "completeExtractionSourceCount": 1,
+    "warningSourceCount": 1
+  },
+  "confirmedDocuments": 0,
+  "referenceDocuments": 40,
+  "runSources": [
+    {
+      "sourcePageUrl": "https://portal.monodukuri-hojo.jp/about.html",
+      "lastAttemptAt": "2026-09-27T05:05:42.595Z",
+      "lastSuccessAt": "2026-09-27T05:05:42.751Z",
+      "latestAttemptStatus": "not_modified"
+    }
+  ],
+  "adminChecks": {
+    "restore": {
+      "checkedAt": "2026-09-27T05:08:18.614Z",
+      "status": "partial",
+      "referenceDocuments": 40,
+      "sources": [
+        {
+          "sourcePageUrl": "https://portal.monodukuri-hojo.jp/about.html",
+          "lastAttemptAt": "2026-09-27T05:05:42.595Z",
+          "lastSuccessAt": "2026-09-27T05:04:27.265Z",
+          "latestAttemptStatus": "partial"
+        }
+      ],
+      "warnings": [
+        {
+          "reasonCode": "operator_restored_snapshot",
+          "message": "一部の資料・説明・掲載情報は確認中です。"
+        }
+      ]
+    },
+    "pause": {
+      "checkedAt": "2026-09-27T05:08:24.967Z",
+      "status": "not_indexed",
+      "referenceDocuments": 0,
+      "sources": [],
+      "warnings": []
+    }
+  }
+}

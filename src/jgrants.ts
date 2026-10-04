@@ -481,6 +481,18 @@ async function fetchSubsidyDetail(subsidyId: string) {
   };
 }
 
+// Internal metadata projection: never return or persist attachment Base64 bodies.
+export function extractJgrantsDocumentMetadata(payload: unknown) {
+  const item = getResultRecords(payload)[0];
+  if (!item) throw new JGrantsApiError("補助金詳細がありません。", "invalid_response");
+  return {
+    id: asString(item.id), detailHtml: asString(item.detail) ?? "",
+    workflowIds: asRecords(item.workflow).map(w => asString(w.id)).filter((x): x is string => Boolean(x)),
+    attachments: ["application_guidelines", "outline_of_grant", "application_form"].flatMap(type =>
+      asRecords(item[type]).map(doc => ({ type, name: asString(doc.name) ?? "名称未設定" }))),
+  };
+}
+
 export async function getSubsidyDetail(
   subsidyId: string,
   cacheOptions: JGrantsCacheOptions = {},

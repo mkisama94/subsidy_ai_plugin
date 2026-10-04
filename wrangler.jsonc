@@ -7,6 +7,14 @@
   "observability": {
     "enabled": true
   },
+  "triggers": { "crons": ["*/15 * * * *"] },
+  "vars": {
+    "OFFICIAL_DOCUMENTS_ENABLED": "false",
+    "DOCUMENT_DISCOVERY_ENABLED": "false",
+    "DOCUMENT_CLASSIFICATION_ENABLED": "false",
+    "DOCUMENT_CLASSIFICATION_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "DOCUMENT_AI_DAILY_CALL_LIMIT": "100"
+  },
   "d1_databases": [
     {
       "binding": "subsidy_ai_relations",

@@ -14,6 +14,7 @@ const expected: Record<string, boolean[]> = {
   get_company_activities: [true, false, true, true],
   search_subsidies: [false, false, true, false],
   get_subsidy_detail: [false, false, true, false],
+  get_subsidy_documents: [true, false, false, true],
   evaluate_subsidy_fit: [false, false, true, false],
   evaluate_subsidy_fit_for_company: [false, false, true, false],
   verify_corporate_relationship: [false, true, true, false],
@@ -25,8 +26,8 @@ const expected: Record<string, boolean[]> = {
 };
 const keys = ["readOnlyHint", "destructiveHint", "openWorldHint", "idempotentHint"] as const;
 
-test("実際のMCP tools/listの全15ツール・4注釈が審査用定義と一致する", async () => {
-  const server = createServer({});
+test("実際のMCP tools/listの全16ツール・4注釈が審査用定義と一致する", async () => {
+  const server = createServer({ OFFICIAL_DOCUMENTS_ENABLED: "true" });
   const client = new Client({ name: "review-contract-test", version: "1.0.0" });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await server.connect(serverTransport);
@@ -54,6 +55,24 @@ test("実際のMCP tools/listの全15ツール・4注釈が審査用定義と一
   } finally {
     await client.close();
     await server.close();
+  }
+});
+
+test("非公開時は既存15ツールのみを返し資料ツールの直接呼出しを拒否する", async () => {
+  for (const flag of [undefined, "false", "invalid"]) {
+    const server = createServer({ OFFICIAL_DOCUMENTS_ENABLED: flag, DOCUMENT_DISCOVERY_ENABLED: "true" });
+    const client = new Client({ name: "hidden-tool-test", version: "1" });
+    const [ct, st] = InMemoryTransport.createLinkedPair();
+    await server.connect(st); await client.connect(ct);
+    try {
+      const { tools } = await client.listTools();
+      assert.deepEqual(tools.map(t => t.name).sort(), Object.keys(expected).filter(n => n !== "get_subsidy_documents").sort());
+      for (const tool of tools) assert.deepEqual(tool.annotations, submission.tools[tool.name].annotations);
+      await assert.rejects(
+        () => client.callTool({ name: "get_subsidy_documents", arguments: { subsidy_id: "testsubsidy1" } }),
+        /Tool get_subsidy_documents not found/,
+      );
+    } finally { await client.close(); await server.close(); }
   }
 });
 

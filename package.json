@@ -1,6 +1,6 @@
 {
   "name": "subsidy-ai-mcp",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "license": "AGPL-3.0-only",
   "private": true,
   "type": "module",
@@ -10,6 +10,8 @@
     "test": "tsx --test test/**/*.test.ts",
     "verify:production": "node scripts/verify-production.mjs",
     "typecheck": "tsc --noEmit",
+    "comparison:preview": "tsx scripts/verify-comparison-ui.ts --preview-only",
+    "comparison:verify-ui": "tsx scripts/verify-comparison-ui.ts",
     "documents:import": "tsx scripts/import-document-sources.mjs",
     "documents:admin": "node scripts/documents-admin.mjs"
   },

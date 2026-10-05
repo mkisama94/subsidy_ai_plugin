@@ -90,7 +90,7 @@ export async function createResearchSourceHash(evidenceText: string) {
     .join("");
 }
 
-function isOfficialResearchHostname(hostname: string) {
+export function isOfficialResearchHostname(hostname: string) {
   const normalized = hostname.toLowerCase();
   return (
     normalized.endsWith(".go.jp") ||

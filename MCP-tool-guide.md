@@ -1,6 +1,29 @@
-# ツール注釈の理由（0.12.0）
+# ツール注釈の理由（0.13.0）
 
-ローカル0.12.0の全16ツールに対応。本番配備状況は別途確認してください。Platformの各理由欄へ転記するための説明です。任意のidempotentHintも明示しています。
+ローカル0.13.0の最大17ツールに対応。資料ナビ・比較UIは個別のフラグで有効化します。本番配備状況は別途確認してください。Platformの各理由欄へ転記するための説明です。任意のidempotentHintも明示しています。
+
+## render_subsidy_comparison
+
+- readOnlyHint: true
+- destructiveHint: false
+- openWorldHint: false
+- idempotentHint: true
+
+**read_only_justification**
+
+Validates and formats comparison data supplied by the model, returning an HTML UI resource and a text table. Does not write records, fetch upstream data or submit applications.
+
+**destructive_justification**
+
+Only produces a comparison display from supplied data. No database records, applications, files or external business state are deleted or overwritten.
+
+**open_world_justification**
+
+Rendering is bounded to the supplied comparison payload and a bundled UI resource. Source links are displayed but not fetched by this tool or the widget.
+
+**idempotent_justification**
+
+Repeated calls with the same validated payload produce the same structured comparison and text table, without persistent state or external side effects.
 
 ## search_companies
 

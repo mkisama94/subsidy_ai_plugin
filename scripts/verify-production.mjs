@@ -9,6 +9,10 @@ import { Client, StreamableHTTPClientTransport } from '@modelcontextprotocol/cli
 const endpoint = new URL(process.env.MCP_VERIFY_URL ?? 'https://subsidy.ai-orchestration.jp/mcp');
 if (process.argv.includes('--ipv4-first')) setDefaultResultOrder('ipv4first');
 const documentsEnabled = process.argv.includes('--documents-enabled');
+const comparisonEnabled = process.argv.includes('--comparison-enabled');
+if (process.argv.includes('--comparison-smoke') && !comparisonEnabled) {
+  throw new Error('--comparison-smoke requires --comparison-enabled');
+}
 if (process.env.DOCUMENT_VERIFY_REQUIRE_AVAILABLE === 'true' && !documentsEnabled) {
   throw new Error('DOCUMENT_VERIFY_REQUIRE_AVAILABLE requires --documents-enabled');
 }
@@ -21,10 +25,31 @@ try {
   const { tools } = await client.listTools();
   report.tools = tools.map(({name,annotations})=>({name,annotations}));
   if (!process.argv.includes('--snapshot')) {
-    const expectedNames = Object.keys(submission.tools).filter(name => documentsEnabled || name !== 'get_subsidy_documents');
+    const expectedNames = Object.keys(submission.tools).filter(name => (documentsEnabled || name !== 'get_subsidy_documents') && (comparisonEnabled || name !== 'render_subsidy_comparison'));
     assert.deepEqual(tools.map(t=>t.name).sort(), expectedNames.sort());
     for(const tool of tools) assert.deepEqual(tool.annotations,submission.tools[tool.name].annotations,tool.name);
-    report.checks.push({name:documentsEnabled?'16 tools match enabled release':'15 tools match hidden-document release',ok:true});
+    report.checks.push({name:`${expectedNames.length} tools match configured release`,ok:true});
+    if (comparisonEnabled) {
+      const tool = tools.find(t => t.name === 'render_subsidy_comparison');
+      assert.equal(tool._meta?.ui?.resourceUri, 'ui://subsidy-ai/comparison/v1.html');
+      const resource = await client.readResource({uri:tool._meta.ui.resourceUri});
+      assert.equal(resource.contents[0]?.mimeType, 'text/html;profile=mcp-app');
+      assert.ok(resource.contents[0]?.text?.includes('ui/initialize'));
+      report.checks.push({name:'comparison UI resource and metadata available (host rendering not verified)',ok:true});
+      if (process.argv.includes('--comparison-smoke')) {
+        const missing = {status:'unconfirmed',note:'UI検証用の架空データです。',sources:[],label:null};
+        const rendered = await client.callTool({name:tool.name,arguments:{demo:true,title:'比較UI接続検証（架空）',rows:[{
+          subsidyId:'demo1',name:'検証用制度（架空）',round:'検証用公募回（架空）',details:[],
+          pastRate:{status:'not_registered',value:null,round:null,applications:null,selected:null,note:null,sources:[]},
+          maximumGrant:{...missing,value:null},grantRate:missing,fit:missing,deadline:{...missing,value:null},
+        }]}});
+        assert.ok(!rendered.isError);
+        assert.equal(rendered.structuredContent?.schemaVersion,'1.0');
+        assert.equal(rendered.structuredContent?.demo,true);
+        assert.ok(rendered.content.some(c => c.type === 'text' && c.text.includes('実績未登録')));
+        report.checks.push({name:'comparison demo tool call returns structured data and fallback table',ok:true});
+      }
+    }
   }
   if(process.argv.includes('--smoke')) {
     async function call(name,args,validate) {

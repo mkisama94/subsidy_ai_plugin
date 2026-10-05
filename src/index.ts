@@ -1,4 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/server";
+import { registerComparison } from "./comparison/register";
 import { NtaApiError, getCorporateIdentity, searchCorporateIdentities } from "./nta";
 import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
@@ -35,7 +36,7 @@ import {
 } from "./professionalConsultation";
 
 const SERVER_NAME = "subsidy-ai-mcp";
-const SERVER_VERSION = "0.12.0";
+const SERVER_VERSION = "0.13.0";
 const DOMAIN_VERIFICATION_PATH = "/.well-known/openai-apps-challenge";
 
 // OpenAI's public plugin review requires all three safety hints on every tool.
@@ -121,6 +122,7 @@ function errorToolResult(error: unknown) {
 }
 
 type Env = DocumentEnv & {
+  SUBSIDY_COMPARISON_ENABLED?: string;
   NTA_APPLICATION_ID?: string;
   GBIZINFO_API_TOKEN?: string;
   EDINET_API_KEY?: string;
@@ -1117,6 +1119,7 @@ export function createServer(env: Env): McpServer {
       catch(error) { return errorToolResult(error); }
     });
   }
+  if (enabled(env.SUBSIDY_COMPARISON_ENABLED)) registerComparison(server);
   return server;
 }
 

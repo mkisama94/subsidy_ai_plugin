@@ -7,6 +7,7 @@ import { createServer } from "../src/index";
 const submission = JSON.parse(readFileSync(new URL("../chatgpt-app-submission.json", import.meta.url), "utf8"));
 // Independent review inventory: read-only, destructive, open-world, idempotent.
 const expected: Record<string, boolean[]> = {
+  render_subsidy_comparison: [true, false, false, true],
   search_corporate_identities: [true, false, true, true],
   get_corporate_identity: [true, false, true, true],
   search_companies: [true, false, true, true],
@@ -26,8 +27,8 @@ const expected: Record<string, boolean[]> = {
 };
 const keys = ["readOnlyHint", "destructiveHint", "openWorldHint", "idempotentHint"] as const;
 
-test("実際のMCP tools/listの全16ツール・4注釈が審査用定義と一致する", async () => {
-  const server = createServer({ OFFICIAL_DOCUMENTS_ENABLED: "true" });
+test("実際のMCP tools/listの全17ツール・4注釈が審査用定義と一致する", async () => {
+  const server = createServer({ OFFICIAL_DOCUMENTS_ENABLED: "true", SUBSIDY_COMPARISON_ENABLED: "true" });
   const client = new Client({ name: "review-contract-test", version: "1.0.0" });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await server.connect(serverTransport);
@@ -66,7 +67,7 @@ test("非公開時は既存15ツールのみを返し資料ツールの直接呼
     await server.connect(st); await client.connect(ct);
     try {
       const { tools } = await client.listTools();
-      assert.deepEqual(tools.map(t => t.name).sort(), Object.keys(expected).filter(n => n !== "get_subsidy_documents").sort());
+      assert.deepEqual(tools.map(t => t.name).sort(), Object.keys(expected).filter(n => !["get_subsidy_documents", "render_subsidy_comparison"].includes(n)).sort());
       for (const tool of tools) assert.deepEqual(tool.annotations, submission.tools[tool.name].annotations);
       await assert.rejects(
         () => client.callTool({ name: "get_subsidy_documents", arguments: { subsidy_id: "testsubsidy1" } }),

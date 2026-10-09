@@ -239,6 +239,8 @@ Cloudflare Workers上のMCPサーバー
 
 公式資料ナビの実装・設定は[運用手順](docs/official-document-registry-operations.md)を参照してください。資料リンクは既存キャッシュから分離したD1の4テーブルに保存します。公開取得は読み取りだけで、収集・AI分類は別の定期処理です。公式ファイルの本体や利用者の企業情報は保存しません。
 
+厚労省の雇用関係助成金について、Jグランツと独立した公式HTML/PDF収集・D1カタログと、統合検索 `discover_subsidies`・詳細 `get_discovered_subsidy_detail` を追加しています。初期対象は3系列17コースで、初期設定では全追加機能を無効にしています。[改善仕様](docs/mhlw-employment-grants-mcp-spec-2026-10-09.md)と[実装・運用手順](docs/mhlw-employment-grants-operations.md)を参照してください。既存プラグインを維持したMCP先行配備、収集のみの開始、公開版の検証、新ツールの段階公開を独立して行えます。ローカル検証済みで、本番公開・OpenAI反映・年度別条件の照合完了を示すものではありません。
+
 専門家への相談に進む場合、`prepare_professional_consultation`は`readyToSendMessage`（件名・本文）と`nextAction`を返します。Web検索で確認した情報からも利用でき、制度名、参照URL、確認済み事項、未確認論点、準備資料、既知の期限を相談文に引き継ぎます。本文では対応可否、専門外の場合の紹介、必要資料の共有方法、初期相談の費用と進め方を尋ねます。任意の`company_name`と`public_business_summary`には公開情報のみを指定し、不明な値は省略します。既存の適合判定が返す`professionalConsultation`にも同じ相談文が含まれます。`presentationGuidance`に従い、検討・相談に進む場面でコピーできる文面を提示します。候補探索のたびに長文を表示する必要はなく、相談論点がない場合の文面は`null`です。相談文の保存・自動送信は行いません。
 
 Jグランツの検索結果と補助金詳細は、Cloudflare D1へ読み取りキャッシュとして保存できます。`public_api_cache`には、正規化された公開補助金情報、取得日時、内容ハッシュ、通常の有効期限、および公式API障害時に限って使用できる失効猶予期限を保存します。

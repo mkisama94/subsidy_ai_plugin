@@ -1,0 +1,363 @@
+{
+  "startedAt": "2026-10-09T09:56:03.462Z",
+  "environment": "Node + ephemeral SQLite; official live GET; not Cloudflare production",
+  "collections": [
+    {
+      "sourceId": "mhlw-training",
+      "status": "staged",
+      "count": 7,
+      "coverage": {
+        "registeredCourses": 7,
+        "extractedCourses": 7,
+        "discoveredDocuments": 36,
+        "queuedDocuments": 34
+      }
+    },
+    {
+      "sourceId": "mhlw-career",
+      "status": "staged",
+      "count": 6,
+      "coverage": {
+        "registeredCourses": 6,
+        "extractedCourses": 6,
+        "discoveredDocuments": 50,
+        "queuedDocuments": 40
+      }
+    },
+    {
+      "sourceId": "mhlw-hiring-difficulty",
+      "status": "staged",
+      "count": 1,
+      "coverage": {
+        "registeredCourses": 1,
+        "extractedCourses": 1,
+        "discoveredDocuments": 61,
+        "queuedDocuments": 21
+      }
+    },
+    {
+      "sourceId": "mhlw-hiring-developmental",
+      "status": "staged",
+      "count": 1,
+      "coverage": {
+        "registeredCourses": 1,
+        "extractedCourses": 1,
+        "discoveredDocuments": 26,
+        "queuedDocuments": 12
+      }
+    },
+    {
+      "sourceId": "mhlw-hiring-middle-aged",
+      "status": "staged",
+      "count": 1,
+      "coverage": {
+        "registeredCourses": 1,
+        "extractedCourses": 1,
+        "discoveredDocuments": 15,
+        "queuedDocuments": 6
+      }
+    },
+    {
+      "sourceId": "mhlw-hiring-livelihood",
+      "status": "staged",
+      "count": 1,
+      "coverage": {
+        "registeredCourses": 1,
+        "extractedCourses": 1,
+        "discoveredDocuments": 18,
+        "queuedDocuments": 8
+      }
+    }
+  ],
+  "searches": [
+    {
+      "query": "AI研修",
+      "courses": [
+        "人材育成支援コース",
+        "人への投資促進コース",
+        "事業展開等リスキリング支援コース",
+        "教育訓練休暇等付与コース"
+      ]
+    },
+    {
+      "query": "正社員化",
+      "courses": [
+        "正社員化コース",
+        "障害者正社員化コース"
+      ]
+    },
+    {
+      "query": "採用",
+      "courses": [
+        "特定就職困難者コース",
+        "発達障害者・難治性疾患患者雇用開発コース",
+        "中高年層安定雇用支援コース",
+        "生活保護受給者等雇用開発コース"
+      ]
+    },
+    {
+      "query": "人材育成支援コース",
+      "courses": [
+        "人材育成支援コース",
+        "人への投資促進コース"
+      ]
+    },
+    {
+      "query": "教育訓練休暇等付与コース",
+      "courses": [
+        "教育訓練休暇等付与コース",
+        "建設労働者認定訓練コース"
+      ]
+    },
+    {
+      "query": "人への投資促進コース",
+      "courses": [
+        "人への投資促進コース"
+      ]
+    },
+    {
+      "query": "事業展開等リスキリング支援コース",
+      "courses": [
+        "事業展開等リスキリング支援コース"
+      ]
+    },
+    {
+      "query": "建設労働者認定訓練コース",
+      "courses": [
+        "建設労働者認定訓練コース",
+        "建設労働者技能実習コース"
+      ]
+    },
+    {
+      "query": "建設労働者技能実習コース",
+      "courses": [
+        "建設労働者技能実習コース",
+        "建設労働者認定訓練コース"
+      ]
+    },
+    {
+      "query": "障害者職業能力開発コース",
+      "courses": [
+        "障害者職業能力開発コース"
+      ]
+    },
+    {
+      "query": "正社員化コース",
+      "courses": [
+        "正社員化コース",
+        "障害者正社員化コース"
+      ]
+    },
+    {
+      "query": "障害者正社員化コース",
+      "courses": [
+        "障害者正社員化コース",
+        "正社員化コース"
+      ]
+    },
+    {
+      "query": "賃金規定等改定コース",
+      "courses": [
+        "賃金規定等改定コース",
+        "賃金規定等共通化コース"
+      ]
+    },
+    {
+      "query": "賃金規定等共通化コース",
+      "courses": [
+        "賃金規定等共通化コース"
+      ]
+    },
+    {
+      "query": "賞与・退職金制度導入コース",
+      "courses": [
+        "賞与・退職金制度導入コース"
+      ]
+    },
+    {
+      "query": "短時間労働者労働時間延長支援コース",
+      "courses": [
+        "短時間労働者労働時間延長支援コース"
+      ]
+    },
+    {
+      "query": "特定就職困難者コース",
+      "courses": [
+        "特定就職困難者コース"
+      ]
+    },
+    {
+      "query": "発達障害者・難治性疾患患者雇用開発コース",
+      "courses": [
+        "発達障害者・難治性疾患患者雇用開発コース"
+      ]
+    },
+    {
+      "query": "中高年層安定雇用支援コース",
+      "courses": [
+        "中高年層安定雇用支援コース"
+      ]
+    },
+    {
+      "query": "生活保護受給者等雇用開発コース",
+      "courses": [
+        "生活保護受給者等雇用開発コース"
+      ]
+    }
+  ],
+  "pdf": [
+    {
+      "url": "https://www.mhlw.go.jp/content/11800000/001085514.pdf",
+      "title": "周知用リーフレット「新入社員研修に助成金を活用できます！」［956KB］",
+      "status": "needs_review",
+      "pages": 2,
+      "fragments": 23,
+      "elapsedMs": 2178.2980000000025,
+      "byteLength": 978632,
+      "contentHash": "c577b797af8f3d32181f39e0528d47fc073793dd8cb7595a5eb925f3af040f9f",
+      "warnings": [
+        "table_layout_needs_review"
+      ]
+    },
+    {
+      "url": "https://www.mhlw.go.jp/content/11600000/001756111.pdf",
+      "title": "支給要領［19.3MB］",
+      "status": "needs_review",
+      "reasonCode": "pdf_page_limit",
+      "elapsedMs": 2164.147600000004,
+      "byteLength": 20215433,
+      "contentHash": "1148b591c19ea4e7d12538324214f493f33e35b2c4a224a718d587edf1cb13be",
+      "warnings": [
+        "pdf_page_limit"
+      ]
+    }
+  ],
+  "release": {
+    "releaseId": "db76c989-5b8f-4dab-9149-73a195336579",
+    "count": 17
+  },
+  "latency": {
+    "samples": 20,
+    "p95Ms": 9.595200000003388,
+    "scope": "local in-process D1 adapter, not production SLO"
+  },
+  "details": [
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000001",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000002",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000003",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000004",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000005",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000006",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000007",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000008",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000009",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000010",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000011",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000012",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000013",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000014",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000015",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000016",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    },
+    {
+      "candidateId": "8a17f201-1d28-4a31-a894-000000000017",
+      "status": "overview_only",
+      "evidenceRecords": 3
+    }
+  ],
+  "documents": {
+    "queued": 145,
+    "sample": [
+      {
+        "id": "00400cfef2d04991e2bf5280efcd931da210359bf749273e404aa253ae53bce8",
+        "title": "詳しくはこちら［228KB］",
+        "url": "https://www.mhlw.go.jp/content/000679427.pdf"
+      },
+      {
+        "id": "00491bbe383503e7886aea0514d2529d5694903b19d15237adcc55936f8be815",
+        "title": "支給要領［19.3MB］",
+        "url": "https://www.mhlw.go.jp/content/11600000/001756111.pdf"
+      },
+      {
+        "id": "00997e125dcc7ca76c48c5e5e1f7f01ec55be501e08f470fff7ca3b27c62b3c5",
+        "title": "雇用関係助成金共通要領Q&A［1.1MB］",
+        "url": "https://www.mhlw.go.jp/content/11600000/001749391.pdf"
+      },
+      {
+        "id": "012295f1b89ab1fd4dfbd454ff33337234a546478e796dfd5220804db0f3612c",
+        "title": "PDF例［37KB］",
+        "url": "https://www.mhlw.go.jp/content/001682013.pdf"
+      },
+      {
+        "id": "0249a73de52e6dcd5bf7678bae6c18a85b6c0ff4b0f9e50a0e079f942087e610",
+        "title": "特定求職者雇用開発助成金（発達障害者・難治性疾患患者雇用開発コース）の申請にあたって［1.3MB］",
+        "url": "https://www.mhlw.go.jp/content/000971192.pdf"
+      }
+    ]
+  },
+  "completedAt": "2026-10-09T09:56:46.166Z",
+  "status": "passed"
+}

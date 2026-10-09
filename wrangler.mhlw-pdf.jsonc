@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "subsidy-ai-mhlw-pdf",
+  "main": "src/officialSources/mhlw/pdfWorker.ts",
+  "compatibility_date": "2026-08-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "observability": {"enabled": true},
+  "limits": {"cpu_ms": 120000},
+  "vars": {"MHLW_INGESTION_ENABLED":"false","MHLW_AI_EXTRACTION_ENABLED":"false","MHLW_AI_DAILY_CALL_LIMIT":"0"},
+  "d1_databases": [{"binding":"subsidy_ai_relations","database_name":"subsidy-ai-relations","database_id":"7a921696-7f84-4195-b629-61ff7c2bf611"}],
+  "queues": {"consumers":[{"queue":"subsidy-ai-mhlw-pdf","max_batch_size":1,"max_batch_timeout":5,"max_retries":3,"max_concurrency":1,"retry_delay":300}]}
+}

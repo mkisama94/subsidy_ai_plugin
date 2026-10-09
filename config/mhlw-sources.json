@@ -1,0 +1,432 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "mhlw-training",
+      "programName": "人材開発支援助成金",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/d01-1.html",
+      "selector": "main",
+      "requiredText": [
+        "人材開発支援助成金"
+      ],
+      "policy": {
+        "pages": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/stf/",
+            "queryKeys": []
+          }
+        ],
+        "files": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/content/",
+            "queryKeys": []
+          },
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/file/",
+            "queryKeys": []
+          }
+        ]
+      },
+      "courses": [
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000001",
+          "key": "training",
+          "name": "人材育成支援コース",
+          "aliases": [],
+          "purposeTags": [
+            "研修",
+            "AI研修",
+            "人材育成"
+          ]
+        },
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000002",
+          "key": "training-leave",
+          "name": "教育訓練休暇等付与コース",
+          "aliases": [],
+          "purposeTags": [
+            "研修",
+            "教育訓練",
+            "休暇"
+          ]
+        },
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000003",
+          "key": "human-investment",
+          "name": "人への投資促進コース",
+          "aliases": [],
+          "purposeTags": [
+            "AI研修",
+            "デジタル",
+            "研修",
+            "人材育成"
+          ]
+        },
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000004",
+          "key": "reskilling",
+          "name": "事業展開等リスキリング支援コース",
+          "aliases": [],
+          "purposeTags": [
+            "AI研修",
+            "リスキリング",
+            "新事業",
+            "研修"
+          ]
+        },
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000005",
+          "key": "construction-certified",
+          "name": "建設労働者認定訓練コース",
+          "aliases": [],
+          "purposeTags": [
+            "建設",
+            "訓練"
+          ]
+        },
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000006",
+          "key": "construction-practical",
+          "name": "建設労働者技能実習コース",
+          "aliases": [],
+          "purposeTags": [
+            "建設",
+            "技能実習"
+          ]
+        },
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000007",
+          "key": "disability-training",
+          "name": "障害者職業能力開発コース",
+          "aliases": [],
+          "purposeTags": [
+            "職業訓練",
+            "障害者雇用"
+          ]
+        }
+      ],
+      "termsUrl": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "termsCheckedOn": "2026-10-09",
+      "intervalHours": 24,
+      "maxDocuments": 40,
+      "dependencyPages": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00018.html",
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00026.html"
+      ]
+    },
+    {
+      "id": "mhlw-career",
+      "programName": "キャリアアップ助成金",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/part_haken/jigyounushi/career.html",
+      "selector": "main",
+      "requiredText": [
+        "キャリアアップ助成金"
+      ],
+      "policy": {
+        "pages": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/stf/",
+            "queryKeys": []
+          }
+        ],
+        "files": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/content/",
+            "queryKeys": []
+          },
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/file/",
+            "queryKeys": []
+          }
+        ]
+      },
+      "courses": [
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000008",
+          "key": "permanent",
+          "name": "正社員化コース",
+          "aliases": [],
+          "purposeTags": [
+            "正社員化",
+            "転換"
+          ]
+        },
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000009",
+          "key": "disability-permanent",
+          "name": "障害者正社員化コース",
+          "aliases": [],
+          "purposeTags": [
+            "正社員化",
+            "障害者雇用"
+          ]
+        },
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000010",
+          "key": "wage-revision",
+          "name": "賃金規定等改定コース",
+          "aliases": [],
+          "purposeTags": [
+            "賃上げ",
+            "処遇改善"
+          ]
+        },
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000011",
+          "key": "wage-common",
+          "name": "賃金規定等共通化コース",
+          "aliases": [],
+          "purposeTags": [
+            "賃金",
+            "処遇改善"
+          ]
+        },
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000012",
+          "key": "bonus-pension",
+          "name": "賞与・退職金制度導入コース",
+          "aliases": [],
+          "purposeTags": [
+            "賞与",
+            "退職金",
+            "処遇改善"
+          ]
+        },
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000013",
+          "key": "hours-extension",
+          "name": "短時間労働者労働時間延長支援コース",
+          "aliases": [],
+          "purposeTags": [
+            "労働時間延長",
+            "社会保険"
+          ]
+        }
+      ],
+      "termsUrl": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "termsCheckedOn": "2026-10-09",
+      "intervalHours": 24,
+      "maxDocuments": 40,
+      "dependencyPages": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00018.html",
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00026.html"
+      ]
+    },
+    {
+      "id": "mhlw-hiring-difficulty",
+      "programName": "特定求職者雇用開発助成金",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/tokutei_konnan.html",
+      "selector": "main",
+      "requiredText": [
+        "特定求職者雇用開発助成金"
+      ],
+      "policy": {
+        "pages": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/stf/",
+            "queryKeys": []
+          }
+        ],
+        "files": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/content/",
+            "queryKeys": []
+          },
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/file/",
+            "queryKeys": []
+          }
+        ]
+      },
+      "courses": [
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000014",
+          "key": "hiring-difficulty",
+          "name": "特定就職困難者コース",
+          "aliases": [],
+          "purposeTags": [
+            "採用",
+            "雇入れ",
+            "高年齢者",
+            "障害者雇用"
+          ]
+        }
+      ],
+      "termsUrl": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "termsCheckedOn": "2026-10-09",
+      "intervalHours": 24,
+      "maxDocuments": 40,
+      "dependencyPages": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00018.html",
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00026.html"
+      ]
+    },
+    {
+      "id": "mhlw-hiring-developmental",
+      "programName": "特定求職者雇用開発助成金",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/hattatsu_nanchi.html",
+      "selector": "main",
+      "requiredText": [
+        "特定求職者雇用開発助成金"
+      ],
+      "policy": {
+        "pages": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/stf/",
+            "queryKeys": []
+          }
+        ],
+        "files": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/content/",
+            "queryKeys": []
+          },
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/file/",
+            "queryKeys": []
+          }
+        ]
+      },
+      "courses": [
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000015",
+          "key": "hiring-developmental",
+          "name": "発達障害者・難治性疾患患者雇用開発コース",
+          "aliases": [],
+          "purposeTags": [
+            "採用",
+            "雇入れ",
+            "障害者雇用"
+          ]
+        }
+      ],
+      "termsUrl": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "termsCheckedOn": "2026-10-09",
+      "intervalHours": 24,
+      "maxDocuments": 40,
+      "dependencyPages": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00018.html",
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00026.html"
+      ]
+    },
+    {
+      "id": "mhlw-hiring-middle-aged",
+      "programName": "特定求職者雇用開発助成金",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/chuukou.html",
+      "selector": "main",
+      "requiredText": [
+        "特定求職者雇用開発助成金"
+      ],
+      "policy": {
+        "pages": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/stf/",
+            "queryKeys": []
+          }
+        ],
+        "files": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/content/",
+            "queryKeys": []
+          },
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/file/",
+            "queryKeys": []
+          }
+        ]
+      },
+      "courses": [
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000016",
+          "key": "hiring-middle-aged",
+          "name": "中高年層安定雇用支援コース",
+          "aliases": [],
+          "purposeTags": [
+            "採用",
+            "雇入れ",
+            "中高年"
+          ]
+        }
+      ],
+      "termsUrl": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "termsCheckedOn": "2026-10-09",
+      "intervalHours": 24,
+      "maxDocuments": 40,
+      "dependencyPages": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00018.html",
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00026.html"
+      ]
+    },
+    {
+      "id": "mhlw-hiring-livelihood",
+      "programName": "特定求職者雇用開発助成金",
+      "publisher": "厚生労働省",
+      "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/tokutei_seikatsu.html",
+      "selector": "main",
+      "requiredText": [
+        "特定求職者雇用開発助成金"
+      ],
+      "policy": {
+        "pages": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/stf/",
+            "queryKeys": []
+          }
+        ],
+        "files": [
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/content/",
+            "queryKeys": []
+          },
+          {
+            "hostname": "www.mhlw.go.jp",
+            "pathPrefix": "/file/",
+            "queryKeys": []
+          }
+        ]
+      },
+      "courses": [
+        {
+          "id": "8a17f201-1d28-4a31-a894-000000000017",
+          "key": "hiring-livelihood",
+          "name": "生活保護受給者等雇用開発コース",
+          "aliases": [],
+          "purposeTags": [
+            "採用",
+            "雇入れ"
+          ]
+        }
+      ],
+      "termsUrl": "https://www.mhlw.go.jp/chosakuken/index.html",
+      "termsCheckedOn": "2026-10-09",
+      "intervalHours": 24,
+      "maxDocuments": 40,
+      "dependencyPages": [
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00018.html",
+        "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/index_00026.html"
+      ]
+    }
+  ]
+}

@@ -13,13 +13,20 @@
     "comparison:preview": "tsx scripts/verify-comparison-ui.ts --preview-only",
     "comparison:verify-ui": "tsx scripts/verify-comparison-ui.ts",
     "documents:import": "tsx scripts/import-document-sources.mjs",
-    "documents:admin": "node scripts/documents-admin.mjs"
+    "documents:admin": "node scripts/documents-admin.mjs",
+    "mhlw:admin": "tsx scripts/mhlw-admin.ts",
+    "mhlw:verify-live": "tsx scripts/verify-mhlw-live.ts",
+    "mhlw:pdf:dev": "wrangler dev --config wrangler.mhlw-pdf.jsonc",
+    "mhlw:pdf:build": "wrangler deploy --dry-run --config wrangler.mhlw-pdf.jsonc",
+    "mhlw:config": "tsx scripts/mhlw-config.ts",
+    "mhlw:verify-contract": "tsx scripts/verify-mhlw-contract.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.0.0",
     "agents": "^0.20.0",
     "fflate": "^0.8.3",
     "linkedom": "0.18.12",
+    "unpdf": "1.8.1",
     "zod": "^4.0.0"
   },
   "devDependencies": {

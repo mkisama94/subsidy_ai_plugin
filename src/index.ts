@@ -1,5 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/server";
 import { registerComparison } from "./comparison/register";
+import { registerDiscovery } from "./subsidyDiscovery/register";
+import { DISCOVERY_GUIDANCE } from "./subsidyDiscovery/service";
+import { collectDueMhlwSources } from "./officialSources/mhlw/collect";
+import type { CatalogEnv } from "./officialSubsidyCatalog/types";
 import { NtaApiError, getCorporateIdentity, searchCorporateIdentities } from "./nta";
 import { createMcpHandler } from "agents/mcp/server";
 import { z } from "zod";
@@ -121,7 +125,7 @@ function errorToolResult(error: unknown) {
   };
 }
 
-type Env = DocumentEnv & {
+type Env = DocumentEnv & CatalogEnv & {
   SUBSIDY_COMPARISON_ENABLED?: string;
   NTA_APPLICATION_ID?: string;
   GBIZINFO_API_TOKEN?: string;
@@ -1022,7 +1026,8 @@ export function createServer(env: Env): McpServer {
               limit,
             },
             jGrantsCacheOptions,
-          ),
+          ).then(result => enabled(env.MHLW_DISCOVERY_GUIDANCE_ENABLED) && enabled(env.SUBSIDY_DISCOVERY_TOOLS_ENABLED) && enabled(env.MHLW_CATALOG_SERVING_ENABLED)
+            ? {...result, searchGuidance: result.searchGuidance + " " + DISCOVERY_GUIDANCE} : result),
         );
       } catch (error) {
         return errorToolResult(error);
@@ -1120,12 +1125,14 @@ export function createServer(env: Env): McpServer {
     });
   }
   if (enabled(env.SUBSIDY_COMPARISON_ENABLED)) registerComparison(server);
+  registerDiscovery(server, env);
   return server;
 }
 
 export default {
   async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
     ctx.waitUntil(collectDueSources(env).then(result => { console.log(JSON.stringify({event:"document_discovery",...result})); }));
+    ctx.waitUntil(collectDueMhlwSources(env).then(result => { console.log(JSON.stringify({event:"mhlw_discovery",...result})); }));
   },
   async fetch(
     request: Request,

@@ -9,6 +9,11 @@
   },
   "triggers": { "crons": ["*/15 * * * *"] },
   "vars": {
+    "MHLW_INGESTION_ENABLED": "false",
+    "MHLW_AI_EXTRACTION_ENABLED": "false",
+    "MHLW_CATALOG_SERVING_ENABLED": "false",
+    "SUBSIDY_DISCOVERY_TOOLS_ENABLED": "false",
+    "MHLW_DISCOVERY_GUIDANCE_ENABLED": "false",
     "SUBSIDY_COMPARISON_ENABLED": "false",
     "OFFICIAL_DOCUMENTS_ENABLED": "false",
     "DOCUMENT_DISCOVERY_ENABLED": "false",

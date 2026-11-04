@@ -1,0 +1,16 @@
+{
+  "skill_path": "C:/Users/yamamotoma/.codex/plugins/cache/open-estimate-desktop/open-estimate/0.5.0/skills/open-estimate-assessor/SKILL.md",
+  "skill_header_version": "0.5.0",
+  "cli_path": "C:/Users/yamamotoma/.codex/plugins/cache/open-estimate-desktop/open-estimate/0.5.0/skills/open-estimate-assessor/scripts/oes.mjs",
+  "contract_version": "0.5.0-desktop",
+  "contract_skill": {
+    "skill_id": "open-estimate-assessor",
+    "skill_version": "0.5.0",
+    "package_sha256": "97c0f805e85cdac5a970bdf1c2ded21c8af1748a68e16707ffe1d4b0f62c730d"
+  },
+  "recommended_assessment": "oes/assessment/v2",
+  "checked_at": "2026-10-18T14:58:24.524Z",
+  "run_directory": "C:\\git\\subsidy_ai_plugin\\output\\open-estimate-0.5.0-20261018-235821-4f7a3b1b",
+  "existing_measurements_modified": false,
+  "skill_file_sha256": "1fe123dfadc45977d7558b64889847a7349971873795443b6ec6db33329f26f1"
+}

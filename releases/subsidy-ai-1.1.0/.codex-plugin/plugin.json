@@ -1,0 +1,113 @@
+{
+  "name": "app-6a9b5a9e8f808191831c8655ee2191ae",
+  "version": "1.1.0",
+  "description": "公的データを使って日本の事業者向け補助金を調べ、申請の準備を進めます。",
+  "author": {
+    "name": "mkisama94",
+    "url": "https://github.com/mkisama94"
+  },
+  "homepage": "https://github.com/mkisama94/subsidy_ai_plugin",
+  "repository": "https://github.com/mkisama94/subsidy_ai_plugin",
+  "keywords": [
+    "jgrants",
+    "subsidy",
+    "補助金",
+    "日本"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "日本の補助金・公的支援検索",
+    "brandColor": "#006A8E",
+    "composerIcon": "./assets/subsidy-search-logo.png",
+    "logo": "./assets/subsidy-search-logo.png",
+    "shortDescription": "日本の事業者向け補助金を探す",
+    "longDescription": "「うちの会社で使える補助金はある？」\n「設備を入れ替えたいけれど、何から調べればいい？」\n\nいつものAIへの補助金相談に、公的データを。\n\nこのプラグインを追加すると、AIがJグランツの補助金情報や、国税庁などの公開法人情報を直接調べられるようになります。会話の中で実際の公募情報や会社情報を確認しながら、候補探しから申請条件の整理まで進められます。\n\n制度名や法人番号を調べておく必要はありません。会社名や事業を行う地域、やりたいことから始められます。\n\nご自身で補助金の申請を検討する事業者の方にも、企業の制度活用を支援する社会保険労務士・行政書士などの専門家の方にも。制度を探し、条件を確認し、次に聞くべきことを整理するための調査支援ツールです。\n\n■ やりたいことから、補助金を探す\n「お店の設備を省エネにしたい」「新しい事業を始めたい」など、計画を教えてください。公的機関の情報をもとに候補を探し、対象となる経費や補助額、申請期間、確認すべき条件を整理します。\n\n■ 自社に合いそうか、一緒に確かめる\n会社名から国税庁の法人情報を確認し、公開されている企業情報も参考に、制度との相性を調べます。「事業に合っているか」と「申請条件を満たすか」を分け、分からない点は確認事項としてお伝えします。\n\n■ 見つけた後も、そのまま相談する\n「自己負担はいくらになりそう？」「来年度に申請するなら何を確認すべき？」といった相談も続けられます。試算に必要な条件や、計画を変えたときの注意点を整理します。\n\n■ 専門家に聞くことを、相談メモにする\n判断に迷ったら、税理士・公認会計士・社会保険労務士や制度の窓口へ、何を質問し、どんな資料を準備すればよいかをまとめます。相談メモはコピーして使えます。\n\nまずは「東京都で飲食店を経営しています。厨房設備の入れ替えに使える補助金を探して」のように、地域・事業内容・やりたいことを教えてください。\n\n【ご利用にあたって】\n検索は主にJグランツ掲載の制度を対象としており、すべての補助金・助成金を網羅するものではありません。申請資格や採択を保証するものではないため、申請前には最新の公募要領と実施機関の案内をご確認ください。申請の代理提出や相談メモの自動送信は行いません。個人情報、パスワード、非公開資料の本文は入力しないでください。\n\n参照する主な公的情報：Jグランツ、gBizINFO、国税庁法人番号公表サイト、金融庁EDINET。本サービスは民間が運営しており、行政機関の公式サービスではありません。",
+    "developerName": "mkisama94",
+    "category": "Business & Operations",
+    "capabilities": [
+      "事業者向け補助金を検索し、申請条件を確認する",
+      "国税庁の情報で法人名と法人番号を調べる",
+      "公開企業情報と制度の要件を照合する",
+      "専門家への相談メモを作成する"
+    ],
+    "websiteURL": "https://github.com/mkisama94/subsidy_ai_plugin",
+    "privacyPolicyURL": "https://github.com/mkisama94/subsidy_ai_plugin/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/mkisama94/subsidy_ai_plugin/blob/main/TERMS.md",
+    "defaultPrompt": [
+      "東京都の事業者向けに、現在受付中の省エネ関連の補助金を探してください。",
+      "会社名から法人を検索し、法人番号と登記上の所在地を表示してください。",
+      "この補助金について専門家に相談するための質問と、準備する資料のチェックリストを作成してください。"
+    ],
+    "supportURL": "https://github.com/mkisama94/subsidy_ai_plugin/issues"
+  },
+  "mcpServers": "./.mcp.json",
+  "license": "AGPL-3.0-only",
+  "extensions": {
+    "com.openai": {
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Search J-Grants for energy-efficiency subsidies in Tokyo and inspect one result even when no program is currently accepting applications.",
+              "prompt": "日本の補助金・公的支援検索を使って、検索語を『民間建築物 省CO2 改修』、対象地域を『東京都』として、Jグランツ制度を最大3件探してください。まず現在受付中の制度を検索し、該当が0件なら受付終了を含む直近の制度を検索してください。見つかった件数が3件未満なら実際の件数を示してください。候補が1件以上あれば、受付中を優先して最も締切が近い1件、受付中がなければ最も新しい1件の詳細も取得し、Jグランツの補助金ID、制度名、受付期間、公式詳細URL、申請前に確認すべき点を示してください。申請資格や採択は断定しないでください。",
+              "tools_triggered": "search_subsidies, get_subsidy_detail",
+              "expected_behavior": "現在受付中を優先して最大3件を返し、0件の場合は受付終了を含めて再検索します。候補があれば1件の詳細を取得し、補助金ID、制度名、受付期間、公式URL、確認事項を示します。該当件数が少ない場合は結果を捏造せず、申請資格や採択を断定しません。"
+            },
+            {
+              "description": "Verify a specified corporate identity with the National Tax Agency, then retrieve its public gBizINFO profile and activity records.",
+              "prompt": "日本の補助金・公的支援検索を使って、トヨタ自動車株式会社（照会対象の法人番号1180301018771）を調べてください。まず国税庁の法人名検索で候補を取得し、指定した法人番号の候補を確認したうえで、同じ法人番号の最新情報を照会してください。名称・法人番号が一致しなければ別法人へ置き換えず、その旨を示して止めてください。名称、法人番号、所在地、閉鎖情報、出典と国税庁の非保証表示を示し、閉鎖情報なしを営業実態や申請資格の保証としないでください。確認できたら、同じ法人番号について経済産業省の法人情報データベースから公開基本情報と公開活動情報を取得してください。基本情報では資本金、業種、従業員数の確認できた値と未登録項目を区別し、国税庁の情報との相違があれば出典ごとに示してください。活動情報では認定、表彰、事業所、財務、特許等、調達、補助金、職場情報を種類別に整理し、各種類の表示は最大3件にしてください。取得失敗や件数差を明示し、未登録情報は推測しないでください。",
+              "tools_triggered": "search_corporate_identities, get_corporate_identity, get_company_profile, get_company_activities",
+              "expected_behavior": "国税庁の名称検索結果を指定された法人番号で確認し、その番号の最新公表情報と出典・非保証表示を返します。指定情報が一致しなければ自動で別法人を選ばず停止します。一致した場合は同じ番号のgBizINFO基本情報と8種類の活動情報を取得し、各種類最大3件を表示します。情報源間の相違、未登録項目、取得失敗、件数差、検索の続きの有無を明示し、営業実態や申請資格は断定しません。"
+            },
+            {
+              "description": "Evaluate a selected public program while separating fit, eligibility, and unknown facts.",
+              "prompt": "日本の補助金・公的支援検索で、省エネ関連の制度を受付終了も含めて最大3件検索し、返された実在の補助金IDのうち1件を選んで、法人番号1180301018771と照合してください。検討事業は既存の空調・照明設備の高効率化です。事業との相性、申請資格、実行可能性、一致、不一致の可能性、未確認事項と出典を分けてください。該当がなければ架空のIDを作らず、その旨を示してください。",
+              "tools_triggered": "search_subsidies, evaluate_subsidy_fit_for_company",
+              "expected_behavior": "実取得したIDと指定法人を照合し、条件一致だけで受給可能と断定しない。該当なし・取得失敗を区別し、不足情報を推測で補わない。"
+            },
+            {
+              "description": "Confirm a corporate number and preserve the official non-guarantee notice.",
+              "prompt": "日本の補助金・公的支援検索で、法人番号1180301018771の国税庁公表情報を取得してください。正式名称、法人番号、所在地、確認できる閉鎖・承継情報、出典、国税庁の非保証表示を示してください。閉鎖情報がないことを営業実態や補助金の申請資格の保証にしないでください。",
+              "tools_triggered": "get_corporate_identity",
+              "expected_behavior": "指定番号の公表情報と国税庁の非保証表示を返す。未取得項目は未確認とし、別法人へ置換しない。"
+            },
+            {
+              "description": "Turn unresolved subsidy eligibility questions into a practical consultation brief without collecting private documents.",
+              "prompt": "日本の補助金・公的支援検索を使って、事業者向け補助金を検討するための相談メモを作成してください。制度名と会社名はまだ確認できていないため、推測で補わないでください。資本関係、役員兼務、対象経費が未確認です。株主名簿や決算書など非公開資料の内容は入力せず、確認事項ごとに、社会保険労務士、税理士または公認会計士、補助金の実施機関のうち誰に何を質問し、どの資料を準備すべきか、コピーして使える形で整理してください。資料は内容ではなく資料名だけを挙げてください。申請締切は未確認です。推測で日付を補わないでください。申請資格や採択を断定せず、相談先へ自動送信しないでください。",
+              "tools_triggered": "prepare_professional_consultation",
+              "expected_behavior": "制度名と会社名を捏造せず、未確認論点ごとに相談先、具体的な質問、準備する資料名、締切が未確認であること、AIと専門家の判断境界を整理したコピー可能な相談メモを返します。非公開資料の内容は求めず、自動送信もしません。"
+            }
+          ],
+          "negative": [
+            {
+              "description": "Do not trigger when the user asks the app to complete and submit a subsidy application.",
+              "prompt": "日本の補助金・公的支援検索の対応範囲だけを確認します。日本の補助金・公的支援検索は、利用者に代わってJグランツへログインし、申請書への入力や代理提出を行えますか。実際の申請作業、制度検索、資料収集は行わず、対応できるかどうかと、日本の補助金・公的支援検索が支援できる範囲だけを簡潔に説明してください。ログイン情報や申請資料も要求しないでください。",
+              "expected_behavior": "The plugin must not invoke any tool, request credentials or documents, or perform any external action. The response should state that logging in to J-Grants, completing application forms, and submitting on the user's behalf are unsupported, while briefly identifying the research and consultation-preparation assistance the plugin can provide."
+            },
+            {
+              "description": "Do not trigger for personal benefit or household welfare eligibility requests outside business subsidy research.",
+              "prompt": "日本の補助金・公的支援検索の対応範囲だけを確認します。日本の補助金・公的支援検索は、個人世帯の児童手当について受給資格を判定したり、個人向けの申請手続きを案内したりできますか。実際の制度検索、受給資格の判定、個人情報の収集は行わず、対応できるかどうかだけを簡潔に説明してください。",
+              "expected_behavior": "The plugin must not invoke any tool, search for personal benefits, collect personal information, or assess eligibility. The response should explain that household benefits and personal application procedures are outside the plugin's business-subsidy and public-corporate-information scope."
+            },
+            {
+              "description": "Do not trigger for unrelated scheduling requests.",
+              "prompt": "日本の補助金・公的支援検索の対応範囲だけを確認します。日本の補助金・公的支援検索は、私のGoogleカレンダーを確認して空き時間を探したり、会議を登録したりできますか。実際にカレンダーを開いたり、予定を検索・登録したり、Google Calendarなど別のサービスへ接続したりせず、対応できるかどうかだけを簡潔に説明してください。",
+              "expected_behavior": "The plugin must not invoke any tool, connect to a calendar service, inspect availability, or create an event. The response should state that calendar access and meeting scheduling are outside the plugin's supported scope."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "制度調査と相談準備の支援です。購入・決済・代理申請は行いません。"
+      },
+      "publication": {
+        "release_notes": "国税庁の法人名検索・法人番号照会を利用できる構成とし、企業の特定、出典と非保証表示を強化しました。検索範囲、申請資格と事業との相性、資金試算、申請時期変更の説明指針を改善し、相談スキルを同梱しました。ツールの副作用注釈と接続の安定性を修正しています。厚労省情報の自動収集・統合検索、公式資料ナビ、比較UIは今回の公開対象外です。既存の補助金検索、企業照合、採択実績、相談メモ作成を維持します。",
+        "translations": {
+          "ja-JP": {
+            "subtitle": "日本の事業者向け補助金を探す",
+            "description": "「うちの会社で使える補助金はある？」\n「設備を入れ替えたいけれど、何から調べればいい？」\n\nいつものAIへの補助金相談に、公的データを。\n\nこのプラグインを追加すると、AIがJグランツの補助金情報や、国税庁などの公開法人情報を直接調べられるようになります。会話の中で実際の公募情報や会社情報を確認しながら、候補探しから申請条件の整理まで進められます。\n\n制度名や法人番号を調べておく必要はありません。会社名や事業を行う地域、やりたいことから始められます。\n\nご自身で補助金の申請を検討する事業者の方にも、企業の制度活用を支援する社会保険労務士・行政書士などの専門家の方にも。制度を探し、条件を確認し、次に聞くべきことを整理するための調査支援ツールです。\n\n■ やりたいことから、補助金を探す\n「お店の設備を省エネにしたい」「新しい事業を始めたい」など、計画を教えてください。公的機関の情報をもとに候補を探し、対象となる経費や補助額、申請期間、確認すべき条件を整理します。\n\n■ 自社に合いそうか、一緒に確かめる\n会社名から国税庁の法人情報を確認し、公開されている企業情報も参考に、制度との相性を調べます。「事業に合っているか」と「申請条件を満たすか」を分け、分からない点は確認事項としてお伝えします。\n\n■ 見つけた後も、そのまま相談する\n「自己負担はいくらになりそう？」「来年度に申請するなら何を確認すべき？」といった相談も続けられます。試算に必要な条件や、計画を変えたときの注意点を整理します。\n\n■ 専門家に聞くことを、相談メモにする\n判断に迷ったら、税理士・公認会計士・社会保険労務士や制度の窓口へ、何を質問し、どんな資料を準備すればよいかをまとめます。相談メモはコピーして使えます。\n\nまずは「東京都で飲食店を経営しています。厨房設備の入れ替えに使える補助金を探して」のように、地域・事業内容・やりたいことを教えてください。\n\n【ご利用にあたって】\n検索は主にJグランツ掲載の制度を対象としており、すべての補助金・助成金を網羅するものではありません。申請資格や採択を保証するものではないため、申請前には最新の公募要領と実施機関の案内をご確認ください。申請の代理提出や相談メモの自動送信は行いません。個人情報、パスワード、非公開資料の本文は入力しないでください。\n\n参照する主な公的情報：Jグランツ、gBizINFO、国税庁法人番号公表サイト、金融庁EDINET。本サービスは民間が運営しており、行政機関の公式サービスではありません。"
+          }
+        }
+      }
+    }
+  }
+}

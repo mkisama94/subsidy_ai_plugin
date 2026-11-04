@@ -1,0 +1,40 @@
+1: {
+2:   "name": "subsidy-ai-mcp",
+3:   "version": "0.13.0",
+4:   "license": "AGPL-3.0-only",
+5:   "private": true,
+6:   "type": "module",
+7:   "scripts": {
+8:     "dev": "wrangler dev",
+9:     "deploy": "wrangler deploy",
+10:     "test": "tsx --test test/**/*.test.ts",
+11:     "verify:production": "node scripts/verify-production.mjs",
+12:     "typecheck": "tsc --noEmit",
+13:     "comparison:preview": "tsx scripts/verify-comparison-ui.ts --preview-only",
+14:     "comparison:verify-ui": "tsx scripts/verify-comparison-ui.ts",
+15:     "documents:import": "tsx scripts/import-document-sources.mjs",
+16:     "documents:admin": "node scripts/documents-admin.mjs",
+17:     "mhlw:admin": "tsx scripts/mhlw-admin.ts",
+18:     "mhlw:verify-live": "tsx scripts/verify-mhlw-live.ts",
+19:     "mhlw:pdf:dev": "wrangler dev --config wrangler.mhlw-pdf.jsonc",
+20:     "mhlw:pdf:build": "wrangler deploy --dry-run --config wrangler.mhlw-pdf.jsonc",
+21:     "mhlw:config": "tsx scripts/mhlw-config.ts",
+22:     "mhlw:verify-contract": "tsx scripts/verify-mhlw-contract.ts"
+23:   },
+24:   "dependencies": {
+25:     "@modelcontextprotocol/server": "^2.0.0",
+26:     "agents": "^0.20.0",
+27:     "fflate": "^0.8.3",
+28:     "linkedom": "0.18.12",
+29:     "unpdf": "1.8.1",
+30:     "zod": "^4.0.0"
+31:   },
+32:   "devDependencies": {
+33:     "@cloudflare/workers-types": "latest",
+34:     "@modelcontextprotocol/client": "2.0.0",
+35:     "@types/node": "^24.0.0",
+36:     "tsx": "^4.20.0",
+37:     "typescript": "^5.9.0",
+38:     "wrangler": "^4.135.0"
+39:   }
+40: }

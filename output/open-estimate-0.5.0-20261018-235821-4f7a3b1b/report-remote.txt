@@ -1,0 +1,36 @@
+オープン工数見積 0.5.0 / リモート再計算結果
+対象: C:\git\subsidy_ai_plugin / SUBSIDY-20261018-R1 revision 1
+送信: 利用者の同意後、保存済みremote-model-preview.jsonをevaluate_modelへ送信。
+送信先: https://open-estimate.ai-orchestration.jp/mcp
+ソース、名称、説明、パス、根拠、hash、Assessment、判断台帳は送信対象外。
+
+結果: 40機能 / 258 CFP / PARTIAL
+Entry 70 / Exit 78 / Read 62 / Write 48
+
+TEST参考工数・金額（サーバー表示値）
+p25: 516時間 / 64.5人日 / 25,800 USD / 4,085,172円
+中央値: 774時間 / 96.8人日 / 38,700 USD / 6,127,758円
+p75: 1,290時間 / 161.3人日 / 64,500 USD / 10,212,930円
+1人日=8時間。人日はサーバーの表示丸めに従う。
+工数係数2/3/5時間/CFP、時給50USDは架空のTEST値。実績ベンチマーク・市場価格ではない。
+対象作業: 設計・実装・テスト。企画・日常運用を含まない。
+
+為替: 1USD=158.34円。取得状態AVAILABLE。
+FRB観測日: 2026-10-09 / 公表日: 2026-10-13
+取得・確認・換算日時: 2026-10-19 00:15:21.756 JST（2026-10-18T15:15:21.756Z）
+出典: https://www.federalreserve.gov/releases/h10/current/
+
+測定の状態と限界
+部分測定: 走査未完了フラグとPDF配送機能の暫定判断を保持。
+暫定P33:5 CFPは合計258 CFPの内数。主Workerのproducer binding配備は未確認。
+範囲内未読0、範囲外未読307、補助資料未読59、範囲不明0。
+候補48:採用40、非計上4、統合4、未採用の未解決0。未知の機能がないことは保証しない。
+サーバーは数値モデルの形式・参照検査とTEST規則の再計算を実行。
+ソースの実在性・網羅性・意味解釈の独立検証は未実施。未署名・サーバー未保存・未公開。
+ローカル計数結果とのCFP・E/X/R/W・時間・USDの一致を確認。
+
+詳細根拠: assessment-validated-v2.json の /assessment/judgments と /assessment/function_candidates
+元のローカル報告: report-local.txt（送信前記録として保持）
+サーバー応答原本: remote-result.json
+report_hash: d3909c83cf2d0fa3ab4889d67a3e6a0186166cd6d462f7fa59a408825453f911
+profile_set_id: oes-local-test-2026-10-v1

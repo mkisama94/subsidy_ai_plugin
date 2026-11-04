@@ -1,0 +1,102 @@
+{
+  "stage": "LOCAL_EXPORT_VALIDATED_REMOTE_NOT_SENT",
+  "measurement": {
+    "status": "PARTIAL",
+    "cfp": 258,
+    "counts": {
+      "entry": 70,
+      "exit": 78,
+      "read": 62,
+      "write": 48,
+      "total_processes": 40,
+      "accepted_processes": 40
+    }
+  },
+  "effort": {
+    "status": "AVAILABLE",
+    "hours_per_cfp": {
+      "p25": "2",
+      "median": "3",
+      "p75": "5"
+    },
+    "person_hours": {
+      "p25": "516",
+      "median": "774",
+      "p75": "1290"
+    }
+  },
+  "reference_usd": {
+    "status": "AVAILABLE",
+    "hourly_wage_usd": "50",
+    "amount_usd": {
+      "p25": "25800",
+      "median": "38700",
+      "p75": "64500"
+    }
+  },
+  "person_days_8h": {
+    "p25": "64.5",
+    "median": "96.75",
+    "p75": "161.25"
+  },
+  "records_counts": {
+    "in_scope_unread": 0,
+    "outside_unread": 307,
+    "supporting_unread": 59,
+    "scope_unknown_files": 0,
+    "record_gaps": 0,
+    "unresolved_candidates": 0
+  },
+  "partial_reasons": [
+    "SCAN_INCOMPLETE_SCOPE_IMPACT_UNKNOWN",
+    "JUDGMENT_PROVISIONAL:J33",
+    "FINDING_OPEN:F-SCAN",
+    "FINDING_OPEN:F-QUEUE"
+  ],
+  "provisional_cfp_subtotal": 5,
+  "candidate_counts": {
+    "identified": 48,
+    "counted": 40,
+    "outside": 4,
+    "merged": 4,
+    "unresolved": 0
+  },
+  "assessment_hash": "54013a0031af46393647906474bf11c89e489805bc8a9a211403c62ac8246535",
+  "remote_transmitted": false,
+  "display_currency": "JPY",
+  "fx": {
+    "status": "NOT_REQUESTED",
+    "rate": null,
+    "observation_date": null,
+    "fetched_at": null,
+    "converted_at": null
+  },
+  "paths": {
+    "assessment": "C:\\git\\subsidy_ai_plugin\\output\\open-estimate-0.5.0-20261018-235821-4f7a3b1b\\assessment-validated-v2.json",
+    "judgments_pointer": "/assessment/judgments",
+    "model": "C:\\git\\subsidy_ai_plugin\\output\\open-estimate-0.5.0-20261018-235821-4f7a3b1b\\remote-model-preview.json",
+    "version_verification": "C:\\git\\subsidy_ai_plugin\\output\\open-estimate-0.5.0-20261018-235821-4f7a3b1b\\version-verification.json"
+  },
+  "component_totals": {
+    "core": {
+      "processes": 15,
+      "cfp": 104
+    },
+    "ui": {
+      "processes": 3,
+      "cfp": 6
+    },
+    "docs": {
+      "processes": 2,
+      "cfp": 22
+    },
+    "admin": {
+      "processes": 15,
+      "cfp": 72
+    },
+    "catalog": {
+      "processes": 5,
+      "cfp": 54
+    }
+  }
+}

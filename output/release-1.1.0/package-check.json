@@ -1,0 +1,19 @@
+{
+  "packageVersion": "1.1.0",
+  "mcpVersion": "0.13.0",
+  "endpoint": "https://subsidy-ai-plugin.mkisama.workers.dev/mcp",
+  "files": [
+    ".codex-plugin/plugin.json",
+    ".mcp.json",
+    "skills/subsidy-consultation/SKILL.md",
+    "assets/subsidy-search-logo.png",
+    "LICENSE"
+  ],
+  "bytes": 1316936,
+  "sha256": "f20a11f5888cdd1ae50cbb5e77a6a27d2aaa743a1131c62038d0e9ec644db717",
+  "positiveCases": 5,
+  "negativeCases": 3,
+  "declaredDemoRecording": null,
+  "localPackageChecks": "passed",
+  "openaiUploadValidation": "not_run"
+}

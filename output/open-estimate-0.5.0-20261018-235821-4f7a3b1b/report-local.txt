@@ -1,0 +1,119 @@
+﻿オープン工数見積 0.5.0 / ローカル算定結果（リモート送信前）
+作成日時(UTC): 2026-10-18T15:13:51.731587+00:00
+対象: C:\git\subsidy_ai_plugin / 現行ワークツリー
+目的: as_built_functional_size / 単一アプリ境界
+範囲ID: SUBSIDY-20261018-R1 / revision 1
+対象: src/pluginsと関連migrations/config/scripts。無効フラグの実装も含む。
+除外: 複製、ビルド生成物、配布物、node_modules。テスト・説明資料は補助資料。
+対象作業: 設計・実装・テスト。企画・日常運用・申請審査作業は含まない。
+
+1. 版・互換性の確認
+SKILL.md: C:/Users/yamamotoma/.codex/plugins/cache/open-estimate-desktop/open-estimate/0.5.0/skills/open-estimate-assessor/SKILL.md
+本文版: 0.5.0
+補助CLI: C:/Users/yamamotoma/.codex/plugins/cache/open-estimate-desktop/open-estimate/0.5.0/skills/open-estimate-assessor/scripts/oes.mjs
+contract_version: 0.5.0-desktop
+contract.skill_version: 0.5.0
+package_sha256: 97c0f805e85cdac5a970bdf1c2ded21c8af1748a68e16707ffe1d4b0f62c730d
+SKILL.mdファイルsha256: 1fe123dfadc45977d7558b64889847a7349971873795443b6ec6db33329f26f1
+採用形式: oes/assessment/v2。両版情報とローカルexport検査で互換性を確認。
+0.4.1へのフォールバックは実施していない。
+
+2. 採用モデル（ローカル試算）
+機能数: 40 / CFP: 258 / Entry:70 Exit:78 Read:62 Write:48 / データ群:57
+状態: PARTIAL。リモート再計算未実行。
+p25: 516時間 / 64.5人日 / 25,800 USD
+中央値: 774時間 / 96.75人日 / 38,700 USD
+p75: 1,290時間 / 161.25人日 / 64,500 USD
+1人日=8時間。TEST工数係数=2/3/5時間/CFP。TEST時給=50USD。
+この係数は架空の検証値で、実績ベンチマーク・実際の賃金統計ではない。
+実際に投入した工数・納期・市場価値・受託価格の保証ではない。
+JPY: 未算出。FRB観測日・取得日時・換算日時・適用レートは未取得。
+
+3. 暫定・未解決
+P33 厚労省PDF解析ジョブ配送:5 CFP（258 CFPの内数）。
+実装はあるが、主Worker設定にproducer bindingが見当たらず配備のつながりは未確認。
+未採用の未解決候補:0。ただし未知の機能がないことは保証しない。
+
+4. 読取・記録状況
+CLI取得済み:64ファイル、9,914行（補助資料を含む）。計上根拠は測定コピーだけ。
+manifest: 641項目（収集器の除外を含む）。
+範囲内未読:0 / 範囲外未読:307 / 補助資料未読:59 / 範囲不明:0
+識別候補:48 / 採用:40 / 非計上:4 / 統合:4 / 未解決:0
+input.analysis_complete=false。取得除外/上限を含む全体走査の状態は未完了を維持。
+partial_reasons: SCAN_INCOMPLETE_SCOPE_IMPACT_UNKNOWN, JUDGMENT_PROVISIONAL:J33, FINDING_OPEN:F-SCAN, FINDING_OPEN:F-QUEUE
+構造的記録不足:0。形式の充足は機能解釈の正しさの証明ではない。
+
+5. 主な非計上・統合
+相談スキルの助言文自体:専用プログラムでないためCFPとして非計上。
+外部開始経路を確認できないrepositoryの親子関係検索メソッド:非計上。
+health/所有確認/MCP技術処理、配布検証ツール:業務機能として非計上。
+比較画面初期化は比較初期表示に統合。手動収集/PDF実行/運営検索は同一目的の機能に統合。
+
+6. 証拠・保存先
+C:\git\subsidy_ai_plugin\output\open-estimate-0.5.0-20261018-235821-4f7a3b1b\assessment-validated-v2.json
+判断台帳: /assessment/judgments / 候補台帳: /assessment/function_candidates
+assessment_hash: 54013a0031af46393647906474bf11c89e489805bc8a9a211403c62ac8246535
+CLIの一時assessment_path: C:\Users\YAMAMO~1\AppData\Local\Temp\open-estimate-helper\cdd20023-b279-421f-9749-ac87547a8979\assessment-54013a0031af46393647906474bf11c89e489805bc8a9a211403c62ac8246535.json
+必要JSON・版確認・読取コピーを今回専用フォルダーへ保持済み。過去の測定ファイルは変更なし。
+セッションは24時間有効。自動削除ではなく、purgeで対象キャッシュを削除する。
+
+7. 保証範囲
+ローカルexportで形式・参照・読取根拠の整合検査を通過。ソース実行・ビルド・テストは行っていない。
+リモートは未送信。サーバーが行うのは数値モデルへの形式・参照検査とTEST規則による再計算。
+ソース実在性・網羅性・意味解釈の独立監査、証明書発行、署名、サーバー保存、公開は未実施。
+公開稼働、外部API疎通、migration適用、OpenAI承認は確認対象外。
+
+8. 送信内容プレビュー
+送信先: https://open-estimate.ai-orchestration.jp/mcp
+送るのはremote-model-preview.jsonの連番ID・分類・状態だけ。
+ソース、名称、説明、パス、根拠、hash、Assessment、判断台帳は送らない。
+送信同意を得た後、display_currency=JPYでevaluate_modelを実行する。
+
+9. 機能別内訳（CFP = E+X+R+W）
+P01 国税庁法人名検索: 4 CFP (E2 X2 R0 W0)
+P02 国税庁法人番号照会: 4 CFP (E2 X2 R0 W0)
+P03 gBizINFO法人候補検索: 4 CFP (E2 X2 R0 W0)
+P04 gBizINFO法人基本情報取得: 4 CFP (E2 X2 R0 W0)
+P05 法人活動8分類と件数照合: 28 CFP (E10 X18 R0 W0)
+P06 EDINET資本関係検証・保存: 11 CFP (E4 X4 R0 W3)
+P07 専門家向け相談文作成: 2 CFP (E1 X1 R0 W0)
+P08 みなし大企業の制度別条件照合: 2 CFP (E1 X1 R0 W0)
+P09 公式採択実績と根拠の登録: 9 CFP (E2 X2 R1 W4)
+P10 保存済み公式採択実績照会: 6 CFP (E1 X2 R3 W0)
+P11 制度全体の採択見通し算定: 4 CFP (E1 X1 R1 W1)
+P12 Jグランツ候補検索: 6 CFP (E2 X2 R1 W1)
+P13 Jグランツ制度詳細取得: 6 CFP (E2 X2 R1 W1)
+P14 入力企業情報の補助金条件照合: 6 CFP (E2 X2 R1 W1)
+P15 法人番号からの補助金条件照合: 8 CFP (E3 X3 R1 W1)
+P16 補助金候補比較表作成・表示: 2 CFP (E1 X1 R0 W0)
+P17 比較表の並び替え: 2 CFP (E1 X1 R0 W0)
+P18 比較表の詳細・出典の開閉: 2 CFP (E1 X1 R0 W0)
+P19 登録済み公式資料照会: 8 CFP (E1 X3 R4 W0)
+P20 公式資料の定期収集・分類: 14 CFP (E4 X3 R4 W3)
+P21 公式資料掲載元の検証・登録: 7 CFP (E1 X1 R2 W3)
+P22 公式資料収集状況レポート: 5 CFP (E1 X1 R3 W0)
+P23 公式資料掲載元の再収集予約: 3 CFP (E1 X1 R0 W1)
+P24 公式資料掲載元の停止: 3 CFP (E1 X1 R0 W1)
+P25 公式資料掲載元の承認取消: 3 CFP (E1 X1 R0 W1)
+P26 公式資料の過去収集結果への復元: 4 CFP (E1 X1 R1 W1)
+P27 厚労省掲載元登録: 4 CFP (E1 X1 R1 W1)
+P28 厚労省カタログ運営レポート: 8 CFP (E1 X1 R6 W0)
+P29 厚労省掲載元の再収集予約: 4 CFP (E1 X1 R0 W2)
+P30 厚労省掲載元の停止: 3 CFP (E1 X1 R0 W1)
+P31 厚労省掲載元の再開: 3 CFP (E1 X1 R0 W1)
+P32 厚労省ページ収集と候補版作成: 12 CFP (E2 X1 R3 W6)
+P33 厚労省PDF解析ジョブ配送: 5 CFP (E1 X0 R2 W2)
+P34 厚労省PDF解析・断片保存: 12 CFP (E3 X2 R4 W3)
+P35 候補版レビュー用資料取得: 5 CFP (E1 X2 R2 W0)
+P36 候補版の人手確認登録・検証: 8 CFP (E1 X1 R3 W3)
+P37 検証済みカタログ版の公開切替: 8 CFP (E1 X1 R4 W2)
+P38 公開カタログリリース復元: 4 CFP (E1 X1 R1 W1)
+P39 Jグランツ・厚労省の横断制度探索: 14 CFP (E2 X2 R7 W3)
+P40 探索候補の版・取組時期別詳細: 11 CFP (E2 X2 R6 W1)
+
+10. 区分別集計
+core: 15機能 / 104 CFP
+ui: 3機能 / 6 CFP
+docs: 2機能 / 22 CFP
+admin: 15機能 / 72 CFP
+catalog: 5機能 / 54 CFP

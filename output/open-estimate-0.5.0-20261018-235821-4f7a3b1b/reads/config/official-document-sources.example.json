@@ -1,0 +1,25 @@
+1: {
+2:   "schemaVersion": 1,
+3:   "sources": [{
+4:     "id": "fa5c6169-5f74-40cd-ad4b-c4540421d55a",
+5:     "sourceKind": "official_html",
+6:     "program": { "seriesKey": "example-only", "name": "設定例（実在制度ではありません）", "institutionName": "設定例" },
+7:     "round": { "subsidyId": "EXAMPLEONLY", "fiscalYear": 2026, "name": "第1回", "scopeKey": "overall", "acceptanceStart": null, "acceptanceEnd": null, "workflowId": null },
+8:     "sourcePageUrl": "https://docs.example.com/round1/",
+9:     "fetchUrl": "https://docs.example.com/round1/",
+10:     "publisherName": "設定例",
+11:     "registrationStatus": "pending",
+12:     "trustEvidenceUrl": "https://docs.example.com/round1/",
+13:     "trustEvidenceNote": "設定例です。実在する公式の掲載元・制度・年度・公募回に置き換え、根拠を確認してください。",
+14:     "approvedAt": null,
+15:     "policy": {
+16:       "pages": [{ "hostname": "docs.example.com", "pathPrefix": "/round1/", "queryKeys": [] }],
+17:       "files": [{ "hostname": "docs.example.com", "pathPrefix": "/files/", "queryKeys": [] }]
+18:     },
+19:     "extractor": {
+20:       "selector": "main", "linkSelector": "a[href]", "contextSelector": "li, tr, p, section",
+21:       "requiredPageText": ["2026年度 第1回"], "confirmedContextText": ["2026年度 第1回"], "excludedContextText": ["2025年度", "前年度"],
+22:       "associationBasis": "official_heading", "version": "1"
+23:     }
+24:   }]
+25: }

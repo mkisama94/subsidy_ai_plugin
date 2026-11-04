@@ -1,0 +1,31 @@
+1: {
+2:   "$schema": "./node_modules/wrangler/config-schema.json",
+3:   "name": "subsidy-ai-plugin",
+4:   "main": "src/index.ts",
+5:   "compatibility_date": "2026-08-30",
+6:   "compatibility_flags": ["nodejs_compat"],
+7:   "observability": {
+8:     "enabled": true
+9:   },
+10:   "triggers": { "crons": ["*/15 * * * *"] },
+11:   "vars": {
+12:     "MHLW_INGESTION_ENABLED": "false",
+13:     "MHLW_AI_EXTRACTION_ENABLED": "false",
+14:     "MHLW_CATALOG_SERVING_ENABLED": "false",
+15:     "SUBSIDY_DISCOVERY_TOOLS_ENABLED": "false",
+16:     "MHLW_DISCOVERY_GUIDANCE_ENABLED": "false",
+17:     "SUBSIDY_COMPARISON_ENABLED": "false",
+18:     "OFFICIAL_DOCUMENTS_ENABLED": "false",
+19:     "DOCUMENT_DISCOVERY_ENABLED": "false",
+20:     "DOCUMENT_CLASSIFICATION_ENABLED": "false",
+21:     "DOCUMENT_CLASSIFICATION_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+22:     "DOCUMENT_AI_DAILY_CALL_LIMIT": "100"
+23:   },
+24:   "d1_databases": [
+25:     {
+26:       "binding": "subsidy_ai_relations",
+27:       "database_name": "subsidy-ai-relations",
+28:       "database_id": "7a921696-7f84-4195-b629-61ff7c2bf611"
+29:     }
+30:   ]
+31: }

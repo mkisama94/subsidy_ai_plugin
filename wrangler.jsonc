@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "subsidy-ai-plugin",
-  "main": "src/index.ts",
+  "main": "src/worker.ts",
   "compatibility_date": "2026-08-30",
   "compatibility_flags": ["nodejs_compat"],
   "observability": {
@@ -9,6 +9,7 @@
   },
   "triggers": { "crons": ["*/15 * * * *"] },
   "vars": {
+    "PUBLIC_HISTORY_ENABLED": "false",
     "MHLW_INGESTION_ENABLED": "false",
     "MHLW_AI_EXTRACTION_ENABLED": "false",
     "MHLW_CATALOG_SERVING_ENABLED": "false",

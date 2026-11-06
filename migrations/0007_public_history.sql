@@ -1,0 +1,9 @@
+CREATE TABLE public_source_policies (id TEXT PRIMARY KEY, source_id TEXT NOT NULL, version INTEGER NOT NULL, terms_url TEXT NOT NULL, reviewed_at INTEGER NOT NULL, purpose TEXT NOT NULL, allow_storage INTEGER NOT NULL DEFAULT 0, allow_derivatives INTEGER NOT NULL DEFAULT 0, allow_redistribution INTEGER NOT NULL DEFAULT 0, retention_days INTEGER NOT NULL DEFAULT 400, status TEXT NOT NULL DEFAULT 'pending', UNIQUE(source_id,version));
+CREATE TABLE public_entity_heads (entity_key TEXT PRIMARY KEY, source_id TEXT NOT NULL, entity_id TEXT NOT NULL, round_id TEXT NOT NULL, version_id TEXT NOT NULL, revision INTEGER NOT NULL, last_verified_at INTEGER NOT NULL);
+CREATE TABLE public_fact_versions (id TEXT PRIMARY KEY, entity_key TEXT NOT NULL, previous_version_id TEXT REFERENCES public_fact_versions(id), revision INTEGER NOT NULL, content_hash TEXT NOT NULL, facts_json TEXT NOT NULL, evidence_json TEXT NOT NULL, source_record_id TEXT, schema_version TEXT NOT NULL, extractor_version TEXT NOT NULL, policy_id TEXT NOT NULL REFERENCES public_source_policies(id), observed_at INTEGER NOT NULL, effective_from TEXT, effective_to TEXT, UNIQUE(entity_key,revision));
+CREATE INDEX public_versions_entity ON public_fact_versions(entity_key,observed_at);
+CREATE TABLE public_observations (id TEXT PRIMARY KEY, entity_key TEXT NOT NULL, version_id TEXT, observed_at INTEGER NOT NULL, result TEXT NOT NULL, failure_code TEXT);
+CREATE INDEX public_observations_entity ON public_observations(entity_key,observed_at);
+CREATE TABLE public_change_events (sequence INTEGER PRIMARY KEY AUTOINCREMENT, id TEXT NOT NULL UNIQUE, entity_key TEXT NOT NULL, version_id TEXT NOT NULL REFERENCES public_fact_versions(id), previous_version_id TEXT, kind TEXT NOT NULL, changed_fields_json TEXT NOT NULL, published_at INTEGER NOT NULL);
+CREATE TABLE public_history_retention (id TEXT PRIMARY KEY, minimum_sequence INTEGER NOT NULL);
+INSERT INTO public_history_retention VALUES('main',0);

@@ -1,0 +1,1 @@
+{"response":"固定回答。意味は人が確認する。","sources":[],"actions":[]}

@@ -1,0 +1,22 @@
+[
+  {
+    "trial_id": "trial-f219dac8-a706-435a-8f27-062240b1cb6c",
+    "answer_sha256": "834e18cded0133c866bc089807a6ac4d8337a76e05ca387a9378b742bcabed53",
+    "rubric_sha256": "c99a373eecfeb222edadbed40a0d690d8d2fee6eca3640c8a4b10b8015b1d6b8",
+    "status": "FAIL",
+    "kind": "human",
+    "reviewer": "review reproduction",
+    "independence": "fixture",
+    "method_version": "1",
+    "reviewed_at": "2026-11-05T09:40:14.681Z",
+    "reason": "fixture only",
+    "evidence": [
+      "response:1"
+    ],
+    "checks": {
+      "correctness": "FAIL",
+      "scope": "PASS",
+      "evidence": "PASS"
+    }
+  }
+]

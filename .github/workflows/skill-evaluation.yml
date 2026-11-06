@@ -1,0 +1,23 @@
+name: Skill evaluation infrastructure
+on:
+  pull_request:
+    paths:
+      - 'evaluation/skill/**'
+      - 'plugins/subsidy-ai/skills/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/skill-evaluation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deterministic-checks:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm run test:skill-eval
+      - run: npm run eval:skill -- plan --suite all --max-trials 4

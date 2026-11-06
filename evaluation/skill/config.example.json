@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "project_id": "subsidy-ai",
+  "project_adapter": "./project/adapter.mjs",
+  "host_adapter": "./hosts/codex.mjs",
+  "host_bin": "codex",
+  "skill_root": "../../plugins/subsidy-ai/skills",
+  "candidate_exclude": ["subsidy-consultation.zip"],
+  "output_root": "../../tmp/skill-eval",
+  "answer_schema": "./project/schemas/answer.schema.json",
+  "model": { "requested_id": "SET_EXPLICITLY", "reasoning_effort": null },
+  "loading_mode": "supplied_candidate_text",
+  "budget": { "case_timeout_ms": 300000, "suite_timeout_ms": 900000, "max_trials": 1 },
+  "policy": { "network": "deny", "target_execution": "deny", "approval": "never" },
+  "data": { "classification": "synthetic", "retention": "manual; preserve evidence used in comparisons", "audience": "repository maintainers" }
+}

@@ -1,0 +1,174 @@
+{
+  "schema_version": "1.0",
+  "assessment_set_id": "set-61e1948b-85b6-4031-b571-32cb488eb5b1",
+  "created_at": "2026-11-05T09:40:14.661Z",
+  "previous_sha256": null,
+  "assessments": [
+    {
+      "schema_version": "1.0",
+      "assessment_id": "assessment-bd44dcab-f559-4303-afaf-27cdeeaf581b",
+      "created_at": "2026-11-05T09:40:14.647Z",
+      "trial_id": "trial-f219dac8-a706-435a-8f27-062240b1cb6c",
+      "answer_sha256": "834e18cded0133c866bc089807a6ac4d8337a76e05ca387a9378b742bcabed53",
+      "rubric_sha256": "c99a373eecfeb222edadbed40a0d690d8d2fee6eca3640c8a4b10b8015b1d6b8",
+      "rubric_raw": "{\n  \"version\": \"1\",\n  \"required\": [\n    \"設備目的との相性と必須資格を分ける\",\n    \"設立日・判定基準日と資本関係の確認を案内する\",\n    \"未確認のまま有力・最優先と断定しない\"\n  ],\n  \"alternatives\": [\n    \"条件付きで検討可能とする回答\",\n    \"相性があるが資格は判断不能とする回答\"\n  ],\n  \"failures\": [\n    \"資格を保証する\",\n    \"所在地だけで技術的な適合性を断定する\"\n  ],\n  \"allowed_sources\": [\n    \"official-a\"\n  ],\n  \"review_checks\": [\n    \"correctness\",\n    \"scope\",\n    \"evidence\"\n  ],\n  \"evidence\": \"回答本文と固定入力を照合する。キーワード一致だけで判定しない。\"\n}\n",
+      "grader": {
+        "version": "1.0",
+        "canonicalization": "sorted-json-v1",
+        "roots": [
+          {
+            "root": "C:\\git\\subsidy_ai_plugin\\evaluation\\skill\\core",
+            "files": [
+              {
+                "path": "runner.mjs",
+                "size": 24726,
+                "sha256": "83c2aeaf9e987a482f726973e9123a3e3a86aa1fdd8e832dc3f0e56ec2b9c786"
+              },
+              {
+                "path": "store.mjs",
+                "size": 3701,
+                "sha256": "46800b4663608b921e23ab5e0ee2518179619d5d4c207e61e8663f81b84e228b"
+              }
+            ]
+          },
+          {
+            "root": "C:\\git\\subsidy_ai_plugin\\evaluation\\skill\\hosts",
+            "files": [
+              {
+                "path": "codex.mjs",
+                "size": 1255,
+                "sha256": "02688312c4bf5a035fb263b23f05f886123de9546e0c44804e243e3358472591"
+              },
+              {
+                "path": "process.mjs",
+                "size": 7543,
+                "sha256": "f77d31187ce1b8dc30149fd4e29d80604f31dd923e0b92a7e5707fb2c2485bc4"
+              }
+            ]
+          },
+          {
+            "root": "C:\\git\\subsidy_ai_plugin\\evaluation\\skill\\project",
+            "files": [
+              {
+                "path": "adapter.mjs",
+                "size": 3570,
+                "sha256": "388cfa9546d69d91789653f9807bac97e6f0d928178375a25a0e788d9710578b"
+              },
+              {
+                "path": "cases/C001/case.json",
+                "size": 424,
+                "sha256": "3166be5457c625b8082367d4a60f6fc0ebb5034f9b13b5af842685fed4d96b34"
+              },
+              {
+                "path": "cases/C001/input/sources.txt",
+                "size": 340,
+                "sha256": "bb355be2265d0a45bf5021f3708b556df1c91bbf5b0dee43030bb8940a7fbeab"
+              },
+              {
+                "path": "cases/C001/request.txt",
+                "size": 125,
+                "sha256": "372816276eab10177397c35cb9a34db931b39681f879b5090a688ad56f1c8557"
+              },
+              {
+                "path": "cases/C001/rubric.json",
+                "size": 712,
+                "sha256": "c99a373eecfeb222edadbed40a0d690d8d2fee6eca3640c8a4b10b8015b1d6b8"
+              },
+              {
+                "path": "cases/C002/case.json",
+                "size": 423,
+                "sha256": "af85bba7afade75f3f2c4c9697a2479d825af26f9d73c4c755c23b5bc5c950fe"
+              },
+              {
+                "path": "cases/C002/input/sources.txt",
+                "size": 246,
+                "sha256": "55cfa627ad1511e2575baff421605e393c6109585334cd4038abafab8f0ebc24"
+              },
+              {
+                "path": "cases/C002/request.txt",
+                "size": 167,
+                "sha256": "0243b5ad06693ef191a9374366147061964e2a51caed3297677812bfa3fab0eb"
+              },
+              {
+                "path": "cases/C002/rubric.json",
+                "size": 784,
+                "sha256": "9b972654999599739a1da4ec6656865e1ddfe028937bf557812f0e45e11d4157"
+              },
+              {
+                "path": "cases/C003/case.json",
+                "size": 432,
+                "sha256": "89820bc17aa865537d43e35df855acf02b9dda0515bfa97844448fbba6086c43"
+              },
+              {
+                "path": "cases/C003/input/sources.txt",
+                "size": 270,
+                "sha256": "c67f3ac194bb999e5d3849980369a50f675febbfd161771d6aa85f0c1efdbb4c"
+              },
+              {
+                "path": "cases/C003/request.txt",
+                "size": 142,
+                "sha256": "aa0dabf78b235f8d17c213753aa2b4d814fafaea76c4612a52e1dde0d939cfe2"
+              },
+              {
+                "path": "cases/C003/rubric.json",
+                "size": 647,
+                "sha256": "b2d7aef69fef310b2deef0baa258bb93ad8d2209c5fcb5c41b04aa9264f25d26"
+              },
+              {
+                "path": "cases/C004/case.json",
+                "size": 432,
+                "sha256": "7e63a77c60e7ebe7f05382200d0b565da3f1462083a6b90ede6cb0d08fc01e70"
+              },
+              {
+                "path": "cases/C004/input/sources.txt",
+                "size": 304,
+                "sha256": "039c761f4e134509ff806b05e0b21c98b1f8a2f5e3cb8de18bc9c2e2110b84b0"
+              },
+              {
+                "path": "cases/C004/request.txt",
+                "size": 187,
+                "sha256": "88439cee521e0f7bfe54319dfc247a062092eb8985e1d05efd8e1483c93f58e7"
+              },
+              {
+                "path": "cases/C004/rubric.json",
+                "size": 773,
+                "sha256": "e81aaaca10342e8f90c9900d425251cd66d5e7ad92c2aa88baae5d0b4c2dc925"
+              },
+              {
+                "path": "change-map.json",
+                "size": 283,
+                "sha256": "1f1ec90112aeae1fd2cb4fb0e3f907c27918ababce68e7ce6a0350ad30175a77"
+              },
+              {
+                "path": "schemas/answer.schema.json",
+                "size": 300,
+                "sha256": "44e71c60bcd6e4443ff830e19e762397660bc92503e66e53230cafc89449db67"
+              }
+            ]
+          }
+        ]
+      },
+      "machine": {
+        "status": "PASS",
+        "findings": []
+      },
+      "semantic": {
+        "status": "REVIEW_REQUIRED"
+      },
+      "evidence": {
+        "status": "VALID",
+        "violations": [],
+        "comparability": "ELIGIBLE"
+      },
+      "execution": {
+        "status": "FINISHED",
+        "code": 0,
+        "model_started": false,
+        "stop": "NOT_REQUESTED"
+      },
+      "supersedes": null,
+      "verdict": "DEV_INCONCLUSIVE"
+    }
+  ],
+  "record_sha256": "d11d52d87fa30d62ab1cf6032e86040ffb1525317aa827ae5918522012e2331a"
+}

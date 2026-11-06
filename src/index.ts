@@ -1,4 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/server";
+import { expirePublicHistory } from './publicHistory/service';
 import { registerComparison } from "./comparison/register";
 import { registerDiscovery } from "./subsidyDiscovery/register";
 import { DISCOVERY_GUIDANCE } from "./subsidyDiscovery/service";
@@ -126,6 +127,7 @@ function errorToolResult(error: unknown) {
 }
 
 type Env = DocumentEnv & CatalogEnv & {
+  PUBLIC_HISTORY_ENABLED?: string;
   SUBSIDY_COMPARISON_ENABLED?: string;
   NTA_APPLICATION_ID?: string;
   GBIZINFO_API_TOKEN?: string;
@@ -1131,6 +1133,7 @@ export function createServer(env: Env): McpServer {
 
 export default {
   async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(expirePublicHistory(env));
     ctx.waitUntil(collectDueSources(env).then(result => { console.log(JSON.stringify({event:"document_discovery",...result})); }));
     ctx.waitUntil(collectDueMhlwSources(env).then(result => { console.log(JSON.stringify({event:"mhlw_discovery",...result})); }));
   },

@@ -19,6 +19,8 @@
 
 公開文書: [プライバシーポリシー](PRIVACY.md)・[利用規約](TERMS.md)・[セキュリティポリシー](SECURITY.md)・[コントリビューションガイド](CONTRIBUTING.md)・[行動規範](CODE_OF_CONDUCT.md)
 
+スキルの改善には、製品の配布と独立した[小事例評価の手順](evaluation/skill/README.md)を利用できます。`npm run eval:skill -- plan --case C001`でモデルを起動せず準備を確認し、`npm run test:skill-eval`で評価基盤を検証します。
+
 0.11.0の再審査用資料: [修正・検証記録](docs/review-resubmission-2026-09-20.md)・[ツール注釈の理由](docs/tool-annotation-justifications.md)。`npm run verify:production`は公開MCPのツール一覧と申請用JSONの一致を検査します。`npm run verify:production -- --smoke`は公的API参照と相談文生成も検査し、補助金の一時キャッシュ以外の保存・上書きは実行しません。
 
 ## このプロジェクトが解決したい問題

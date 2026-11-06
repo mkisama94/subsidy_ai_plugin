@@ -1,0 +1,47 @@
+{
+  "candidate": [
+    {
+      "path": "company-research/SKILL.md",
+      "size": 5295,
+      "sha256": "c30ae67fdb6053a9a975945247d8e39b384acc80615404d01ab8c0239b47a0b1"
+    },
+    {
+      "path": "subsidy-consultation/SKILL.md",
+      "size": 4900,
+      "sha256": "673854f6104f210823289644fcb28935f585e5ea29543988a202ac486f136cfd"
+    }
+  ],
+  "frozen": [
+    {
+      "path": "answer.schema.json",
+      "size": 300,
+      "sha256": "44e71c60bcd6e4443ff830e19e762397660bc92503e66e53230cafc89449db67"
+    },
+    {
+      "path": "case/case.json",
+      "size": 424,
+      "sha256": "3166be5457c625b8082367d4a60f6fc0ebb5034f9b13b5af842685fed4d96b34"
+    },
+    {
+      "path": "case/input/sources.txt",
+      "size": 340,
+      "sha256": "bb355be2265d0a45bf5021f3708b556df1c91bbf5b0dee43030bb8940a7fbeab"
+    },
+    {
+      "path": "case/request.txt",
+      "size": 125,
+      "sha256": "372816276eab10177397c35cb9a34db931b39681f879b5090a688ad56f1c8557"
+    },
+    {
+      "path": "case/rubric.json",
+      "size": 712,
+      "sha256": "c99a373eecfeb222edadbed40a0d690d8d2fee6eca3640c8a4b10b8015b1d6b8"
+    },
+    {
+      "path": "rubric.json",
+      "size": 712,
+      "sha256": "c99a373eecfeb222edadbed40a0d690d8d2fee6eca3640c8a4b10b8015b1d6b8"
+    }
+  ],
+  "workspace": []
+}

@@ -4,6 +4,8 @@ node_modules/
 .env
 *.log
 /private_docs/
+/tmp/skill-eval/
+/evaluation/skill/config.local.json
 
 # Local evidence checkout; not a deployable submodule.
 /output/valuation-2026-09-09/evidence/public-repo/

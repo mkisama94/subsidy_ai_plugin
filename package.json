@@ -8,8 +8,11 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "test": "tsx --test test/**/*.test.ts",
+    "eval:skill": "node evaluation/skill/cli.mjs",
+    "test:skill-eval": "node --test evaluation/skill/tests/*.test.mjs",
     "verify:production": "node scripts/verify-production.mjs",
     "typecheck": "tsc --noEmit",
+    "test:public-history-runtime": "node scripts/test-public-history-runtime.mjs",
     "comparison:preview": "tsx scripts/verify-comparison-ui.ts --preview-only",
     "comparison:verify-ui": "tsx scripts/verify-comparison-ui.ts",
     "documents:import": "tsx scripts/import-document-sources.mjs",
@@ -19,7 +22,8 @@
     "mhlw:pdf:dev": "wrangler dev --config wrangler.mhlw-pdf.jsonc",
     "mhlw:pdf:build": "wrangler deploy --dry-run --config wrangler.mhlw-pdf.jsonc",
     "mhlw:config": "tsx scripts/mhlw-config.ts",
-    "mhlw:verify-contract": "tsx scripts/verify-mhlw-contract.ts"
+    "mhlw:verify-contract": "tsx scripts/verify-mhlw-contract.ts",
+    "test:subsidy-rules": "node packages/subsidy-rules/check.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "^2.0.0",

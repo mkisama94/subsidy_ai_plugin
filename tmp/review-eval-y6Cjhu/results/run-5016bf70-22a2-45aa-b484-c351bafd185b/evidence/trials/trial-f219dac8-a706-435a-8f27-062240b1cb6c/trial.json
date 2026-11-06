@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "trial_id": "trial-f219dac8-a706-435a-8f27-062240b1cb6c",
+  "created_at": "2026-11-05T09:40:14.611Z",
+  "case_key": "C001",
+  "case_definition_sha256": "3166be5457c625b8082367d4a60f6fc0ebb5034f9b13b5af842685fed4d96b34",
+  "variant": "default",
+  "repeat": 1,
+  "directory": "evidence/trials/trial-f219dac8-a706-435a-8f27-062240b1cb6c",
+  "candidate_sha256": "556e2741f279e27c98f692b6ce22f3fe6e8a38bab3bc135e1a5a49c99c4436ae",
+  "rubric_sha256": "c99a373eecfeb222edadbed40a0d690d8d2fee6eca3640c8a4b10b8015b1d6b8",
+  "request_sha256": "372816276eab10177397c35cb9a34db931b39681f879b5090a688ad56f1c8557",
+  "input_sha256": "106837548ff56fe611546f607065d8784c66c77cbbf1445a3012dedc9cc652bf",
+  "contract_sha256": "2f439a4cbabdf4f79f5b88f3f18f03b3fad70ce7f24d61229f0502374fdf5f0c",
+  "loading_mode": "supplied_candidate_text",
+  "execution": {
+    "status": "FINISHED",
+    "code": 0,
+    "model_started": false,
+    "stop": "NOT_REQUESTED"
+  },
+  "elapsed_ms": 1,
+  "observation": {
+    "events_complete": true,
+    "observed_model": null,
+    "observed_effort": null,
+    "contamination": "NOT_OBSERVED_NOT_PROOF",
+    "observed_tool_calls": 0,
+    "usage": [],
+    "requested_model": "fixture-only",
+    "requested_effort": null,
+    "supplied_hash": "d23d251f7b1ae6fab1c1f11cb0413f950bfa6c0e228924e1598d31c0800f9df8",
+    "host_observed_hash": null,
+    "access_isolation": "UNCONFIRMED"
+  },
+  "evidence": {
+    "status": "VALID",
+    "violations": [],
+    "comparability": "ELIGIBLE"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@subsidy-ai/rules",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "exports": "./dist/index.js",
+  "files": ["dist", "LICENSE", "README.md"]
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "trial_id": "trial-0e478d6a-7ac4-409e-b64e-618c762d3e5e",
+    "answer_sha256": "1b02aa485537196645d999751493482540b3bcb5ca340ddc5b6b6115db5372ba",
+    "rubric_sha256": "b2d7aef69fef310b2deef0baa258bb93ad8d2209c5fcb5c41b04aa9264f25d26",
+    "status": "PASS",
+    "kind": "model",
+    "reviewer": "Codex parent reviewer",
+    "independence": "Separate from evaluated Luna session; same agent authored candidate skill, not independent author review",
+    "method_version": "1",
+    "reviewed_at": "2026-11-05T14:39:33.6358190+00:00",
+    "reason": "指定順の3項目、法人番号の先頭0、補助金への非誘導を確認。出典説明は合成入力と対応するが、完全一致の機械検査はFAILのまま保持。",
+    "evidence": [
+      "法人番号：0123456789012",
+      "正式名称→法人番号→住所の順",
+      "sources: 合成国税庁応答 nta-fixture; actions: []"
+    ],
+    "checks": {
+      "correctness": "PASS",
+      "scope": "PASS",
+      "evidence": "PASS"
+    }
+  },
+  {
+    "trial_id": "trial-a05e7ed3-4908-45a6-b728-22d1c6b35e7e",
+    "answer_sha256": "fff8283d4d0610f187192a9ab45275c85976916df9d511a48ab5658c4384e96e",
+    "rubric_sha256": "e81aaaca10342e8f90c9900d425251cd66d5e7ad92c2aa88baae5d0b4c2dc925",
+    "status": "PASS",
+    "kind": "model",
+    "reviewer": "Codex parent reviewer",
+    "independence": "Separate from evaluated Luna session; same agent authored candidate skill, not independent author review",
+    "method_version": "1",
+    "reviewed_at": "2026-11-05T14:39:33.6512225+00:00",
+    "reason": "資本金の単位、従業員数の空欄と別記理由、代表者役職を保持。出典注記で基準日・取得日・更新日不明を区別。出典ID完全一致の機械検査FAILは保持。",
+    "evidence": [
+      "資本金：1000万円",
+      "従業員数： の後が空欄、確認事項は別記",
+      "代表者：架空一郎（代表取締役）",
+      "sourcesに基準日2025-03-31、更新日記載なし、取得日2026-11-05"
+    ],
+    "checks": {
+      "correctness": "PASS",
+      "scope": "PASS",
+      "evidence": "PASS"
+    }
+  }
+]

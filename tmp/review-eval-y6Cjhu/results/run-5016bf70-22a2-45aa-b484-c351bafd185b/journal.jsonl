@@ -1,0 +1,4 @@
+{"schema_version":"1.0","event_id":"event-ed756337-eb12-4c1d-a108-f43a394bfce8","created_at":"2026-11-05T09:40:14.538Z","state":"PREPARING","run_id":"run-5016bf70-22a2-45aa-b484-c351bafd185b"}
+{"schema_version":"1.0","event_id":"event-026f25f9-7ef0-4c48-9968-18064490ac7e","created_at":"2026-11-05T09:40:14.613Z","state":"RUNNING","trial_id":"trial-f219dac8-a706-435a-8f27-062240b1cb6c","case_key":"C001"}
+{"schema_version":"1.0","event_id":"event-af2c6ca1-e1fa-425b-9e52-650254918788","created_at":"2026-11-05T09:40:14.628Z","state":"FINISHED","trial_id":"trial-f219dac8-a706-435a-8f27-062240b1cb6c"}
+{"schema_version":"1.0","event_id":"event-4a3c788b-caf0-435e-8703-ac4ad3a939f5","created_at":"2026-11-05T09:40:14.662Z","state":"SEALED","run_id":"run-5016bf70-22a2-45aa-b484-c351bafd185b"}

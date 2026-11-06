@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "types": ["node"] },
+  "include": ["src/applicationAssist/**/*.ts", "scripts/application-assist/**/*.ts", "test/applicationAssist/**/*.ts"]
+}

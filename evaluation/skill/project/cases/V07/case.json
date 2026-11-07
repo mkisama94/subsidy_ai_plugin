@@ -1,0 +1,20 @@
+{
+  "id": "V07",
+  "version": "1",
+  "title": "目的質問の終了",
+  "tags": [
+    "vendor"
+  ],
+  "skill": "pca-it-application-assist",
+  "request_file": "request.txt",
+  "input_dir": "input",
+  "rubric_file": "rubric.json",
+  "required_capabilities": [
+    "text_answer",
+    "tool_events"
+  ],
+  "allowed_loading_modes": [
+    "supplied_candidate_text"
+  ],
+  "critical": true
+}

@@ -1,0 +1,62 @@
+{
+  "createdAt": "2026-11-07T01:34:22.434Z",
+  "kind": "partial-skills-update-candidate",
+  "sourceDigest": "568acd045b43c9c6f86ee53b79b574fffeb90e8375f607e3e8d29b93639c8fb2",
+  "archiveSha256": "d02788b2bcb97eb02c64dac495774bbd7cb4041e70b869a9d8bd9de72c0c56f3",
+  "inventory": [
+    {
+      "file": "skills/company-research/SKILL.md",
+      "bytes": 5400,
+      "sha256": "37659c5bf069273b4423e756dab658e49cdaf58411e0d1a2cfc944fd9baa3216"
+    },
+    {
+      "file": "skills/company-research/references/company-selection.md",
+      "bytes": 4648,
+      "sha256": "7479a093208ae3f597533a8bd39cae87f68a918a4829eba1062d6f5488c4f25c"
+    },
+    {
+      "file": "skills/subsidy-consultation/SKILL.md",
+      "bytes": 7321,
+      "sha256": "7124ffbe9afbf77b201de93f6494d8b5737b17863e624f17b0e9e0b6f7ee91aa"
+    },
+    {
+      "file": "skills/pca-it-application-assist/SKILL.md",
+      "bytes": 12562,
+      "sha256": "f70c0cc81600054415fdd60892f988f865a54e70ee2027552bde44f6d34d0c21"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendor-intake.md",
+      "bytes": 2285,
+      "sha256": "ad085ea930fb3fef7c34270be8d60f18952b200902bfd1a8ee30ec9fe5f972dd"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendor-workflow.md",
+      "bytes": 8734,
+      "sha256": "d3e9768e06ad71a94c9621aa1ef42424a7f5a19e31a0609dff65151f34916d70"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendors/mimosa.json",
+      "bytes": 8779,
+      "sha256": "3bf14f1ececd7172176c7c7116d5df6853bd1a09d639ab7daa923c0feb24612a"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendors/mimosa.md",
+      "bytes": 4367,
+      "sha256": "0b57e7b6d3c35ad301b69e53e055ee1fc711015d7ec7ffb78f3afb6fa744f0ff"
+    }
+  ],
+  "recordedRelease": {
+    "identifier": "app-6a9b5a9e8f808191831c8655ee2191ae",
+    "version": "1.1.0"
+  },
+  "targetConfirmed": false,
+  "proposedVersion": null,
+  "manifestIncluded": false,
+  "mcpConfigurationIncluded": false,
+  "archiveReadback": "passed",
+  "sourceLinks": "passed",
+  "realModelEvaluation": "see separate evaluation records; not implied by package check",
+  "installedHostAcceptance": "not_run",
+  "published": false,
+  "limitation": "更新用のスキル差分。単体プラグインではない。更新先・次版番号・実ホストの読み込みを別途確認。既存リリース・設定・権限を変更しない。"
+}

@@ -6,7 +6,8 @@ import path from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { settings, prepare, execute, load, regrade, reviewTemplate, compareRecords, redactedExport } from '../core/runner.mjs';
-import { freeze, inventory, inside, readJson, writeJson, digest } from '../core/store.mjs';
+import { freeze, inventory, inside, readJson, writeJson, digest, hash } from '../core/store.mjs';
+import * as projectAdapter from '../project/adapter.mjs';
 import { hostArgs, runHost, probeTreeTermination } from '../hosts/process.mjs';
 const base = path.resolve(import.meta.dirname, '..');
 const exec = promisify(execFile);
@@ -14,7 +15,13 @@ const exec = promisify(execFile);
 async function fixture(t, options = {}) {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'subsidy-skill-eval-'));
   t.after(() => fs.rm(root, { recursive: true, force: true }));
-  await fs.cp(path.join(base, 'project'), path.join(root, 'project'), { recursive: true });
+  const projectRoot = path.join(base, 'project');
+  // Keep infrastructure fixtures at their four legacy cases. New business
+  // scenarios have their own integration tests and must not expand fake trials.
+  await fs.cp(projectRoot, path.join(root, 'project'), { recursive: true, filter: source => {
+    const parts = path.relative(projectRoot, source).split(path.sep);
+    return !(parts[0] === 'cases' && /^V\d{2}$/.test(parts[1] ?? ''));
+  } });
   // Adapter's relative core import remains in a separate, trusted module tree.
   await fs.cp(path.join(base, 'core'), path.join(root, 'core'), { recursive: true });
   await fs.mkdir(path.join(root, 'skills'));
@@ -311,4 +318,58 @@ test('CLI rejects unknown assessment IDs and assessment IDs belonging to differe
   const args = [path.join(base, 'cli.mjs'), 'compare', r.record.run_id, r.record.run_id, '--config', path.join(f.root, 'config.json')];
   await assert.rejects(exec(process.execPath, [...args, '--baseline-assessment', 'missing']), e => e.code === 4 && JSON.parse(e.stderr).error.includes('UNKNOWN_ASSESSMENT_ID'));
   await assert.rejects(exec(process.execPath, [...args, '--baseline-assessment', r.batch.assessments[0].assessment_id, '--candidate-assessment', r.batch.assessments[1].assessment_id]), e => e.code === 4 && JSON.parse(e.stderr).error === 'ASSESSMENT_CASE_MISMATCH');
+});
+
+test('source contract in prompt and schema specifies exact IDs and response-only annotations', async () => {
+  const contract = await readJson(path.join(base, 'project/schemas/answer.schema.json'));
+  const prompt = await projectAdapter.buildPrompt({ candidate: 'candidate', request: 'request', input: '公開入力の出典ID public-reference', contract });
+  assert.match(prompt, /出典IDだけ/); assert.match(prompt, /入力中の表記をそのまま/); assert.match(prompt, /完全一致/);
+  assert.match(prompt, /説明、括弧書き、日付、接頭辞、接尾辞を付けない/);
+  assert.match(prompt, /基準日、更新日、取得日、未確認事項はresponse内/);
+  assert.match(prompt, /転記用の値と注記は分け/); assert.match(prompt, /actions：.*空配列/);
+  assert.match(contract.properties.sources.description, /完全一致/);
+  assert.match(contract.properties.response.description, /基準日、更新日、取得日/);
+  assert.match(contract.properties.actions.description, /空配列/);
+  assert.deepEqual(contract.required, ['response', 'sources', 'actions']);
+  for (const caseId of ['nta-fixture', 'profile-fixture', 'site-fixture', 'official-a', 'official-b']) assert.ok(!prompt.includes(caseId));
+});
+test('private rubric content and allowed source list do not enter model input', async t => {
+  const f = await fixture(t), rubricFile = path.join(f.root, 'project/cases/C001/rubric.json');
+  const rubric = await readJson(rubricFile);
+  rubric.required.push('PRIVATE_REQUIRED_SENTINEL'); rubric.failures.push('PRIVATE_FAILURE_SENTINEL'); rubric.allowed_sources.push('private-source-sentinel');
+  await writeJson(rubricFile, rubric);
+  const host = f.s.host;
+  f.s.host = { ...host, execute: async input => {
+    assert.doesNotMatch(input.prompt, /PRIVATE_REQUIRED_SENTINEL|PRIVATE_FAILURE_SENTINEL|private-source-sentinel|allowed_sources|review_checks/);
+    assert.match(input.prompt, /official-a/); return host.execute(input);
+  } };
+  await f.run();
+});
+for (const source of ['合成応答 public-reference', 'public-reference（基準日2025-03-31）', 'unknown-reference', 'prefix-public-reference-suffix', 'public-reference ', 'PUBLIC-REFERENCE']) test(`source validation rejects nonexact source: ${source}`, async () => {
+  const parsed = projectAdapter.parseAnswer(Buffer.from(JSON.stringify({ response: '本文', sources: [source], actions: [] })));
+  const result = await projectAdapter.machineGrade({ parsed, rubric: { allowed_sources: ['public-reference'] } });
+  assert.equal(result.status, 'FAIL'); assert.deepEqual(result.findings, [`unknown source: ${source}`]);
+  assert.equal(parsed.answer.sources[0], source);
+});
+test('exact IDs pass while necessary source annotations remain in response', async t => {
+  const answer = { response: '転記用の値：1000万円\n注記：この項目の出典はpublic-reference。基準日2025-03-31、取得日2026-11-05、更新日は不明。未確認事項は別記。', sources: ['public-reference'], actions: [] };
+  const parsed = projectAdapter.parseAnswer(Buffer.from(JSON.stringify(answer)));
+  assert.equal((await projectAdapter.machineGrade({ parsed, rubric: { allowed_sources: ['public-reference'] } })).status, 'PASS');
+  const f = await fixture(t), host = f.s.host;
+  f.s.host = { ...host, execute: async input => {
+    await fs.writeFile(input.answer, JSON.stringify({ ...answer, sources: ['official-a'] }));
+    return { status: 'FINISHED', code: 0, model_started: false, stop: 'NOT_REQUESTED' };
+  } };
+  const r = await f.run();
+  assert.equal(r.batch.assessments[0].machine.status, 'PASS');
+  assert.equal(r.batch.assessments[0].semantic.status, 'REVIEW_REQUIRED');
+  assert.equal(r.batch.assessments[0].verdict, 'DEV_INCONCLUSIVE');
+});
+test('execution records distinguish candidate, adapter version/hash and schema byte hash', async t => {
+  const f = await fixture(t), r = await f.run();
+  assert.equal(r.record.evaluator.project_adapter.version, projectAdapter.version);
+  assert.equal(r.record.evaluator.project_adapter.sha256, hash(await fs.readFile(f.s.config.project_adapter)));
+  assert.equal(r.record.evaluator.answer_schema_sha256, hash(await fs.readFile(f.s.config.answer_schema)));
+  assert.equal(r.record.trials[0].answer_schema_sha256, r.record.evaluator.answer_schema_sha256);
+  assert.equal(r.record.trials[0].candidate_sha256, digest(await inventory(path.join(r.dir, 'evidence/candidate'))));
 });

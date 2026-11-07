@@ -1,8 +1,33 @@
 {
-  "eligibility": ["eligibility"],
-  "comparison": ["comparison", "evidence"],
-  "company-research": ["company", "scope", "unknown"],
-  "evidence": ["evidence", "unknown"],
-  "scope": ["scope"],
-  "common": ["eligibility", "comparison", "company", "scope", "unknown", "evidence"]
+  "eligibility": [
+    "eligibility"
+  ],
+  "comparison": [
+    "comparison",
+    "evidence"
+  ],
+  "company-research": [
+    "company",
+    "scope",
+    "unknown"
+  ],
+  "evidence": [
+    "evidence",
+    "unknown"
+  ],
+  "scope": [
+    "scope"
+  ],
+  "common": [
+    "eligibility",
+    "comparison",
+    "company",
+    "scope",
+    "unknown",
+    "evidence",
+    "vendor"
+  ],
+  "vendor-workflow": [
+    "vendor"
+  ]
 }

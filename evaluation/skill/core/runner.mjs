@@ -54,7 +54,8 @@ const publicPlan = plan => ({ ...plan, selection: { ...plan.selection, selected:
 async function appendJournal(dir, event) { await fs.appendFile(path.join(dir, 'journal.jsonl'), JSON.stringify({ schema_version: '1.0', event_id: id('event'), created_at: now(), ...event }) + '\n'); }
 async function evaluatorIdentity(config) {
   const roots = [path.join(base, 'core'), path.join(base, 'hosts'), path.dirname(config.project_adapter)];
-  return { version: '1.0', canonicalization: 'sorted-json-v1', roots: await Promise.all(roots.map(async root => ({ root, files: await inventory(root) }))) };
+  const project = await import(pathToFileURL(config.project_adapter).href);
+  return { version: '1.0', canonicalization: 'sorted-json-v1', project_adapter: { id: project.id, version: project.version, sha256: hash(await fs.readFile(config.project_adapter)) }, answer_schema_sha256: hash(await fs.readFile(config.answer_schema)), roots: await Promise.all(roots.map(async root => ({ root, files: await inventory(root) }))) };
 }
 async function textFiles(root) {
   return (await Promise.all((await inventory(root)).map(async file => `--- ${file.path} ---\n${await fs.readFile(inside(root, file.path), 'utf8')}`))).join('\n\n');
@@ -173,7 +174,7 @@ export async function execute(s, plan, signal) {
     await fs.writeFile(inside(trialDir, 'stderr.log'), '');
     const start = { candidate: await inventory(path.join(evidenceRoot, 'candidate')), frozen: await inventory(frozen), workspace: await inventory(workspace) };
     await writeJson(inside(trialDir, 'start-inventory.json'), start);
-    const trial = { schema_version: '1.0', trial_id: trialId, created_at: now(), case_key: c.id, case_definition_sha256: hash(await fs.readFile(inside(frozen, 'case/case.json'))), variant: 'default', repeat: 1, directory: relative, candidate_sha256: digest(candidate), rubric_sha256: hash(await fs.readFile(inside(frozen, 'rubric.json'))), request_sha256: hash(request), input_sha256: digest(await inventory(inside(frozen, `case/${c.input_dir}`))), contract_sha256: digest(contract), loading_mode: config.loading_mode };
+    const trial = { schema_version: '1.0', trial_id: trialId, created_at: now(), case_key: c.id, case_definition_sha256: hash(await fs.readFile(inside(frozen, 'case/case.json'))), variant: 'default', repeat: 1, directory: relative, candidate_sha256: digest(candidate), rubric_sha256: hash(await fs.readFile(inside(frozen, 'rubric.json'))), request_sha256: hash(request), input_sha256: digest(await inventory(inside(frozen, `case/${c.input_dir}`))), contract_sha256: digest(contract), answer_schema_sha256: hash(await fs.readFile(inside(frozen, 'answer.schema.json'))), loading_mode: config.loading_mode };
     await appendJournal(dir, { state: 'RUNNING', trial_id: trialId, case_key: c.id });
     const started = Date.now();
     try {

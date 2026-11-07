@@ -1,5 +1,47 @@
 # スキルの小事例評価
 
+## 販売会社別手順の評価（2026-11-07追加）
+
+V22は版2へ更新し、既知の製品・現状・目標・手元資料を与えたうえで、資料一覧・説明案・コピー用引継ぎメモを必須とします。project adapter 1.2ではR1〜R5のレビュー判定も必要です。`project/requirementReview.mjs`は各条件の理由・実回答の引用を検査しますが、意味の合否は担当者が確認します。旧V22の質問だけの応答と合格記録は保存し、新しい試験の合格根拠に使いません。[修正と追加評価](../../docs/vendor-workflow-v22-v2-evaluation-2026-11-07.md)を参照してください。
+
+`project/vendor-workflow-scenarios.json`にV01〜V25を定義しています。V01〜V23・V25は`project/cases/Vxx/`の24件で、既存adapter・出典ID完全一致検査・意味レビューを使用します。V24は実際のホストの導入・質問UI・ファイル読取り等の確認であり、本文供給ケースへ変換しません。手順は[ホスト確認](../../docs/vendor-workflow-host-acceptance.md)を参照してください。
+
+```powershell
+# シナリオ定義を編集した場合にfixtureを再生成（過去の固定証拠は変更しない）
+node scripts/prepare-vendor-workflow-cases.mjs
+node evaluation/skill/cli.mjs plan --suite affected --change vendor-workflow --max-trials 24
+node evaluation/skill/cli.mjs run --suite affected --change vendor-workflow --max-trials 24 --model gpt-6.1-sol
+# 従来4件も含む全28件。予算とモデルは実行者が明示する
+node evaluation/skill/cli.mjs run --suite all --max-trials 28 --model gpt-6.1-sol
+```
+
+このモデル名は今回の利用者指定で、既定モデルへの変更ではありません。requestedモデルとobservedモデルは別々に記録します。機械PASSと、実装者による意味レビュー、独立した受入、ホスト確認を混同しません。評価器自体のテストでは従来の4件をfixtureとして分離し、新業務ケースの追加で偽ホストの起動数・異常処理テストが膨らまないようにしています。実際の28件の選択とfixture整合は`test/vendorWorkflow.test.ts`で検査します。
+
+スキル更新候補の作成は`node scripts/vendor-workflow-package.mjs`。参照リンクとJSON/YAMLを検査し、実バイトの一覧・hashとZIP展開一致を保存します。成果物は部分更新用で、インストール・OpenAI申請・公開は行いません。
+
+## 販売会社別手順の評価（2026-11-07追加）
+
+`project/vendor-workflow-scenarios.json`にV01〜V25を定義しています。V01〜V23・V25は`project/cases/Vxx/`の24件で、既存adapter・出典ID完全一致検査・意味レビューを使用します。V24は実際のホストの導入・質問UI・ファイル読取り等の確認であり、本文供給ケースへ変換しません。手順は[ホスト確認](../../docs/vendor-workflow-host-acceptance.md)を参照してください。
+
+```powershell
+# シナリオ定義を編集した場合にfixtureを再生成（過去の固定証拠は変更しない）
+node scripts/prepare-vendor-workflow-cases.mjs
+node evaluation/skill/cli.mjs plan --suite affected --change vendor-workflow --max-trials 24
+node evaluation/skill/cli.mjs run --suite affected --change vendor-workflow --max-trials 24 --model gpt-6.1-sol
+# 従来4件も含む全28件。予算とモデルは実行者が明示する
+node evaluation/skill/cli.mjs run --suite all --max-trials 28 --model gpt-6.1-sol
+```
+
+このモデル名は今回の利用者指定で、既定モデルへの変更ではありません。requestedモデルとobservedモデルは別々に記録します。機械PASSと、実装者による意味レビュー、独立した受入、ホスト確認を混同しません。評価器自体のテストでは従来の4件をfixtureとして分離し、新業務ケースの追加で偽ホストの起動数・異常処理テストが膨らまないようにしています。実際の28件の選択とfixture整合は`test/vendorWorkflow.test.ts`で検査します。
+
+スキル更新候補の作成は`node scripts/vendor-workflow-package.mjs`。参照リンクとJSON/YAMLを検査し、実バイトの一覧・hashとZIP展開一致を保存します。成果物は部分更新用で、インストール・OpenAI申請・公開は行いません。
+
+2026-11-07：Project adapterを1.1へ更新しました。評価用の`response`・`sources`・`actions`の出力仕様をプロンプトと回答スキーマの両方へ明記しています。`sources`には実際に使用した固定入力中の出典IDだけを完全一致で記載し、説明・項目との対応・基準日・更新日・取得日・未確認事項は`response`へ記載します。転記用の値と注記を分け、外部操作のない本文供給試験の`actions`は空配列とします。
+
+出典の機械検査は完全一致を維持し、部分一致・自動抽出・未知IDの無視は行いません。許可出典一覧やrubricはモデルへ渡しません。出典の省略や主張と根拠の対応は意味レビューでも確認します。機械PASSだけで根拠が十分とは判定しません。
+
+新しい実行記録の`evaluator.project_adapter`にadapterの版と実バイトhash、`evaluator.answer_schema_sha256`とtrialの`answer_schema_sha256`にスキーマの実バイトhashを保存します。候補スキルの一覧・hashとtrialの`candidate_sha256`はこれらと別です。出力仕様変更後は新しいrunで試験し、過去の原回答や不合格判定は変更しません。前後のプロンプト・スキーマ・評価器が異なる結果は、同条件のスキル改善比較とは扱いません。
+
 スキルの指示文を変更し、小さく固定した依頼で判断の差を確認する開発専用の仕組みです。製品のビルド、梱包、インストール、公開から独立しています。Node.js 24を使用し、追加のnpm依存はありません。
 
 共通設計の出典は Open Estimate の `docs/implementation/SKILL-EVALUATION-PORTABLE-DESIGN-2026-11-05.md`（SKILL-EVAL-PORTABLE-1.0）です。その業務固有の計数ルールは移植していません。

@@ -3,8 +3,19 @@
   "additionalProperties": false,
   "required": ["response", "sources", "actions"],
   "properties": {
-    "response": { "type": "string" },
-    "sources": { "type": "array", "items": { "type": "string" } },
-    "actions": { "type": "array", "items": { "type": "string" } }
+    "response": {
+      "type": "string",
+      "description": "利用者に提示する回答本文。出典の説明、項目との対応、基準日、更新日、取得日、未確認事項もここに記載する。転記用の値と注記は分け、注記をフォームの入力値に混ぜない。"
+    },
+    "sources": {
+      "type": "array",
+      "description": "回答の根拠として実際に使用した、固定入力中の出典IDだけの配列。入力中の表記と完全一致させる。説明、括弧書き、日付、接頭辞、接尾辞は付けず、responseに記載する。",
+      "items": { "type": "string", "description": "固定入力にある出典IDをそのまま記載する。" }
+    },
+    "actions": {
+      "type": "array",
+      "description": "この試験では外部操作を実行しないため、空配列にする。",
+      "items": { "type": "string" }
+    }
   }
 }

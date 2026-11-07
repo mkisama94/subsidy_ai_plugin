@@ -1,0 +1,150 @@
+{
+  "recordedAt": "2026-11-07T02:23:49.741Z",
+  "caseId": "V22",
+  "caseVersion": "2",
+  "runId": "run-db5ddb85-0aff-4006-ac46-cdbc743f2052",
+  "previousRun": "run-a1887f14-890c-48f1-bcd2-efb7fb009748",
+  "previousJudgmentLimitation": "旧V22の合格記録は三成果物の能力確認には不十分。旧記録は保持し、今回の新入力・新回答で補う。",
+  "assessment": {
+    "run_id": "run-db5ddb85-0aff-4006-ac46-cdbc743f2052",
+    "saved_to": "C:\\git\\subsidy_ai_plugin\\tmp\\skill-eval\\run-db5ddb85-0aff-4006-ac46-cdbc743f2052",
+    "purpose": "DEVELOPMENT",
+    "product_acceptance": "NOT_REQUESTED",
+    "model_quality_evidence": true,
+    "assessment_set_id": "set-e6031da6-e3b7-4aa9-a983-f3c1b6ec26b2",
+    "cases": [
+      {
+        "trial_id": "trial-67c34373-65a2-4c69-9c78-837bc9b7abe4",
+        "assessment_id": "assessment-ccc13d04-536c-4b1a-91e6-8b5d7c53723d",
+        "verdict": "DEV_PASS",
+        "machine": {
+          "status": "PASS",
+          "findings": []
+        },
+        "semantic": {
+          "trial_id": "trial-67c34373-65a2-4c69-9c78-837bc9b7abe4",
+          "answer_sha256": "3770902c4b90fc41b2b875546469cf7f0622f43b620d351b1a5c54931105e8b4",
+          "rubric_sha256": "82edce0a1d30c4e626c313e22ecc836e569f4a35c157049997ed9d1bb9be0cae",
+          "status": "PASS",
+          "kind": "model",
+          "reviewer": "Codex implementing assistant",
+          "independence": "Same implementing assistant; not independent or human acceptance",
+          "method_version": "vendor-requirement-review-2",
+          "reviewed_at": "2026-11-07T02:23:49.626Z",
+          "reason": "V22 v2のR1〜R5について出力実物と未実行能力の境界を個別確認。質問による会話継続だけを代替の合格根拠にしない。",
+          "evidence": [
+            "R1: 年度・枠別の公式必須書類を確定した一覧ではなく、手元資料の仮整理です。",
+            "R1: | 架空見積Q22 |",
+            "R1: | BS・PL | 手元にあるのは2025年12月期。制度上の必要年度への適合は未確認",
+            "R1: | 事業内容資料 |",
+            "R1: 未受領。本文・入力欄・条項・宛先は未確認",
+            "R1: 所持の本人申告のみ。原本読取り・照合未実施",
+            "R2: 現在、会計業務では入力担当と承認担当が分かれており、承認はメールで行っています。",
+            "R2: 導入後は承認状況・履歴・権限を管理できる運用を目指しています。",
+            "R2: 希望プランで目標の運用を実現できるかは未確認です。",
+            "R3: ③ 別のチャットへコピーする引継ぎメモ",
+            "R3: 【本人確認済み】\n希望製品：PCAクラウド会計\n購入先：ミモザ\n申請希望年度：2026年",
+            "R3: 【未確認・未受領】",
+            "R3: 【次に独立して進められる操作】",
+            "R3: このメモを本人が別チャットへ貼り付けて引き継ぐ。自動再開は行われない。",
+            "R4: 原本読取り・照合はすべて未実施。",
+            "R4: 正式転記準備は未完了。",
+            "R4: ローカル実行・ファイル保存・永続案件保存は利用できない。",
+            "R4: 書式記入・送信・受付・申請提出は実行していない。",
+            "R5: これらの情報は再質問せず引き継ぐ。",
+            "R5: 手元のQ22で、宛名が架空A社、発行者がミモザになっているか確認してください。",
+            "R5: 登録情報や書式の回答を待たずに進められます。"
+          ],
+          "checks": {
+            "correctness": "PASS",
+            "scope": "PASS",
+            "evidence": "PASS",
+            "R1": "PASS",
+            "R2": "PASS",
+            "R3": "PASS",
+            "R4": "PASS",
+            "R5": "PASS"
+          }
+        },
+        "evidence": {
+          "status": "VALID",
+          "violations": [],
+          "comparability": "ELIGIBLE"
+        }
+      }
+    ],
+    "unexecuted": []
+  },
+  "requestedModel": "gpt-6.1-sol",
+  "observedModel": "unknown",
+  "independentReview": false,
+  "requirements": [
+    {
+      "id": "R1",
+      "status": "PASS",
+      "reason": "見積Q22・2025年12月期BS/PL・事業内容資料を三用途と次の操作で整理し、同意書未受領、所持申告と原本未照合、必要年度の未確認を区別。",
+      "excerpts": [
+        "年度・枠別の公式必須書類を確定した一覧ではなく、手元資料の仮整理です。",
+        "| 架空見積Q22 |",
+        "| BS・PL | 手元にあるのは2025年12月期。制度上の必要年度への適合は未確認",
+        "| 事業内容資料 |",
+        "未受領。本文・入力欄・条項・宛先は未確認",
+        "所持の本人申告のみ。原本読取り・照合未実施"
+      ]
+    },
+    {
+      "id": "R2",
+      "status": "PASS",
+      "reason": "現状と目標から本文中に使える説明案を作成し、機能・削減効果や正式転記を確定しない。",
+      "excerpts": [
+        "現在、会計業務では入力担当と承認担当が分かれており、承認はメールで行っています。",
+        "導入後は承認状況・履歴・権限を管理できる運用を目指しています。",
+        "希望プランで目標の運用を実現できるかは未確認です。"
+      ]
+    },
+    {
+      "id": "R3",
+      "status": "PASS",
+      "reason": "コピー用コードブロックに本人確認済み事項・未確認/未受領・具体的な次の操作を含む引継ぎメモが実在し、自動保存/再開と区別。",
+      "excerpts": [
+        "③ 別のチャットへコピーする引継ぎメモ",
+        "【本人確認済み】\n希望製品：PCAクラウド会計\n購入先：ミモザ\n申請希望年度：2026年",
+        "【未確認・未受領】",
+        "【次に独立して進められる操作】",
+        "このメモを本人が別チャットへ貼り付けて引き継ぐ。自動再開は行われない。"
+      ]
+    },
+    {
+      "id": "R4",
+      "status": "PASS",
+      "reason": "原本読取り・ローカル実行保存・正式転記の完了を主張せず、本文内の作成物に限定。",
+      "excerpts": [
+        "原本読取り・照合はすべて未実施。",
+        "正式転記準備は未完了。",
+        "ローカル実行・ファイル保存・永続案件保存は利用できない。",
+        "書式記入・送信・受付・申請提出は実行していない。"
+      ]
+    },
+    {
+      "id": "R5",
+      "status": "PASS",
+      "reason": "既知の製品・購入先・年度・現状目標を再質問していない。本人が手元原本の宛名等を確認する一つの独立操作を具体化。",
+      "excerpts": [
+        "これらの情報は再質問せず引き継ぐ。",
+        "手元のQ22で、宛名が架空A社、発行者がミモザになっているか確認してください。",
+        "登録情報や書式の回答を待たずに進められます。"
+      ]
+    }
+  ],
+  "inputChanged": true,
+  "sameSkillCandidateAsPriorZip": true,
+  "skillSourceDigest": "568acd045b43c9c6f86ee53b79b574fffeb90e8375f607e3e8d29b93639c8fb2",
+  "preservedPriorFiles": {
+    "skills-update-candidate.zip": "d02788b2bcb97eb02c64dac495774bbd7cb4041e70b869a9d8bd9de72c0c56f3",
+    "evaluation-summary.json": "7a246265b3f23d5fdd25f06054bf3461cd2f6fcb3fe3c88ddb1a3c370e5a6959",
+    "final-evaluation-redacted.json": "5c7db7cbb98203a35a95d4556a49c6dd1fbdd804480f343eff13bb12af43b795"
+  },
+  "interpretation": "V22 v2の追加1試行。28件の一括再評価ではなくスキル改善の前後比較でもない。",
+  "hostV24": "not_run",
+  "OpenAIUpdate": "not_submitted"
+}

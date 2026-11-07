@@ -1,0 +1,5 @@
+# Skill evaluations and candidate manifests identify exact file bytes.
+# Keep authored line endings stable across checkout and archive verification.
+plugins/subsidy-ai/skills/** -text
+output/vendor-workflow-candidate-568acd045b43/** -text
+output/vendor-workflow-v22-v2-db5ddb85/** -text

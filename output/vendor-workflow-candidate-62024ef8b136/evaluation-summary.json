@@ -1,0 +1,231 @@
+{
+  "createdAt": "2026-11-07T03:28:35.049Z",
+  "status": "DEVELOPMENT_CASE_COVERAGE_COMPLETE",
+  "scope": "quote-entry affected 17 cases plus 4 existing cases; current case versions, not a single all-pass run",
+  "package": {
+    "folder": "C:\\git\\subsidy_ai_plugin\\output\\vendor-workflow-candidate-62024ef8b136",
+    "sourceDigest": "62024ef8b136cf3feeb67715471ef001d61a5ee6a6fe4843721e378a61141e0e",
+    "archiveSha256": "eb6f34004d8da6799c421b87fd0bb30f85826a5cc25e16db8cd57f8ae2d6b1c7",
+    "files": 10,
+    "installedHostAcceptance": "not_run"
+  },
+  "packageCandidateMatch": {
+    "files": 10,
+    "status": "PASS",
+    "runs": [
+      "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "run-00b01d2a-8037-4705-8a98-fb03c05d6928"
+    ],
+    "currentSourceBytes": "PASS"
+  },
+  "currentCases": [
+    {
+      "caseId": "C001",
+      "caseVersion": "2",
+      "runId": "run-00b01d2a-8037-4705-8a98-fb03c05d6928",
+      "trialId": "trial-1e9dc744-0613-4459-9ff4-01f292523976",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "c001-v2-evaluation-summary.json"
+    },
+    {
+      "caseId": "C002",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-0389c45e-c473-41f9-a210-39d173a83af2",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "C003",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-2f298ce8-144f-4960-937f-13e2a14ef2a5",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "C004",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-06abb1e5-1c8d-47e9-91ed-997e77a7cc1b",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q01",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-122f0bc5-aca5-4731-b733-9bca98630d5f",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q02",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-eebb55af-7396-4d75-8736-ac886a4b3332",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q03",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-05c94662-6aec-4425-84f3-614d2588f814",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q04",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-8734ecf5-d9e7-4112-b13c-741bbd0a7f06",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q05",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-301c6bf9-2944-4361-8fba-c832436025b7",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q06",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-e60e4cee-cf09-4e9f-aaf5-05d0098765c3",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q07",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-582a40af-6061-4b83-b090-866bb09771bd",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q08",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-dc04794d-ab40-452f-b84f-bf034fa2071d",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q09",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-e1f86c80-eebc-46c8-956c-f9b9f379adbd",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q10",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-6a08f4af-3e41-489e-85cc-eb6da4161bf5",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q11",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-2e887022-d924-4847-b095-52500ab507a3",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q12",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-0f6501f6-ad8c-4844-ba96-fb5a4b39e323",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "Q13",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-73c464eb-3680-401f-aa90-9d7e21bfd2b2",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "V02",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-551f5c71-4f6d-4285-8f6f-4f0f4ece5e79",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "V18",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-27a9c622-25d0-4cba-882f-2a5842630024",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "V19",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-334378a1-2037-40c0-bf8b-b762d5f7a090",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    },
+    {
+      "caseId": "V22",
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "trialId": "trial-c41d95c0-f175-4ce3-a355-7f44f9fa841b",
+      "verdict": "DEV_PASS",
+      "evidenceFile": "batch-evaluation-summary.json"
+    }
+  ],
+  "totalModelTrials": 43,
+  "requestedModel": "gpt-6.1-sol",
+  "observedModel": null,
+  "observedModelStatus": "unknown in all 43 trials",
+  "review": {
+    "reviewer": "implementing-assistant",
+    "independence": "not independent acceptance"
+  },
+  "history": [
+    {
+      "runId": "run-419bcf82-0d43-44c1-9a67-d83cfe85f1b5",
+      "pass": 20,
+      "fail": [
+        "V22"
+      ],
+      "folder": "../vendor-workflow-candidate-a3d5f23022df",
+      "reason": "Next operation was outside copy-only handoff; skill instruction corrected."
+    },
+    {
+      "runId": "run-cee6c45f-e78a-45c7-9bed-9a327151597a",
+      "pass": 20,
+      "fail": [
+        "C001"
+      ],
+      "file": "batch-evaluation-summary.json",
+      "reason": "Unknown source ID in C001 v1 output; original failure retained."
+    },
+    {
+      "runId": "run-00b01d2a-8037-4705-8a98-fb03c05d6928",
+      "pass": 1,
+      "fail": [],
+      "file": "c001-v2-evaluation-summary.json",
+      "reason": "C001 v2 marks source ID and unlabeled user statement separately. New input/new trial; same rubric and exact-match grading."
+    }
+  ],
+  "tests": {
+    "unit": {
+      "passed": 166,
+      "log": "unit-tests.txt"
+    },
+    "infrastructure": {
+      "passed": 50,
+      "log": "evaluation-infrastructure-tests.txt"
+    },
+    "typecheck": "passed",
+    "applicationAssistTypecheck": "passed",
+    "metadata": {
+      "status": "passed",
+      "log": "metadata-validation.txt",
+      "pythonQuickValidator": "unavailable: missing PyYAML; Node YAML and metadata validation used"
+    }
+  },
+  "limitations": [
+    "supplied candidate text; not installed-host loading or real PDF/UI operation",
+    "C001 v2 is a changed input; results are not a same-input 21-case single-run pass",
+    "Q/V requirement evidence is reviewed by the implementing assistant",
+    "uninstalled discovery, browser UI, mobile QR, install, public feature version and release submission not performed"
+  ],
+  "installedHostAcceptance": "not_run",
+  "published": false
+}

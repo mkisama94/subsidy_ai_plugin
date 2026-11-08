@@ -5,6 +5,7 @@ node_modules/
 *.log
 /private_docs/
 /tmp/skill-eval/
+/tmp/quote-entry-*
 /evaluation/skill/config.local.json
 
 # Local evidence checkout; not a deployable submodule.

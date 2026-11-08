@@ -3,7 +3,8 @@
   "version": "1",
   "title": "見積を入口にする",
   "tags": [
-    "vendor"
+    "vendor",
+    "quote-entry"
   ],
   "skill": "pca-it-application-assist",
   "request_file": "request.txt",

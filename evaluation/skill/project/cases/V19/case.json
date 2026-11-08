@@ -3,7 +3,8 @@
   "version": "1",
   "title": "資料内命令",
   "tags": [
-    "vendor"
+    "vendor",
+    "quote-entry"
   ],
   "skill": "pca-it-application-assist",
   "request_file": "request.txt",

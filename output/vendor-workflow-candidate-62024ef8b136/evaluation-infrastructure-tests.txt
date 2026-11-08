@@ -1,0 +1,62 @@
+
+> subsidy-ai-mcp@0.13.0 test:skill-eval
+> node --test evaluation/skill/tests/*.test.mjs
+
+✔ A01 plan does not create output or call host/model (124.7297ms)
+✔ A02 model, missing reference, budget and capabilities fail before execute (654.6998ms)
+✔ A03 snapshot is unaffected by source edits during a trial; grading data absent from prompt (364.3025ms)
+✔ A04 mutation and contamination remain excluded after regrade (491.8923ms)
+✔ A05 evidence add refuses regrading (367.2196ms)
+✔ A05 evidence remove refuses regrading (370.404ms)
+✔ A05 evidence change refuses regrading (391.0542ms)
+✔ A06 rubric/grader regrade appends; old records and answers remain unchanged (632.6132ms)
+✔ A07 changed execution input refuses regrade: project/cases/C001/request.txt (346.3477ms)
+✔ A07 changed execution input refuses regrade: project/cases/C001/input/sources.txt (377.6791ms)
+✔ A07 changed execution input refuses regrade: project/schemas/answer.schema.json (355.8092ms)
+✔ A07 changed execution input refuses regrade: project/cases/C001/case.json (339.6298ms)
+✔ A08 machine PASS awaits semantic review; A09 semantic FAIL is decisive (422.0085ms)
+✔ A10 unconfirmed stop prevents later trials and keeps logs (344.6935ms)
+✔ A12 comparison distinguishes condition drift, unknown observations and same trial (845.8631ms)
+✔ A14 unknown change selects complete small suite; A15 path/tool loading refused (123.5501ms)
+✔ A16 fabricated save claim/action fails machine or semantic review; known fail survives timeout (315.7506ms)
+✔ A17 production source and release script do not depend on evaluation (57.9845ms)
+✔ A18 pass remains DEVELOPMENT with acceptance NOT_REQUESTED; A19 unknown schema rejected (436.6189ms)
+✔ A20 second project/answer contract runs without core business branches (326.5903ms)
+✔ reviews must bind to answer/rubric and name their method, reviewer and evidence (414.3955ms)
+✔ history and run metadata tampering detected (355.4717ms)
+✔ path traversal, links and case collisions refused (375.618ms)
+✔ Codex args disable inherited connections and automatic approvals (0.362ms)
+✔ disposable actual process tree stop probe and timeout preserve stdout (875.8338ms)
+✔ CLI plan and invalid options have documented exit codes (312.9275ms)
+✔ precheck failure and output link rejection never start a model (104.1568ms)
+✔ forbidden tool activity fails and incomplete observation cannot pass (624.1698ms)
+✔ redacted export omits text/paths and includes separate original and shared hashes (332.0142ms)
+✔ latest-compatible finds matching historical grading instead of mixing rubric versions (817.3512ms)
+✔ recover records interruption without creating missing end evidence or invoking a model (370.5995ms)
+✔ binary archives are explicitly excluded from text candidates; unexpected binary fails plan (335.7699ms)
+✔ candidate changes between planning and freezing are rejected before host execution (132.9069ms)
+✔ latest 1 assessment deletion cannot roll a FAIL back to PASS (828.5891ms)
+✔ latest 2 assessment deletion cannot roll a FAIL back to PASS (850.9177ms)
+✔ missing head is rejected rather than reconstructing history from remaining files (352.0195ms)
+✔ uncommitted suffix and in-progress writer fail closed (408.1727ms)
+✔ CLI same-run original compares first to latest and allows explicit PASS to FAIL (1005.9265ms)
+✔ CLI same-run latest-compatible compares first to latest and allows explicit PASS to FAIL (1009.8067ms)
+✔ CLI rejects unknown assessment IDs and assessment IDs belonging to different cases (1265.729ms)
+✔ source contract in prompt and schema specifies exact IDs and response-only annotations (0.9745ms)
+✔ private rubric content and allowed source list do not enter model input (304.5611ms)
+✔ source validation rejects nonexact source: 合成応答 public-reference (0.664ms)
+✔ source validation rejects nonexact source: public-reference（基準日2025-03-31） (0.1046ms)
+✔ source validation rejects nonexact source: unknown-reference (0.0794ms)
+✔ source validation rejects nonexact source: prefix-public-reference-suffix (0.0759ms)
+✔ source validation rejects nonexact source: public-reference  (0.0659ms)
+✔ source validation rejects nonexact source: PUBLIC-REFERENCE (0.0609ms)
+✔ exact IDs pass while necessary source annotations remain in response (291.2546ms)
+✔ execution records distinguish candidate, adapter version/hash and schema byte hash (309.3833ms)
+ℹ tests 50
+ℹ suites 0
+ℹ pass 50
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19525.7112

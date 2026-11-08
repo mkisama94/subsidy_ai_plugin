@@ -1,0 +1,4 @@
+﻿資料は更新済みです。添付には次のフォルダの4ファイルを使用してください。
+C:\git\subsidy_ai_plugin\output\pdf\cocreate-application
+
+管理記録：C:\Users\yamamotoma\OneDrive\Documents\助成金プラグイン内部資料\PCAデモ管理\2026-11-07

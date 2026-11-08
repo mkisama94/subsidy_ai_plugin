@@ -1,0 +1,107 @@
+{
+  "createdAt": "2026-11-07T16:43:51.878Z",
+  "kind": "partial-skills-update-candidate",
+  "sourceDigest": "d66de06e7230221e67f95394107924736ceca99f490de4c69d9a7494014d7008",
+  "archiveSha256": "8c32bfce528622180ca4590bb8185b9c9fb5c0d0d64fc8b3b3aa907bc5f45b59",
+  "inventory": [
+    {
+      "file": "skills/company-research/SKILL.md",
+      "bytes": 5469,
+      "sha256": "4291899a74733b59940b12de276a9279ce20a49fc9d48a0199ecafb68e37f77a"
+    },
+    {
+      "file": "skills/company-research/references/company-selection.md",
+      "bytes": 4648,
+      "sha256": "7479a093208ae3f597533a8bd39cae87f68a918a4829eba1062d6f5488c4f25c"
+    },
+    {
+      "file": "skills/company-research/references/ownership.md",
+      "bytes": 3258,
+      "sha256": "3162e60e5f14bab30446123f03d95d955c2ee78e50825032133fc64d6c6fabeb"
+    },
+    {
+      "file": "skills/subsidy-consultation/SKILL.md",
+      "bytes": 8363,
+      "sha256": "46f56bc8355da290c03340ecfd3da8d5041eca2c7453b6ed5ffa000afe45c54d"
+    },
+    {
+      "file": "skills/pca-it-application-assist/SKILL.md",
+      "bytes": 18552,
+      "sha256": "1b8e0ded5c71a11d748ed972d365621ad5b7e308fbedb6d6e518062ec5d31cf7"
+    },
+    {
+      "file": "skills/pca-it-application-assist/assets/quote-case-supplement-template.md",
+      "bytes": 3228,
+      "sha256": "87688e5c76163290ac8cb78aeb9d41357d56fc4cd17922b9538af2a50b3ae2f8"
+    },
+    {
+      "file": "skills/pca-it-application-assist/assets/quote-common-page-template.md",
+      "bytes": 4993,
+      "sha256": "7a000e2df12d617fe3782578c7258c155cfa46c7ab65465b8dff2d68cd79ac1b"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/document-follow-up.md",
+      "bytes": 6026,
+      "sha256": "ee1d1e32ed33e97992c8939588c1741695e665d58608533aa40aef074c12f169"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/financial-documents.md",
+      "bytes": 18556,
+      "sha256": "7f5e7d382e6a299cf5a088ab53759380f00d9cca702dc79f13b22e548341f308"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/quote-consent-bundle.md",
+      "bytes": 4855,
+      "sha256": "63136959fb8cce3261d67527523480fa66abe89a6443b8783ba4aeb82d86c629"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/quote-entry.md",
+      "bytes": 10100,
+      "sha256": "d97d12f3735abcb109b4c73daba2af9b8ef80c7ec1506eb0f95d05e2fb7a4144"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendor-email.md",
+      "bytes": 4459,
+      "sha256": "36f7f21916fbdd11d63532a68fb58ca2ea8e39cbfd5450d70aa3d9e79664999e"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendor-intake.md",
+      "bytes": 2285,
+      "sha256": "ad085ea930fb3fef7c34270be8d60f18952b200902bfd1a8ee30ec9fe5f972dd"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendor-research.md",
+      "bytes": 4578,
+      "sha256": "e74a87ae8fae2a8341a3518aafb1efa61fe7ba2428ff06376e115a5e4ab1f09b"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendor-workflow.md",
+      "bytes": 13409,
+      "sha256": "3df6ce9fe21827fef498ce86c62b17b9db8931f888f7cb87c88d4c82ff4acceb"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendors/mimosa.json",
+      "bytes": 8779,
+      "sha256": "3bf14f1ececd7172176c7c7116d5df6853bd1a09d639ab7daa923c0feb24612a"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendors/mimosa.md",
+      "bytes": 6369,
+      "sha256": "c41864e2359497bd527b84c1c339fe09268028731669c8ebd4f54cf6fe1a6f7b"
+    }
+  ],
+  "recordedRelease": {
+    "identifier": "app-6a9b5a9e8f808191831c8655ee2191ae",
+    "version": "1.1.0"
+  },
+  "targetConfirmed": false,
+  "proposedVersion": null,
+  "manifestIncluded": false,
+  "mcpConfigurationIncluded": false,
+  "archiveReadback": "passed",
+  "sourceLinks": "passed",
+  "realModelEvaluation": "see separate evaluation records; not implied by package check",
+  "installedHostAcceptance": "not_run",
+  "published": false,
+  "limitation": "更新用のスキル差分。単体プラグインではない。更新先・次版番号・実ホストの読み込みを別途確認。既存リリース・設定・権限を変更しない。"
+}

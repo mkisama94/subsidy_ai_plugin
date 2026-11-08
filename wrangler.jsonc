@@ -9,6 +9,9 @@
   },
   "triggers": { "crons": ["*/15 * * * *"] },
   "vars": {
+    "PCA_RELAY_ENABLED": "false",
+    "PCA_RELAY_MODE": "public_debug",
+    "PCA_MCP_URL": "https://pca.ai-orchestration.jp/mcp/application-assist",
     "PUBLIC_HISTORY_ENABLED": "false",
     "MHLW_INGESTION_ENABLED": "false",
     "MHLW_AI_EXTRACTION_ENABLED": "false",

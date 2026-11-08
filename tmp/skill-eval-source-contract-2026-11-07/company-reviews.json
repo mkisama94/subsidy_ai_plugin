@@ -1,0 +1,49 @@
+[
+  {
+    "trial_id": "trial-7347c28c-8ff7-4547-b6eb-4f10a780a246",
+    "answer_sha256": "185f2164b5e3fc07aa18c9ec8df30f7270f8258ee5ab6daa6630be50b8fbcfa9",
+    "rubric_sha256": "b2d7aef69fef310b2deef0baa258bb93ad8d2209c5fcb5c41b04aa9264f25d26",
+    "status": "PASS",
+    "kind": "model",
+    "reviewer": "Codex primary assistant (implementation author; model identity not independently observed)",
+    "independence": "非独立。同じ実装担当のアシスタントによる回答・固定入力・rubricの照合。外部担当者または人によるレビューではない。",
+    "method_version": "source-contract-review-1",
+    "reviewed_at": "2026-11-06T16:01:27.924Z",
+    "reason": "固定入力・依頼・rubricを照合。正式名称→法人番号→住所の順で一致し、0123456789012の先頭0を保持する。登録用値と注記を分け、補助金検索・余分な質問・登録保存送信の主張はない。出典nta-fixtureは正確で、未提供の日付は未提供と説明している。",
+    "evidence": [
+      "answer.raw.txt: responseの正式名称・法人番号・住所の3行と注記",
+      "answer.raw.txt: sources=[nta-fixture], actions=[]",
+      "frozen/case/input/sources.txt: 法人情報と一致確認済みの記載",
+      "frozen/rubric.json: requiredとfailuresの全項目"
+    ],
+    "checks": {
+      "correctness": "PASS",
+      "scope": "PASS",
+      "evidence": "PASS"
+    }
+  },
+  {
+    "trial_id": "trial-5faf6006-1fa8-4cf2-ad2d-b6edb97ab8ef",
+    "answer_sha256": "a32b4b2598e85fe5f7ef47629c85ccfdbd6c1bdec67e34c19f374dbea0aa3d7f",
+    "rubric_sha256": "e81aaaca10342e8f90c9900d425251cd66d5e7ad92c2aa88baae5d0b4c2dc925",
+    "status": "PASS",
+    "kind": "model",
+    "reviewer": "Codex primary assistant (implementation author; model identity not independently observed)",
+    "independence": "非独立。同じ実装担当のアシスタントによる回答・固定入力・rubricの照合。外部担当者または人によるレビューではない。",
+    "method_version": "source-contract-review-1",
+    "reviewed_at": "2026-11-06T16:01:27.926Z",
+    "reason": "固定入力・依頼・rubricを照合。資本金1000万円の単位を保持し、従業員数の転記値は空欄、その理由は確認事項へ別記。代表者架空一郎と代表取締役を保持。資本金の基準日2025-03-31、サイト取得日2026-11-05、更新日記載なしを区別し、実行日に読み替えていない。出典2件と項目の対応をresponseで説明し、sourcesは正確なIDのみ。外部入力保存の成功を主張しない。",
+    "evidence": [
+      "answer.raw.txt: responseの転記用3項目と確認事項・出典の分離",
+      "answer.raw.txt: 基準日2025-03-31、取得日2026-11-05、更新日記載なし",
+      "answer.raw.txt: sources=[profile-fixture,site-fixture], actions=[]",
+      "frozen/case/input/sources.txt: 資本金・未登録・役職・各日付の原記載",
+      "frozen/rubric.json: requiredとfailuresの全項目"
+    ],
+    "checks": {
+      "correctness": "PASS",
+      "scope": "PASS",
+      "evidence": "PASS"
+    }
+  }
+]

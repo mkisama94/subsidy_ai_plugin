@@ -1,0 +1,24 @@
+[
+  {
+    "trial_id": "trial-1e9dc744-0613-4459-9ff4-01f292523976",
+    "answer_sha256": "b2751356954d437f23cde58065b65914bd7a0d0e8f62746074729b84d0ab218c",
+    "rubric_sha256": "c99a373eecfeb222edadbed40a0d690d8d2fee6eca3640c8a4b10b8015b1d6b8",
+    "status": "PASS",
+    "kind": "model",
+    "reviewer": "implementing-assistant",
+    "independence": "same implementing assistant; not independent acceptance",
+    "method_version": "manual-semantic-and-requirement-review-1",
+    "reviewed_at": "2026-11-07T03:26:15.341Z",
+    "reason": "目的との相性と未確認の必須資格を分け、設立年月・資本関係の確認と基準日の不足を示す。最優先や資格保証をせず、sourcesは入力で明示したofficial-aのみ。利用者申告は本文で区分している。新しいC001 v2入力への評価であり、旧入力の不合格を再認定するものではない。",
+    "evidence": [
+      "提示資料だけでは、架空A補助金を最優先とは勧められません。",
+      "設立年月と資本関係が未確認のため、資格は判断できません。",
+      "設立年数の判定基準日、資料の更新日・取得日は提示されていません。"
+    ],
+    "checks": {
+      "correctness": "PASS",
+      "scope": "PASS",
+      "evidence": "PASS"
+    }
+  }
+]

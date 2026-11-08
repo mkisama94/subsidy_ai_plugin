@@ -1,0 +1,87 @@
+{
+  "createdAt": "2026-11-07T05:19:58.719Z",
+  "kind": "partial-skills-update-candidate",
+  "sourceDigest": "fc05b03baaf58cbff86d70d441cecf8d4c9260e4033344112db989d7ff74d73e",
+  "archiveSha256": "66c0856ffdfb21cb158b51efbffdf479a5b58b266211a18163a84c333c6b571e",
+  "inventory": [
+    {
+      "file": "skills/company-research/SKILL.md",
+      "bytes": 5400,
+      "sha256": "37659c5bf069273b4423e756dab658e49cdaf58411e0d1a2cfc944fd9baa3216"
+    },
+    {
+      "file": "skills/company-research/references/company-selection.md",
+      "bytes": 4648,
+      "sha256": "7479a093208ae3f597533a8bd39cae87f68a918a4829eba1062d6f5488c4f25c"
+    },
+    {
+      "file": "skills/subsidy-consultation/SKILL.md",
+      "bytes": 8363,
+      "sha256": "46f56bc8355da290c03340ecfd3da8d5041eca2c7453b6ed5ffa000afe45c54d"
+    },
+    {
+      "file": "skills/pca-it-application-assist/SKILL.md",
+      "bytes": 15405,
+      "sha256": "ea8104565349304fd29b7d1cb17c111dbeb3ef1c1fb10b1a575814df94407395"
+    },
+    {
+      "file": "skills/pca-it-application-assist/assets/quote-case-supplement-template.md",
+      "bytes": 2756,
+      "sha256": "3775606c0f564f07fc1803320b1b90a9f34b4a826b581cd33106e4b37f7adbf3"
+    },
+    {
+      "file": "skills/pca-it-application-assist/assets/quote-common-page-template.md",
+      "bytes": 4835,
+      "sha256": "5452e49ce95e28157c364b444579264f1a92cf6bb608a1d7a0f103467157f18b"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/financial-documents.md",
+      "bytes": 11321,
+      "sha256": "ceee350a57dc1f47f1e65f80164089d440a8cbbdfea1ceed08aa121df8240c95"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/quote-entry.md",
+      "bytes": 9576,
+      "sha256": "8792f70dfc720c4a364da4aaf048653825a3a325085456e551ab3370b4b5bb33"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendor-email.md",
+      "bytes": 4175,
+      "sha256": "43be91a2b46375ee40bfcb3b7df00da0706268aaafcf2c3d292ca866ad8afd9b"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendor-intake.md",
+      "bytes": 2285,
+      "sha256": "ad085ea930fb3fef7c34270be8d60f18952b200902bfd1a8ee30ec9fe5f972dd"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendor-workflow.md",
+      "bytes": 13022,
+      "sha256": "30beea9361ba7893a17e16fdbd057ead95eea6bb2b79a7e250586f94b402b306"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendors/mimosa.json",
+      "bytes": 8779,
+      "sha256": "3bf14f1ececd7172176c7c7116d5df6853bd1a09d639ab7daa923c0feb24612a"
+    },
+    {
+      "file": "skills/pca-it-application-assist/references/vendors/mimosa.md",
+      "bytes": 4367,
+      "sha256": "0b57e7b6d3c35ad301b69e53e055ee1fc711015d7ec7ffb78f3afb6fa744f0ff"
+    }
+  ],
+  "recordedRelease": {
+    "identifier": "app-6a9b5a9e8f808191831c8655ee2191ae",
+    "version": "1.1.0"
+  },
+  "targetConfirmed": false,
+  "proposedVersion": null,
+  "manifestIncluded": false,
+  "mcpConfigurationIncluded": false,
+  "archiveReadback": "passed",
+  "sourceLinks": "passed",
+  "realModelEvaluation": "see separate evaluation records; not implied by package check",
+  "installedHostAcceptance": "not_run",
+  "published": false,
+  "limitation": "更新用のスキル差分。単体プラグインではない。更新先・次版番号・実ホストの読み込みを別途確認。既存リリース・設定・権限を変更しない。"
+}

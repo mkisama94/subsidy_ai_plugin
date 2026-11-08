@@ -37,6 +37,7 @@ export async function writePackage(input: unknown) {
   if (!inside(root, folder) || !inside(root, finalFolder)) throw new Error('Invalid export target');
   await mkdir(folder);
   await writeJson(join(folder, 'case.json'), c);
+  await writeFile(join(folder, 'assessment-summary.html'), bundle.summaryHtml, { flag: 'wx' });
   await writeFile(join(folder, 'applicant-guide.html'), bundle.applicantHtml, { flag: 'wx' });
   await writeFile(join(folder, 'vendor-guide.html'), bundle.vendorHtml, { flag: 'wx' });
   await writeJson(join(folder, 'field-values.json'), bundle.fieldValues);

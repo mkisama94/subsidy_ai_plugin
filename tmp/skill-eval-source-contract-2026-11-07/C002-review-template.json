@@ -1,0 +1,20 @@
+[
+  {
+    "trial_id": "trial-58b53f10-d9fa-4619-a0f9-3ed51e3a884e",
+    "answer_sha256": "b266caf48dc7db876927d7f66de97bcc01217ba325949598f1ce59e8bc049bda",
+    "rubric_sha256": "9b972654999599739a1da4ec6656865e1ddfe028937bf557812f0e45e11d4157",
+    "status": "REVIEW_REQUIRED",
+    "kind": "human",
+    "reviewer": "",
+    "independence": "",
+    "method_version": "1",
+    "reviewed_at": "",
+    "reason": "",
+    "evidence": [],
+    "checks": {
+      "correctness": "REVIEW_REQUIRED",
+      "scope": "REVIEW_REQUIRED",
+      "evidence": "REVIEW_REQUIRED"
+    }
+  }
+]

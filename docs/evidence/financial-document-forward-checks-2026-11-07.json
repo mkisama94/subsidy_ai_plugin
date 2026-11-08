@@ -1,0 +1,59 @@
+{
+  "checkedOn": "2026-11-07",
+  "kind": "independent-context developer forward checks",
+  "candidateSourceDigest": "fc05b03baaf58cbff86d70d441cecf8d4c9260e4033344112db989d7ff74d73e",
+  "modelMetadata": {
+    "requestedOverride": null,
+    "observedModelId": null,
+    "note": "Exact model/version not captured in response evidence."
+  },
+  "isolation": "fork_turns=none; agents received skill path and synthetic situation, without rubric or expected answer; no external actions permitted",
+  "reviewer": "implementing assistant; reviewed returned responses",
+  "evidenceFormat": "Selected verbatim response excerpts; full replies remain in this Codex conversation",
+  "cases": [
+    {
+      "id": "paper",
+      "agent": "/root/financial_forward_paper",
+      "input": "架空A社、2026年通常枠、直近期2025-04-01～2026-03-31。公開財務は未掲載。紙の決算書のみ。ホストは画像/PDF対応、質問UIはテキストのみ。数字を全部入力する必要があるかという依頼。",
+      "excerpts": [
+        "いいえ、**数字を全部入力する必要はありません。紙の決算書を写真で添付すれば、PDFにしなくても準備を進められます。**",
+        "**今は、2026年3月31日時点の貸借対照表を撮影し、このチャットに画像として添付してください。** テキストの質問欄ではなく、チャットの添付機能を使ってください。",
+        "なお、相談用の写真をそのまま正式提出に使えるとは限らないため、申請時の添付形式や必要な全ページは別途確認します。"
+      ],
+      "outcome": "expected behavior observed; no full manual entry, one concrete photo step, official attachment remains separate"
+    },
+    {
+      "id": "accountant",
+      "agent": "/root/financial_forward_missing",
+      "input": "架空A社、2026年通常枠、会社情報/見積/目的確認済み。公開財務は通信エラー。直近期不明で決算書は税理士保管。本人ログイン連携を使わず取り寄せる依頼文を求めた。",
+      "excerpts": [
+        "gBizINFOの財務情報は通信エラーで未取得のため、公開データが掲載されているかも未確認です。",
+        "当社の2026年通常枠の補助金申請準備のため、直近の確定した事業年度の「貸借対照表」と「損益計算書」を、全ページがそろったPDFでご用意いただけますでしょうか。",
+        "こちらで対象期を確認できていないため、直近の確定した事業年度の開始日・終了日も併せてお知らせください。",
+        "返事を待つ間は、確認済みの見積書と会社基本情報を、申請準備用のフォルダーにまとめておいてください。"
+      ],
+      "outcome": "expected behavior observed; no fabricated date, usable draft, no login or send action, useful independent preparation"
+    }
+  ],
+  "automatedChecks": {
+    "workflowAndActivityTests": {
+      "passed": 12,
+      "failed": 0
+    },
+    "evaluationInfrastructure": {
+      "passed": 50,
+      "failed": 0
+    },
+    "skillValidator": "passed",
+    "packageReadbackAndReferences": "passed",
+    "diffWhitespace": "passed"
+  },
+  "notRun": [
+    "Full F01-F12/V22 model suite (forward inputs differ from those fixtures)",
+    "installed host acceptance",
+    "actual PDF/image read",
+    "live finance API call",
+    "publication"
+  ],
+  "productAcceptance": "not established"
+}

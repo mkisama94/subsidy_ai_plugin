@@ -1,8 +1,25 @@
 # スキルの小事例評価
 
+## PCA移管後の会員向け分岐（2026-11-08）
+
+申請相談の入口は、PCA会員向け支援と一般支援の分岐へ変更しました。[変更記録と受入シナリオ](../../docs/pca-membership-routing-2026-11-08.md)を参照してください。以下のV/Q/Fケースと実行記録は従来の資料案内等の評価資料として保持します。過去の成功やケース定義の検査を、新しい会員分岐・認証・実ホストの合格根拠に流用しません。新しい分岐の実モデル・実ホスト評価は未実施です。
+
+## 公開財務・決算書添付の評価（2026-11-07追加）
+
+`project/financial-document-scenarios.json` にF01〜F22を定義しています。公開財務、添付済み資料、添付困難、対象期間・単位の違いを扱います。2026-11-08の案内改善でF02・F13・F14・F16を改訂し、F17〜F22に短いサマリ、添付違い、証明書の期限管理、Gmail検索と監視の能力差、全資料同時受領、連携なしを追加しました。すべて合成入力です。
+
+adapter 1.6は判断に必要な出典・日付だけを本文に示すようにし、出典IDの完全一致とF各ケースのR1〜R3の意味レビューを維持します。変更選択 `financial-documents` は22件と既存V22の計23件、全体は66件。ケース生成・構造検査は応答品質の合格を意味しません。新ケースの実モデル評価は未実施です。[案内改善の記録](../../docs/application-guidance-writing-2026-11-08.md)を参照してください。
+
+```powershell
+node scripts/prepare-vendor-workflow-cases.mjs
+node evaluation/skill/cli.mjs plan --suite affected --change financial-documents --max-trials 23
+```
+
+このplanはモデルを起動しません。実モデルを実行する場合は既存の設定手順でモデル・予算を指定します。ケース定義・機械検査の成功を会話の意味合格に読み替えません。前版の決算書取得案内の検証は[前版の改善実装記録](../../docs/financial-document-assist-implementation-2026-11-07.md)、一括案内への変更と検証範囲は[一括準備の改善記録](../../docs/batch-document-intake-2026-11-07.md)に記録します。
+
 ## 販売会社別手順の評価（2026-11-07追加）
 
-V22は版2へ更新し、既知の製品・現状・目標・手元資料を与えたうえで、資料一覧・説明案・コピー用引継ぎメモを必須とします。project adapter 1.2ではR1〜R5のレビュー判定も必要です。`project/requirementReview.mjs`は各条件の理由・実回答の引用を検査しますが、意味の合否は担当者が確認します。旧V22の質問だけの応答と合格記録は保存し、新しい試験の合格根拠に使いません。[修正と追加評価](../../docs/vendor-workflow-v22-v2-evaluation-2026-11-07.md)を参照してください。
+V22は版2へ更新し、既知の製品・現状・目標・手元資料を与えたうえで、資料一覧・説明案・コピー用引継ぎメモを必須とします。project adapter 1.3でもR1〜R5のレビュー判定を維持します。`project/requirementReview.mjs`は各条件の理由・実回答の引用を検査しますが、意味の合否は担当者が確認します。旧V22の質問だけの応答と合格記録は保存し、新しい試験の合格根拠に使いません。[修正と追加評価](../../docs/vendor-workflow-v22-v2-evaluation-2026-11-07.md)を参照してください。
 
 `project/vendor-workflow-scenarios.json`にV01〜V25を定義しています。V01〜V23・V25は`project/cases/Vxx/`の24件で、既存adapter・出典ID完全一致検査・意味レビューを使用します。V24は実際のホストの導入・質問UI・ファイル読取り等の確認であり、本文供給ケースへ変換しません。手順は[ホスト確認](../../docs/vendor-workflow-host-acceptance.md)を参照してください。
 
@@ -11,30 +28,30 @@ V22は版2へ更新し、既知の製品・現状・目標・手元資料を与�
 node scripts/prepare-vendor-workflow-cases.mjs
 node evaluation/skill/cli.mjs plan --suite affected --change vendor-workflow --max-trials 24
 node evaluation/skill/cli.mjs run --suite affected --change vendor-workflow --max-trials 24 --model gpt-6.1-sol
-# 従来4件も含む全28件。予算とモデルは実行者が明示する
-node evaluation/skill/cli.mjs run --suite all --max-trials 28 --model gpt-6.1-sol
+# 見積入口16件・財務資料22件・従来4件も含む全66件。予算とモデルは実行者が明示する
+node evaluation/skill/cli.mjs run --suite all --max-trials 66 --model gpt-6.1-sol
 ```
 
-このモデル名は今回の利用者指定で、既定モデルへの変更ではありません。requestedモデルとobservedモデルは別々に記録します。機械PASSと、実装者による意味レビュー、独立した受入、ホスト確認を混同しません。評価器自体のテストでは従来の4件をfixtureとして分離し、新業務ケースの追加で偽ホストの起動数・異常処理テストが膨らまないようにしています。実際の28件の選択とfixture整合は`test/vendorWorkflow.test.ts`で検査します。
+このモデル名は今回の利用者指定で、既定モデルへの変更ではありません。requestedモデルとobservedモデルは別々に記録します。機械PASSと、実装者による意味レビュー、独立した受入、ホスト確認を混同しません。評価器自体のテストでは従来の4件をfixtureとして分離し、新業務ケースの追加で偽ホストの起動数・異常処理テストが膨らまないようにしています。現在の66件の選択とfixture整合は`test/vendorWorkflow.test.ts`で検査します。
 
 スキル更新候補の作成は`node scripts/vendor-workflow-package.mjs`。参照リンクとJSON/YAMLを検査し、実バイトの一覧・hashとZIP展開一致を保存します。成果物は部分更新用で、インストール・OpenAI申請・公開は行いません。
 
-## 販売会社別手順の評価（2026-11-07追加）
+## 見積PDFの入口・利用開始の評価（2026-11-07追加）
 
-`project/vendor-workflow-scenarios.json`にV01〜V25を定義しています。V01〜V23・V25は`project/cases/Vxx/`の24件で、既存adapter・出典ID完全一致検査・意味レビューを使用します。V24は実際のホストの導入・質問UI・ファイル読取り等の確認であり、本文供給ケースへ変換しません。手順は[ホスト確認](../../docs/vendor-workflow-host-acceptance.md)を参照してください。
+`project/quote-onboarding-scenarios.json`にQ01〜Q13を定義しています。普通の見積、未添付・添付辞退、複数ページと古い共通情報、資料内命令、追加候補・公開リンク・状態不明・導入辞退、スマホへの引継ぎ、導入済み、要約だけの依頼を確認します。会社未確定等のケースへ既定の会社選択済み入力を追加しません。
+
+Q各ケースのR1〜R3はadapter 1.3で個別レビューを必須にしています。本文供給で候補表示やPDF読取りの実操作を成功扱いにせず、実ホスト試験はV24に分けます。
+
+C001はケース版2で、区分名の「利用者申告」と出典ID `official-a` を入力上で明示的に分けました。業務上の事実・rubric・出典完全一致の採点は維持しています。旧入力で出た未知IDの不合格は残し、新しい入力を別runで実行しました。最終候補の評価は20件の一括評価とC001 v2の追加1件を合わせた21ケースであり、同じ入力・同じrunでの21件一括合格とは扱いません。[実装・検証記録](../../docs/quote-pdf-entry-implementation-2026-11-07.md)を参照してください。
+
+C001はケース版2で、区分名の「利用者申告」と出典ID `official-a` を入力上で明示的に分けました。業務上の事実・rubric・出典完全一致の採点は維持しています。旧入力で出た未知IDの不合格は残し、新しい入力を別runで実行しました。最終候補の評価は20件の一括評価とC001 v2の追加1件を合わせた21ケースであり、同じ入力・同じrunでの21件一括合格とは扱いません。[実装・検証記録](../../docs/quote-pdf-entry-implementation-2026-11-07.md)を参照してください。
 
 ```powershell
-# シナリオ定義を編集した場合にfixtureを再生成（過去の固定証拠は変更しない）
 node scripts/prepare-vendor-workflow-cases.mjs
-node evaluation/skill/cli.mjs plan --suite affected --change vendor-workflow --max-trials 24
-node evaluation/skill/cli.mjs run --suite affected --change vendor-workflow --max-trials 24 --model gpt-6.1-sol
-# 従来4件も含む全28件。予算とモデルは実行者が明示する
-node evaluation/skill/cli.mjs run --suite all --max-trials 28 --model gpt-6.1-sol
+node evaluation/skill/cli.mjs plan --suite affected --change quote-entry --max-trials 17
+# Q13件とV02/V18/V19/V22、および従来C4件の計21件
+node evaluation/skill/cli.mjs run --suite affected --change quote-entry,company-research,comparison,eligibility --max-trials 21 --model gpt-6.1-sol --suite-timeout-ms 900000
 ```
-
-このモデル名は今回の利用者指定で、既定モデルへの変更ではありません。requestedモデルとobservedモデルは別々に記録します。機械PASSと、実装者による意味レビュー、独立した受入、ホスト確認を混同しません。評価器自体のテストでは従来の4件をfixtureとして分離し、新業務ケースの追加で偽ホストの起動数・異常処理テストが膨らまないようにしています。実際の28件の選択とfixture整合は`test/vendorWorkflow.test.ts`で検査します。
-
-スキル更新候補の作成は`node scripts/vendor-workflow-package.mjs`。参照リンクとJSON/YAMLを検査し、実バイトの一覧・hashとZIP展開一致を保存します。成果物は部分更新用で、インストール・OpenAI申請・公開は行いません。
 
 2026-11-07：Project adapterを1.1へ更新しました。評価用の`response`・`sources`・`actions`の出力仕様をプロンプトと回答スキーマの両方へ明記しています。`sources`には実際に使用した固定入力中の出典IDだけを完全一致で記載し、説明・項目との対応・基準日・更新日・取得日・未確認事項は`response`へ記載します。転記用の値と注記を分け、外部操作のない本文供給試験の`actions`は空配列とします。
 

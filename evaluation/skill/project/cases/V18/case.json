@@ -3,7 +3,8 @@
   "version": "1",
   "title": "架空資料の区分維持",
   "tags": [
-    "vendor"
+    "vendor",
+    "quote-entry"
   ],
   "skill": "pca-it-application-assist",
   "request_file": "request.txt",

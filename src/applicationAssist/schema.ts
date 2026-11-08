@@ -32,6 +32,8 @@ export const caseSchema = z.object({
   scope: z.object({ year: z.number().int(), round: z.number().int(), frame: id,
     requestedGrantYen: z.number().int().nonnegative().nullable(), standardRate: z.boolean(), priorGrant: z.boolean().nullable() }),
   sources: z.array(sourceSchema), fields: z.array(evidenceSchema),
+  // Supplied from the applicable planning periods, never inferred from a narrative.
+  projectionPeriods: z.array(date).length(3).nullable().default(null),
   // Dates are supplied from the applicable manual; no guessed fiscal-year algorithm.
   requiredPeriods: z.object({ latest: date.nullable(), productivity: date.nullable(), wages: date.nullable(), ruleVersion: id.nullable() }),
   rulePack: z.object({ version: id, year: z.number().int(), roundFrom: z.number().int(),

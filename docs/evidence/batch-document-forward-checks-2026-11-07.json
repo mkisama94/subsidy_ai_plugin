@@ -1,0 +1,56 @@
+{
+  "checkedOn": "2026-11-07",
+  "kind": "independent-context developer forward checks",
+  "candidateSourceDigest": "edd311e3ced3e7407c2e86513edb11286a21ddd76d4bda67bfb7c215239faf64",
+  "modelMetadata": {
+    "requestedOverride": null,
+    "observedModelId": null,
+    "note": "Exact model/version not captured in response evidence."
+  },
+  "isolation": "fork_turns=none; agents received current skill path and synthetic situation, without rubric, expected answer or implementation history; file edits and external actions prohibited",
+  "reviewer": "implementing assistant; reviewed returned responses",
+  "evidenceFormat": "Selected verbatim response excerpts; full replies remain in this Codex conversation",
+  "cases": [
+    {
+      "id": "initial_batch",
+      "agent": "/root/batch_intake_forward",
+      "input": "架空B社・2026年通常枠・標準補助率。見積等確認済み、見積のみ受領済み。財務・生産性・給与の対象期は合成入力上2025-04-01～2026-03-31。人数・総労働時間・人件費の根拠が必要。公開財務未掲載。複数PDF・画像のドラッグ対応。経理と労務は別。『次は何を用意すればよいですか？』",
+      "excerpts": [
+        "次の一覧のうち、**手元にある資料を、このチャットへまとめてドラッグ・アンド・ドロップしてください。** PDF・画像で受け取れます。全部そろうまで待たず、届いた資料から確認します。",
+        "| 役員・従業員一覧、労働者名簿など | 同期間の役員・従業員の区分、雇用区分、入退社・在籍期間が分かるもの | 労務担当 | 内容確認：人数と集計対象 | 未受領。必要事項が分かる資料を添付 |",
+        "| 勤務記録簿・出勤簿・タイムカード・勤怠システム出力の**いずれか** | 同期間の月別・対象者別の労働時間実績 | 労務担当・勤怠システム | 内容確認：年間総労働時間 | 未受領。対象期間分をまとめて添付 |",
+        "| 見積書 | 確認済みの今回の見積 | 販売会社 | 見積内容・販売会社手続きの確認 | **受領済み・再添付不要** |",
+        "名簿・勤怠・給与の資料は、入力する数値を確認するための資料です。"
+      ],
+      "review": "Observed full initial list including BS/PL, roster, attendance, payroll, conditional financial breakdowns and official certificates; known quote reused, batch upload without wait, official and supporting uses separated. Custodian-specific draft requests also supplied."
+    },
+    {
+      "id": "paper_attachment_limit",
+      "agent": "/root/batch_limits_forward",
+      "input": "架空C社・2026年通常枠。見積受領済み。紙のBS/PL・名簿・勤怠・給与資料を所持、証明書取り寄せ中。必要資料一覧はまだ未提示。合成入力上の必要期間は2025-04-01～2026-03-31。画像をファイル選択で1回2枚まで、追加可能。ドラッグ非対応、質問UIはテキストのみ。『どう渡せばよいですか？』",
+      "excerpts": [
+        "**紙の資料を写真に撮り、このチャットのファイル選択で、1回2枚ずつ添付してください。** 繰り返し追加できるので、こちらの返信を待たず、手元の必要資料を続けて送っていただけます。",
+        "| 貸借対照表・損益計算書 | 上記の確定決算期／経理・顧問税理士 | 財務内容の確認・公式提出 | 紙を所持、未受領／両方の全ページを撮影して添付 |",
+        "| 履歴事項全部証明書 | 申請時に発行から3か月以内のもの／法務局 | 公式提出 | 取り寄せ中、未受領／届いてから追加 |",
+        "取り寄せ中の証明書を待たず、届いた画像から確認を進めます。今回の写真は内容確認用として受け取り、申請画面へ正式に添付する際の形式・必要ページは別途確認します。"
+      ],
+      "review": "Observed initial list covering all known needed records, file picker in batches of two without document-by-document approval gates, pending certificates retained, official attachment not equated with chat photos."
+    }
+  ],
+  "automatedChecks": {
+    "workflowAndActivityTests": { "passed": 12, "failed": 0 },
+    "evaluationInfrastructure": { "passed": 50, "failed": 0 },
+    "skillValidator": "passed",
+    "packageReadbackAndReferences": "passed",
+    "diffWhitespace": "passed",
+    "scenarioSelection": { "financialAndV22": 17, "all": 57 }
+  },
+  "notRun": [
+    "Full F01-F16/V22 model suite (forward inputs differ from those fixtures)",
+    "installed host acceptance and actual drag-and-drop operation",
+    "actual PDF/image/payroll/attendance parsing",
+    "live finance API call",
+    "publication"
+  ],
+  "productAcceptance": "not established"
+}

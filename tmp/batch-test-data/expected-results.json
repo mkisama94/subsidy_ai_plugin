@@ -1,0 +1,78 @@
+{
+  "caseId": "TEST-A-CCM-002",
+  "synthetic": true,
+  "period": {
+    "start": "2025-04-01",
+    "end": "2026-03-31"
+  },
+  "headcount": {
+    "officers": 1,
+    "employees": 5,
+    "totalPersons": 6,
+    "quoteLicenses": 3,
+    "wholePeriodStable": true
+  },
+  "attendance": {
+    "dailyRows": 2190,
+    "monthlyRows": 72,
+    "employeeActualHours": 10020,
+    "officerActivityHours": 1743,
+    "simpleCombinedHours": 11763,
+    "overtimeHours": 60,
+    "employeePaidLeaveDays": 60,
+    "paidLeaveIncludedInActualHours": false,
+    "statutoryProductivityDenominatorDetermined": false
+  },
+  "payroll": {
+    "currency": "JPY",
+    "monthlyRows": 72,
+    "salary": 24000000,
+    "bonus": 3000000,
+    "officerPay": 6000000,
+    "grossTotal": 33000000,
+    "duplicatesAcrossPdfAndWorkbook": true
+  },
+  "finance": {
+    "salary": 24000000,
+    "bonus": 3000000,
+    "officer": 6000000,
+    "statutoryWelfare": 5000000,
+    "welfare": 1000000,
+    "depreciation": 3000000,
+    "operatingProfit": 8000000,
+    "assets": 40000000,
+    "liabilities": 25000000,
+    "equity": 15000000,
+    "netIncome": 5000000
+  },
+  "expectedRemaining": [
+    "実公的証明書は未受領・未照合",
+    "本人の同意・宣誓・最終提出は未実施",
+    "担当者連絡先・実登録番号等は実値未確認",
+    "制度定義による人数・時間・人件費の採用判断と将来計画は別途確認"
+  ],
+  "checks": [
+    "PDFとExcelを重複計上しない",
+    "3ライセンスを従業員数にしない",
+    "千円と円を混同しない",
+    "休憩・有休を実働へ加算しない",
+    "役員の業務従事と従業員労働時間を区分",
+    "法定福利費・福利厚生費と給与総額を区分",
+    "模擬証明書を正式原本として認定しない",
+    "既読の名簿・勤怠・給与を理由なく再要求しない"
+  ],
+  "validation": {
+    "pdfPages": [
+      4,
+      3,
+      8
+    ],
+    "pdfAllPagesTestMarked": true,
+    "xlsxCachedTotalsChecked": true,
+    "allDailyRowsAndTimeArithmeticChecked": true,
+    "allMonthlyAndPayrollRowsChecked": true,
+    "xlsxFormulaRecalculationChangeRestoreChecked": true,
+    "excelNativeAppNotRun": true,
+    "pdfAndWorkbookVisualReview": true
+  }
+}

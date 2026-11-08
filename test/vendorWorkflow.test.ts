@@ -15,6 +15,9 @@ test('vendor workflow references are self-contained and packageable', async () =
   const files = await collectSkills();
   assert.ok(files['skills/company-research/references/company-selection.md']);
   assert.ok(files['skills/pca-it-application-assist/references/vendor-workflow.md']);
+  assert.ok(files['skills/pca-it-application-assist/references/quote-entry.md']);
+  assert.ok(files['skills/pca-it-application-assist/references/financial-documents.md']);
+  assert.ok(files['skills/pca-it-application-assist/assets/quote-common-page-template.md']);
   assert.ok(Object.keys(files).every(f => /^skills\//.test(f) && !/\.(zip|env|pdf|docx)$/.test(f)));
   assert.throws(() => validateSkillFiles({ ...files, 'skills/pca-it-application-assist/references/vendor-workflow.md': new TextEncoder().encode('[broken](../../../../private.json)') }), /BROKEN_SKILL_REFERENCE/);
 });
@@ -34,7 +37,9 @@ test('V01-V25 map to 24 supplied-text cases and one installed-host gate', async 
   assert.deepEqual(scenarios.map((s: any) => s.id), Array.from({ length: 25 }, (_, i) => `V${String(i + 1).padStart(2, '0')}`));
   const selected = await selectCases({ suite: 'affected', change: 'vendor-workflow' });
   assert.equal(selected.selected.length, 24); assert.ok(!selected.selected.some((c: any) => c.id === 'V24'));
-  assert.equal((await selectCases({ suite: 'affected', change: 'common' })).selected.length, 28);
+  const quotes = JSON.parse(await fs.readFile('evaluation/skill/project/quote-onboarding-scenarios.json', 'utf8'));
+  const financials = JSON.parse(await fs.readFile('evaluation/skill/project/financial-document-scenarios.json', 'utf8'));
+  assert.equal((await selectCases({ suite: 'affected', change: 'common' })).selected.length, 28 + quotes.length + financials.length);
   for (const s of scenarios) {
     if (s.id === 'V24') { assert.equal(s.mode, 'installed_host'); continue; }
     const root = `evaluation/skill/project/cases/${s.id}`;
@@ -45,6 +50,43 @@ test('V01-V25 map to 24 supplied-text cases and one installed-host gate', async 
     assert.ok((await fs.readFile(`${root}/input/context.txt`, 'utf8')).includes('独立した合成入力'));
   }
 });
+
+test('quote entry selection covers new cases and document regressions with per-requirement review', async () => {
+  const scenarios = JSON.parse(await fs.readFile('evaluation/skill/project/quote-onboarding-scenarios.json', 'utf8'));
+  const selected = await selectCases({ suite: 'affected', change: 'quote-entry' });
+  assert.deepEqual(selected.selected.map((c: any) => c.id).sort(), [...scenarios.map((s: any) => s.id), 'V02', 'V18', 'V19', 'V22'].sort());
+  for (const s of scenarios) {
+    const root = `evaluation/skill/project/cases/${s.id}`;
+    const c = JSON.parse(await fs.readFile(`${root}/case.json`, 'utf8')), r = JSON.parse(await fs.readFile(`${root}/rubric.json`, 'utf8'));
+    assert.equal(c.id, s.id); assert.equal(c.skill, s.skill ?? 'pca-it-application-assist');
+    assert.deepEqual(r.required, s.required); assert.deepEqual(r.failures, s.failures);
+    assert.deepEqual(r.allowed_sources, ['scenario']);
+    assert.deepEqual(reviewRequirements(s.id), ['correctness', 'scope', 'evidence', ...s.required.map((text: string) => text.split(':')[0])]);
+    assert.equal(await fs.readFile(`${root}/request.txt`, 'utf8'), s.request + '\n' + (s.response_instruction ?? '次の一つの操作と、必要ならそのまま使える説明案・依頼文を示してください。') + '\n');
+    assert.ok((await fs.readFile(`${root}/input/context.txt`, 'utf8')).includes(s.context));
+  }
+});
+test('financial document cases preserve input and require separate semantic decisions', async () => {
+  const scenarios = JSON.parse(await fs.readFile('evaluation/skill/project/financial-document-scenarios.json', 'utf8'));
+  assert.deepEqual(scenarios.map((s: any) => s.id), Array.from({ length: 22 }, (_, i) => `F${String(i + 1).padStart(2, '0')}`));
+  const selected = await selectCases({ suite: 'affected', change: 'financial-documents' });
+  assert.deepEqual(selected.selected.map((c: any) => c.id).sort(), [...scenarios.map((s: any) => s.id), 'V22'].sort());
+  for (const s of scenarios) {
+    const root = `evaluation/skill/project/cases/${s.id}`;
+    const c = JSON.parse(await fs.readFile(`${root}/case.json`, 'utf8')), r = JSON.parse(await fs.readFile(`${root}/rubric.json`, 'utf8'));
+    assert.equal(c.skill, 'pca-it-application-assist');
+    assert.equal(c.version, s.version ?? '1');
+    assert.equal(r.version, s.version ?? '1');
+    assert.deepEqual(r.required, s.required); assert.deepEqual(r.failures, s.failures);
+    assert.deepEqual(r.allowed_sources, ['scenario']);
+    assert.deepEqual(reviewRequirements(s.id), ['correctness', 'scope', 'evidence', 'R1', 'R2', 'R3']);
+    const context = await fs.readFile(`${root}/input/context.txt`, 'utf8');
+    assert.ok(context.includes(s.context));
+    assert.ok(!context.includes('架空A社が選択済み。'));
+    assert.ok(!context.includes('出典ID: M01'));
+  }
+});
+
 test('V22 v2 supplies known inputs and explicitly requests all three artifacts', async () => {
   const root = 'evaluation/skill/project/cases/V22';
   const c = JSON.parse(await fs.readFile(`${root}/case.json`, 'utf8')), r = JSON.parse(await fs.readFile(`${root}/rubric.json`, 'utf8'));

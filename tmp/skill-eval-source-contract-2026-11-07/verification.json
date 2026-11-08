@@ -1,0 +1,537 @@
+{
+  "schema_version": "1.0",
+  "created_at": "2026-11-06T16:05:37.173Z",
+  "verification_type": "評価仕様の不整合を修正した後の動作確認",
+  "acceptance": "NOT_ALL_CRITERIA_MET",
+  "checks": {
+    "fixed_tests": {
+      "passed": 50,
+      "total": 50
+    },
+    "existing_tests": {
+      "passed": 131,
+      "total": 131
+    },
+    "typecheck": "PASS",
+    "plan": {
+      "status": "PASS",
+      "model_called": false,
+      "selected": [
+        "C003",
+        "C004"
+      ]
+    }
+  },
+  "preserved": {
+    "old_run_id": "run-f07869c3-041b-46cb-bce0-11097f4dabb5",
+    "old_run_inventory_sha256": "9714d36f0a8cf6b57b4535c89b886b171cd9cf547c0cd72f8be787b31e60674d",
+    "current_run_inventory_sha256": "9714d36f0a8cf6b57b4535c89b886b171cd9cf547c0cd72f8be787b31e60674d",
+    "old_run_unchanged": true,
+    "product_skills_unchanged": true,
+    "inputs_requests_rubrics_unchanged": true
+  },
+  "model_requested": "gpt-6-luna",
+  "model_starts": 4,
+  "retries": 0,
+  "runs": [
+    {
+      "run_id": "run-fb58a9ef-4898-465f-b5fa-f3e61cc553f6",
+      "created_at": "2026-11-06T16:00:16.622Z",
+      "host": {
+        "id": "codex-cli",
+        "version": "codex-cli 0.167.0-alpha.3.2",
+        "binary": "codex",
+        "tool_set": "host standard tools; user config ignored; skills/apps/multi_agent disabled by config",
+        "termination": {
+          "status": "CONFIRMED_ON_PROBE",
+          "scope": "disposable Node parent and child; actual host termination is recorded per run"
+        },
+        "loading_mode": "supplied_candidate_text",
+        "supplied_hash": null,
+        "host_observed_hash": null,
+        "access_isolation": "UNCONFIRMED",
+        "installed_skill_isolation": "UNCONFIRMED_CONFIG_REQUESTED",
+        "notice": "Managed host instructions and read access beyond workspace may remain. Not a candidate-only or Desktop-load attestation."
+      },
+      "budget": {
+        "case_timeout_ms": 300000,
+        "suite_timeout_ms": 900000,
+        "max_trials": 2
+      },
+      "assessment_set_id": "set-603258ec-c091-4b3d-8949-dccc5a1ccf2d",
+      "trials": [
+        {
+          "case_key": "C003",
+          "trial_id": "trial-7347c28c-8ff7-4547-b6eb-4f10a780a246",
+          "initial_assessment_id": "assessment-3e1e6236-8ba0-4fa5-a1d1-4af7aa0b45d6",
+          "assessment_id": "assessment-c091c8e0-db51-4d17-a1ca-11137ef286f1",
+          "execution": {
+            "status": "FINISHED",
+            "code": 0,
+            "signal": null,
+            "stop_error": null,
+            "model_started": true,
+            "stop": "NOT_REQUESTED"
+          },
+          "elapsed_ms": 6331,
+          "observation": {
+            "events_complete": true,
+            "observed_model": null,
+            "observed_effort": null,
+            "model_metadata_source": "unknown",
+            "usage": [
+              {
+                "input_tokens": 14583,
+                "cached_input_tokens": 0,
+                "cache_write_input_tokens": 0,
+                "output_tokens": 102,
+                "reasoning_output_tokens": 0
+              }
+            ],
+            "contamination": "NOT_OBSERVED_NOT_PROOF",
+            "observed_tool_calls": 0,
+            "requested_model": "gpt-6-luna",
+            "requested_effort": null,
+            "supplied_hash": "38d5b9edea215d8c07a8d84000f54db5bb08f4e95ddddb1be68ac78d7c89b5dc",
+            "host_observed_hash": null,
+            "access_isolation": "UNCONFIRMED"
+          },
+          "machine": {
+            "status": "PASS",
+            "findings": []
+          },
+          "semantic": {
+            "trial_id": "trial-7347c28c-8ff7-4547-b6eb-4f10a780a246",
+            "answer_sha256": "185f2164b5e3fc07aa18c9ec8df30f7270f8258ee5ab6daa6630be50b8fbcfa9",
+            "rubric_sha256": "b2d7aef69fef310b2deef0baa258bb93ad8d2209c5fcb5c41b04aa9264f25d26",
+            "status": "PASS",
+            "kind": "model",
+            "reviewer": "Codex primary assistant (implementation author; model identity not independently observed)",
+            "independence": "非独立。同じ実装担当のアシスタントによる回答・固定入力・rubricの照合。外部担当者または人によるレビューではない。",
+            "method_version": "source-contract-review-1",
+            "reviewed_at": "2026-11-06T16:01:27.924Z",
+            "reason": "固定入力・依頼・rubricを照合。正式名称→法人番号→住所の順で一致し、0123456789012の先頭0を保持する。登録用値と注記を分け、補助金検索・余分な質問・登録保存送信の主張はない。出典nta-fixtureは正確で、未提供の日付は未提供と説明している。",
+            "evidence": [
+              "answer.raw.txt: responseの正式名称・法人番号・住所の3行と注記",
+              "answer.raw.txt: sources=[nta-fixture], actions=[]",
+              "frozen/case/input/sources.txt: 法人情報と一致確認済みの記載",
+              "frozen/rubric.json: requiredとfailuresの全項目"
+            ],
+            "checks": {
+              "correctness": "PASS",
+              "scope": "PASS",
+              "evidence": "PASS"
+            }
+          },
+          "verdict": "DEV_PASS",
+          "evidence": {
+            "status": "VALID",
+            "violations": [],
+            "comparability": "ELIGIBLE"
+          },
+          "answer": {
+            "response": "取引先登録用\n\n正式名称：株式会社架空研究所\n法人番号：0123456789012\n住所：東京都架空区1-2-3\n\n注記：住所は登記住所です。出典は合成国税庁応答です。取得日・更新日・情報の基準日は提供されていません。",
+            "sources": [
+              "nta-fixture"
+            ],
+            "actions": []
+          },
+          "candidate_sha256": "556e2741f279e27c98f692b6ce22f3fe6e8a38bab3bc135e1a5a49c99c4436ae",
+          "adapter": {
+            "id": "subsidy-ai",
+            "version": "1.1",
+            "sha256": "7517b5b92768a88a0b20996034278ab8c1d4f74fb84b21e19d8aa7b0f6b985fc"
+          },
+          "answer_schema_sha256": "c0d4f9bda2b271c7a1d272bbf6e1759358e523f4c19c4d27d1c603d81b58ee6d",
+          "contract_sha256": "00ad11551882b25ed43c1e0f96ff0c0a866f12d4ef8f98100fb10d9ffc63b8ff"
+        },
+        {
+          "case_key": "C004",
+          "trial_id": "trial-5faf6006-1fa8-4cf2-ad2d-b6edb97ab8ef",
+          "initial_assessment_id": "assessment-b7c4eacd-1a3d-4f0c-ade9-6c55a48b2dab",
+          "assessment_id": "assessment-189ea306-cd7b-4f81-9ccf-93030d18bb07",
+          "execution": {
+            "status": "FINISHED",
+            "code": 0,
+            "signal": null,
+            "stop_error": null,
+            "model_started": true,
+            "stop": "NOT_REQUESTED"
+          },
+          "elapsed_ms": 6881,
+          "observation": {
+            "events_complete": true,
+            "observed_model": null,
+            "observed_effort": null,
+            "model_metadata_source": "unknown",
+            "usage": [
+              {
+                "input_tokens": 14618,
+                "cached_input_tokens": 0,
+                "cache_write_input_tokens": 0,
+                "output_tokens": 183,
+                "reasoning_output_tokens": 0
+              }
+            ],
+            "contamination": "NOT_OBSERVED_NOT_PROOF",
+            "observed_tool_calls": 0,
+            "requested_model": "gpt-6-luna",
+            "requested_effort": null,
+            "supplied_hash": "2835f71e0d6936fa293eff7c094f83fc53727592be75ba1f9c18b621946caf30",
+            "host_observed_hash": null,
+            "access_isolation": "UNCONFIRMED"
+          },
+          "machine": {
+            "status": "PASS",
+            "findings": []
+          },
+          "semantic": {
+            "trial_id": "trial-5faf6006-1fa8-4cf2-ad2d-b6edb97ab8ef",
+            "answer_sha256": "a32b4b2598e85fe5f7ef47629c85ccfdbd6c1bdec67e34c19f374dbea0aa3d7f",
+            "rubric_sha256": "e81aaaca10342e8f90c9900d425251cd66d5e7ad92c2aa88baae5d0b4c2dc925",
+            "status": "PASS",
+            "kind": "model",
+            "reviewer": "Codex primary assistant (implementation author; model identity not independently observed)",
+            "independence": "非独立。同じ実装担当のアシスタントによる回答・固定入力・rubricの照合。外部担当者または人によるレビューではない。",
+            "method_version": "source-contract-review-1",
+            "reviewed_at": "2026-11-06T16:01:27.926Z",
+            "reason": "固定入力・依頼・rubricを照合。資本金1000万円の単位を保持し、従業員数の転記値は空欄、その理由は確認事項へ別記。代表者架空一郎と代表取締役を保持。資本金の基準日2025-03-31、サイト取得日2026-11-05、更新日記載なしを区別し、実行日に読み替えていない。出典2件と項目の対応をresponseで説明し、sourcesは正確なIDのみ。外部入力保存の成功を主張しない。",
+            "evidence": [
+              "answer.raw.txt: responseの転記用3項目と確認事項・出典の分離",
+              "answer.raw.txt: 基準日2025-03-31、取得日2026-11-05、更新日記載なし",
+              "answer.raw.txt: sources=[profile-fixture,site-fixture], actions=[]",
+              "frozen/case/input/sources.txt: 資本金・未登録・役職・各日付の原記載",
+              "frozen/rubric.json: requiredとfailuresの全項目"
+            ],
+            "checks": {
+              "correctness": "PASS",
+              "scope": "PASS",
+              "evidence": "PASS"
+            }
+          },
+          "verdict": "DEV_PASS",
+          "evidence": {
+            "status": "VALID",
+            "violations": [],
+            "comparability": "ELIGIBLE"
+          },
+          "answer": {
+            "response": "転記用（項目の順）\n\n資本金：1000万円\n従業員数：\n代表者：架空一郎（代表取締役）\n\n確認事項・出典\n- 資本金は合成公的応答 profile-fixture に記載。基準日は2025-03-31です。\n- 従業員数は profile-fixture で未登録で、合成公式サイト site-fixture にも記載がありません。値は未確認のため空欄です。\n- 代表者は site-fixture の記載に基づきます。更新日の記載はありません。取得日は2026-11-05です。",
+            "sources": [
+              "profile-fixture",
+              "site-fixture"
+            ],
+            "actions": []
+          },
+          "candidate_sha256": "556e2741f279e27c98f692b6ce22f3fe6e8a38bab3bc135e1a5a49c99c4436ae",
+          "adapter": {
+            "id": "subsidy-ai",
+            "version": "1.1",
+            "sha256": "7517b5b92768a88a0b20996034278ab8c1d4f74fb84b21e19d8aa7b0f6b985fc"
+          },
+          "answer_schema_sha256": "c0d4f9bda2b271c7a1d272bbf6e1759358e523f4c19c4d27d1c603d81b58ee6d",
+          "contract_sha256": "00ad11551882b25ed43c1e0f96ff0c0a866f12d4ef8f98100fb10d9ffc63b8ff"
+        }
+      ]
+    },
+    {
+      "run_id": "run-bae8e769-d985-484f-a764-d7368f493fc7",
+      "created_at": "2026-11-06T16:01:34.438Z",
+      "host": {
+        "id": "codex-cli",
+        "version": "codex-cli 0.167.0-alpha.3.2",
+        "binary": "codex",
+        "tool_set": "host standard tools; user config ignored; skills/apps/multi_agent disabled by config",
+        "termination": {
+          "status": "CONFIRMED_ON_PROBE",
+          "scope": "disposable Node parent and child; actual host termination is recorded per run"
+        },
+        "loading_mode": "supplied_candidate_text",
+        "supplied_hash": null,
+        "host_observed_hash": null,
+        "access_isolation": "UNCONFIRMED",
+        "installed_skill_isolation": "UNCONFIRMED_CONFIG_REQUESTED",
+        "notice": "Managed host instructions and read access beyond workspace may remain. Not a candidate-only or Desktop-load attestation."
+      },
+      "budget": {
+        "case_timeout_ms": 300000,
+        "suite_timeout_ms": 900000,
+        "max_trials": 1
+      },
+      "assessment_set_id": "set-c9e49ddc-7c5e-42db-9b9e-780f82c93dc3",
+      "trials": [
+        {
+          "case_key": "C001",
+          "trial_id": "trial-a7d7e17b-9625-4349-a264-4ac63396ecc5",
+          "initial_assessment_id": "assessment-47962440-9b0a-4b53-b687-1c91ecf4cfef",
+          "assessment_id": "assessment-ac87690b-fd85-4903-962e-d28ef6f96875",
+          "execution": {
+            "status": "FINISHED",
+            "code": 0,
+            "signal": null,
+            "stop_error": null,
+            "model_started": true,
+            "stop": "NOT_REQUESTED"
+          },
+          "elapsed_ms": 7377,
+          "observation": {
+            "events_complete": true,
+            "observed_model": null,
+            "observed_effort": null,
+            "model_metadata_source": "unknown",
+            "usage": [
+              {
+                "input_tokens": 14589,
+                "cached_input_tokens": 0,
+                "cache_write_input_tokens": 0,
+                "output_tokens": 235,
+                "reasoning_output_tokens": 0
+              }
+            ],
+            "contamination": "NOT_OBSERVED_NOT_PROOF",
+            "observed_tool_calls": 0,
+            "requested_model": "gpt-6-luna",
+            "requested_effort": null,
+            "supplied_hash": "e2795c7cfcfde316618e97d2a403fc82f66dd8b0233a0eb38c8ad27e082af553",
+            "host_observed_hash": null,
+            "access_isolation": "UNCONFIRMED"
+          },
+          "machine": {
+            "status": "PASS",
+            "findings": []
+          },
+          "semantic": {
+            "trial_id": "trial-a7d7e17b-9625-4349-a264-4ac63396ecc5",
+            "answer_sha256": "f6b031329bad0fde0af0b1c21cbab3683a5c3423ca36838d065a5bd8789e5068",
+            "rubric_sha256": "c99a373eecfeb222edadbed40a0d690d8d2fee6eca3640c8a4b10b8015b1d6b8",
+            "status": "FAIL",
+            "kind": "model",
+            "reviewer": "Codex primary assistant (implementation author; model identity not independently observed)",
+            "independence": "非独立。同じ実装担当のアシスタントによる回答・固定入力・rubricの照合。外部担当者または人によるレビューではない。",
+            "method_version": "source-contract-review-1",
+            "reviewed_at": "2026-11-06T16:03:29.568Z",
+            "reason": "出典official-aの完全一致、事業との相性と資格の分離、設立年月・資本関係の未確認、最優先と断定しない判断は満たす。しかしrubric.required[1]が要求する判定基準日の確認案内がない。回答末尾に基準日の記載なしと示すだけでは、設立3年以内の判定に必要な基準日の確認を案内したとは扱わない。出典形式修正の問題と区別し、内容の未充足としてFAILとする。",
+            "evidence": [
+              "answer.raw.txt: response第1段落（相性と資格条件の分離）",
+              "answer.raw.txt: 未確認事項は設立年月・みなし大企業該当性のみ",
+              "answer.raw.txt: 末尾の基準日記載なしは確認先・確認必要性の案内を含まない",
+              "answer.raw.txt: sources=[official-a], actions=[]",
+              "frozen/rubric.json: required[1] 設立日・判定基準日と資本関係の確認を案内する",
+              "frozen/case/input/sources.txt: 設立3年以内と資本関係の資格条件"
+            ],
+            "checks": {
+              "correctness": "FAIL",
+              "scope": "PASS",
+              "evidence": "PASS"
+            }
+          },
+          "verdict": "DEV_FAIL",
+          "evidence": {
+            "status": "VALID",
+            "violations": [],
+            "comparability": "ELIGIBLE"
+          },
+          "answer": {
+            "response": "架空A補助金を最優先で勧めることはできません。省エネ設備を評価する制度であり、設備との相性はありますが、申請資格には「設立3年以内」と「みなし大企業に該当しないこと」の両方が必要です。設立年月と資本関係が未確認のため、資格を確認できず、最優先候補とは判断できません。\n\n確認できている申告情報：東京都の法人、省エネ設備を購入予定。\n未確認事項：設立年月、みなし大企業該当性。これらを確認できれば、提示資料の資格条件との照合ができます。\n\n出典：official-a（架空A補助金の評価内容、申請資格、対象年度）。対象年度は資料記載の固定の架空年度です。資料に更新日・基準日・取得日の記載はありません。",
+            "sources": [
+              "official-a"
+            ],
+            "actions": []
+          },
+          "candidate_sha256": "556e2741f279e27c98f692b6ce22f3fe6e8a38bab3bc135e1a5a49c99c4436ae",
+          "adapter": {
+            "id": "subsidy-ai",
+            "version": "1.1",
+            "sha256": "7517b5b92768a88a0b20996034278ab8c1d4f74fb84b21e19d8aa7b0f6b985fc"
+          },
+          "answer_schema_sha256": "c0d4f9bda2b271c7a1d272bbf6e1759358e523f4c19c4d27d1c603d81b58ee6d",
+          "contract_sha256": "00ad11551882b25ed43c1e0f96ff0c0a866f12d4ef8f98100fb10d9ffc63b8ff"
+        }
+      ]
+    },
+    {
+      "run_id": "run-4efa4fb4-4c2c-4123-96c9-7ae53b1cdda7",
+      "created_at": "2026-11-06T16:02:02.841Z",
+      "host": {
+        "id": "codex-cli",
+        "version": "codex-cli 0.167.0-alpha.3.2",
+        "binary": "codex",
+        "tool_set": "host standard tools; user config ignored; skills/apps/multi_agent disabled by config",
+        "termination": {
+          "status": "CONFIRMED_ON_PROBE",
+          "scope": "disposable Node parent and child; actual host termination is recorded per run"
+        },
+        "loading_mode": "supplied_candidate_text",
+        "supplied_hash": null,
+        "host_observed_hash": null,
+        "access_isolation": "UNCONFIRMED",
+        "installed_skill_isolation": "UNCONFIRMED_CONFIG_REQUESTED",
+        "notice": "Managed host instructions and read access beyond workspace may remain. Not a candidate-only or Desktop-load attestation."
+      },
+      "budget": {
+        "case_timeout_ms": 300000,
+        "suite_timeout_ms": 900000,
+        "max_trials": 1
+      },
+      "assessment_set_id": "set-8b799b4e-66d2-4ffb-b0fc-e07b41df90af",
+      "trials": [
+        {
+          "case_key": "C002",
+          "trial_id": "trial-58b53f10-d9fa-4619-a0f9-3ed51e3a884e",
+          "initial_assessment_id": "assessment-acfca3be-99ab-44e2-a3b9-987036dda23e",
+          "assessment_id": "assessment-84cc881c-e51a-4529-8dd9-578c1c9c412f",
+          "execution": {
+            "status": "FINISHED",
+            "code": 0,
+            "signal": null,
+            "stop_error": null,
+            "model_started": true,
+            "stop": "NOT_REQUESTED"
+          },
+          "elapsed_ms": 7058,
+          "observation": {
+            "events_complete": true,
+            "observed_model": null,
+            "observed_effort": null,
+            "model_metadata_source": "unknown",
+            "usage": [
+              {
+                "input_tokens": 14607,
+                "cached_input_tokens": 0,
+                "cache_write_input_tokens": 0,
+                "output_tokens": 181,
+                "reasoning_output_tokens": 0
+              }
+            ],
+            "contamination": "NOT_OBSERVED_NOT_PROOF",
+            "observed_tool_calls": 0,
+            "requested_model": "gpt-6-luna",
+            "requested_effort": null,
+            "supplied_hash": "c53e71948a198908a25deb7aa70b79064cd1958b9cdb49a78a7de5e448039867",
+            "host_observed_hash": null,
+            "access_isolation": "UNCONFIRMED"
+          },
+          "machine": {
+            "status": "PASS",
+            "findings": []
+          },
+          "semantic": {
+            "trial_id": "trial-58b53f10-d9fa-4619-a0f9-3ed51e3a884e",
+            "answer_sha256": "b266caf48dc7db876927d7f66de97bcc01217ba325949598f1ce59e8bc049bda",
+            "rubric_sha256": "9b972654999599739a1da4ec6656865e1ddfe028937bf557812f0e45e11d4157",
+            "status": "PASS",
+            "kind": "model",
+            "reviewer": "Codex primary assistant (implementation author; model identity not independently observed)",
+            "independence": "非独立。同じ実装担当のアシスタントによる回答・固定入力・rubricの照合。外部担当者または人によるレビューではない。",
+            "method_version": "source-contract-review-1",
+            "reviewed_at": "2026-11-06T16:03:29.568Z",
+            "reason": "同一公募回・範囲の申請件数と採択件数が未登録で算出不可と説明。前回全体100件/20件=20%には時点と範囲を付け今回特別枠へ転用しない。適合度80を公式率へ変換せず、今回の個別採択確率は判断不可。公式出典IDは正確で、日付は未確認として本文に分離。rubricの未確認表記の別解を満たす。",
+            "evidence": [
+              "answer.raw.txt: responseの今回特別枠の件数未登録と算出不可の説明",
+              "answer.raw.txt: 前回全体20%は今回特別枠に使えないとの説明",
+              "answer.raw.txt: 適合度80は採択率ではなく、個別確率は判断不可",
+              "answer.raw.txt: sources=[official-b], actions=[]",
+              "frozen/case/input/sources.txt: 件数・範囲・スコアの原記載",
+              "frozen/rubric.json: required、alternatives、failuresを照合"
+            ],
+            "checks": {
+              "correctness": "PASS",
+              "scope": "PASS",
+              "evidence": "PASS"
+            }
+          },
+          "verdict": "DEV_PASS",
+          "evidence": {
+            "status": "VALID",
+            "violations": [],
+            "comparability": "ELIGIBLE"
+          },
+          "answer": {
+            "response": "過去採択率（今回・特別枠）：未確認。比較対象と同一範囲の申請件数・採択件数が未登録のため、算出できません。前回・全体の申請100件、採択20件から得られる20%は今回・特別枠の比較欄には使えません。適合度スコア80も公式採択率ではありません。\n今回の採択確率：不明です。過去の集計値から今回の個別の採択確率は判断できません。\n出典：official-b。基準日・更新日・取得日は固定入力に記載がなく、未確認です。",
+            "sources": [
+              "official-b"
+            ],
+            "actions": []
+          },
+          "candidate_sha256": "556e2741f279e27c98f692b6ce22f3fe6e8a38bab3bc135e1a5a49c99c4436ae",
+          "adapter": {
+            "id": "subsidy-ai",
+            "version": "1.1",
+            "sha256": "7517b5b92768a88a0b20996034278ab8c1d4f74fb84b21e19d8aa7b0f6b985fc"
+          },
+          "answer_schema_sha256": "c0d4f9bda2b271c7a1d272bbf6e1759358e523f4c19c4d27d1c603d81b58ee6d",
+          "contract_sha256": "00ad11551882b25ed43c1e0f96ff0c0a866f12d4ef8f98100fb10d9ffc63b8ff"
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "schema_version": "1.0",
+      "comparison_id": "comparison-ec2a243f-cbe5-4999-9af2-7e2900aed115",
+      "created_at": "2026-11-06T16:04:10.217Z",
+      "baseline": "run-f07869c3-041b-46cb-bce0-11097f4dabb5",
+      "candidate": "run-fb58a9ef-4898-465f-b5fa-f3e61cc553f6",
+      "assessment_policy": "latest-compatible",
+      "assessment_selection": "POLICY",
+      "results": [
+        {
+          "case_key": "C003",
+          "category": "CONFOUNDED",
+          "differences": [
+            "contract_sha256",
+            "host",
+            "runner",
+            "grader",
+            "review_method"
+          ],
+          "baseline_assessment_id": "assessment-280aa7d4-30f3-4dc2-b109-6cc10d5b3e7f",
+          "candidate_assessment_id": "assessment-c091c8e0-db51-4d17-a1ca-11137ef286f1",
+          "before": "DEV_FAIL",
+          "after": "DEV_PASS",
+          "regression": false,
+          "before_elapsed_ms": 7047,
+          "after_elapsed_ms": 6331
+        },
+        {
+          "case_key": "C004",
+          "category": "CONFOUNDED",
+          "differences": [
+            "contract_sha256",
+            "host",
+            "runner",
+            "grader",
+            "review_method"
+          ],
+          "baseline_assessment_id": "assessment-e42a8a62-e210-4251-ab17-520a11f1fb31",
+          "candidate_assessment_id": "assessment-189ea306-cd7b-4f81-9ccf-93030d18bb07",
+          "before": "DEV_FAIL",
+          "after": "DEV_PASS",
+          "regression": false,
+          "before_elapsed_ms": 7052,
+          "after_elapsed_ms": 6881
+        }
+      ],
+      "product_acceptance": "NOT_REQUESTED"
+    }
+  ],
+  "C001_failure_hypothesis": {
+    "created_at": "2026-11-06T16:03:29.574Z",
+    "case_key": "C001",
+    "run_id": "run-bae8e769-d985-484f-a764-d7368f493fc7",
+    "failure": "判定基準日の確認案内が不足",
+    "observation": "資料に基準日の記載なしという説明はあるが、資格判定に必要な基準日の確認を案内していない。出典完全一致の問題は解消している。",
+    "hypotheses": [
+      "設立年数という資格条件を評価するときに、判定基準日を追加確認事項として扱う指示が十分か確認する。",
+      "現在のスキルでは延期時に基準日確認を明示するため、延期を依頼していないC001へrubric.required[1]を適用する根拠を確認する。"
+    ],
+    "next_step": "製品スキルの判断手順とrubricの要求範囲を照合してから、どちらを変更すべきか別変更として決める。出典仕様へ業務正解を追加せず、採点基準は緩和しない。",
+    "retry_performed": false
+  },
+  "limitations": [
+    "同じ実装担当のモデルによる非独立レビュー。",
+    "実モデル名・推論設定・実ロードhashは未観測、アクセス隔離は未確認。",
+    "出力仕様・スキーマ・adapter・core・CLI版が変わり、同条件のスキル改善比較ではない。",
+    "本文供給試験のみ。自然なスキル選択・実API・フォーム編集・正式配布受入は未検証。"
+  ]
+}

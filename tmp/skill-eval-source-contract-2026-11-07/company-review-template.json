@@ -1,0 +1,38 @@
+[
+  {
+    "trial_id": "trial-7347c28c-8ff7-4547-b6eb-4f10a780a246",
+    "answer_sha256": "185f2164b5e3fc07aa18c9ec8df30f7270f8258ee5ab6daa6630be50b8fbcfa9",
+    "rubric_sha256": "b2d7aef69fef310b2deef0baa258bb93ad8d2209c5fcb5c41b04aa9264f25d26",
+    "status": "REVIEW_REQUIRED",
+    "kind": "human",
+    "reviewer": "",
+    "independence": "",
+    "method_version": "1",
+    "reviewed_at": "",
+    "reason": "",
+    "evidence": [],
+    "checks": {
+      "correctness": "REVIEW_REQUIRED",
+      "scope": "REVIEW_REQUIRED",
+      "evidence": "REVIEW_REQUIRED"
+    }
+  },
+  {
+    "trial_id": "trial-5faf6006-1fa8-4cf2-ad2d-b6edb97ab8ef",
+    "answer_sha256": "a32b4b2598e85fe5f7ef47629c85ccfdbd6c1bdec67e34c19f374dbea0aa3d7f",
+    "rubric_sha256": "e81aaaca10342e8f90c9900d425251cd66d5e7ad92c2aa88baae5d0b4c2dc925",
+    "status": "REVIEW_REQUIRED",
+    "kind": "human",
+    "reviewer": "",
+    "independence": "",
+    "method_version": "1",
+    "reviewed_at": "",
+    "reason": "",
+    "evidence": [],
+    "checks": {
+      "correctness": "REVIEW_REQUIRED",
+      "scope": "REVIEW_REQUIRED",
+      "evidence": "REVIEW_REQUIRED"
+    }
+  }
+]

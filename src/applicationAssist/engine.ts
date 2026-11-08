@@ -1,5 +1,6 @@
 import { caseSchema, type AssistCase, type FieldEvidence } from './schema';
 import { transcriptionValue } from './transcription';
+import { productivity } from './calculations';
 
 export type Issue = { id: string; reason: string; owner: 'applicant' | 'vendor' | 'maintainer';
   obtainFrom: string; screens: string[]; priority: 'blocking' | 'review'; fieldId?: string };
@@ -83,6 +84,33 @@ export function validateCase(input: unknown) {
   if (n('annualTotalHours') !== null && n('annualTotalHours')! <= 0) add('hours', '年間総労働時間は正数が必要', 'applicant', 'annualTotalHours');
   if (['operatingProfit', 'personnelCosts', 'depreciation'].every(id => n(id) !== null) && n('operatingProfit')! + n('personnelCosts')! + n('depreciation')! <= 0)
     add('productivity-base', '基準生産性が0以下。成長率を自動確定せず適用規則を確認', 'applicant', 'productivityPlan');
+  const metrics = ['operatingProfit', 'personnelCosts', 'depreciation', 'annualTotalHours'] as const;
+  const baseline = metrics.every(id => usable(f(id)))
+    ? productivity(n('operatingProfit'), n('personnelCosts'), n('depreciation'), n('annualTotalHours')) : null;
+  const projection: { year: number; periodEnd: string; productivity: number; growthPercent: number; annualizedGrowthPercent: number }[] = [];
+  if (!c.projectionPeriods || c.projectionPeriods.some((date, i, all) => date <= c.applicationDate ||
+      (i > 0 && (date <= all[i - 1] || Number(date.slice(0, 4)) !== Number(all[i - 1].slice(0, 4)) + 1 || date.slice(4) !== all[i - 1].slice(4)))))
+    add('projection-periods', '翌事業年度以降3年間の計画対象期を確認', 'applicant', 'productivityPlan');
+  else for (const [index, periodEnd] of c.projectionPeriods.entries()) {
+    const ids = metrics.map(id => `plan.${index + 1}.${id}`);
+    const valid = ids.every((id, i) => {
+      const v = f(id);
+      return usable(v) && v!.applicantConfirmed && n(id) !== null &&
+        v!.unit === (metrics[i] === 'annualTotalHours' ? 'hours' : 'JPY') && v!.periodEnd === periodEnd;
+    });
+    if (!valid) { add(`projection-input:${index + 1}`, `${index + 1}年目の利益・人件費・減価償却費・総労働時間の数値と根拠を確認`, 'applicant', 'productivityPlan'); continue; }
+    const value = productivity(n(ids[0]), n(ids[1]), n(ids[2]), n(ids[3]));
+    if (value === null || value <= 0 || baseline === null || baseline <= 0) {
+      add(`projection-value:${index + 1}`, `${index + 1}年目の生産性を算定できません`, 'applicant', 'productivityPlan'); continue;
+    }
+    const ratio = value / baseline;
+    if (!Number.isFinite(ratio)) { add(`projection-value:${index + 1}`, '生産性の比率が計算範囲外', 'applicant', 'productivityPlan'); continue; }
+    projection.push({ year: index + 1, periodEnd, productivity: value, growthPercent: (ratio - 1) * 100,
+      annualizedGrowthPercent: (ratio ** (1 / (index + 1)) - 1) * 100 });
+    // This engine's supported scope is the standard-rate, no-prior-grant 2026 normal frame.
+    if ((index === 0 && ratio + 1e-12 < 1.03) || (index === 2 && ratio + 1e-12 < 1.03 ** 3))
+      add(`productivity-target:${index + 1}`, index === 0 ? '1年後の労働生産性向上3％以上を満たさない' : '3年間の労働生産性の年平均成長率3％以上を満たさない', 'applicant', 'productivityPlan');
+  }
   const p = c.rulePack;
   if (!p.verified || !p.reviewer || p.references.length === 0 || p.references.some(r => !r.sha256 || !r.retrievedAt) ||
       p.year !== c.scope.year || c.scope.round < p.roundFrom || c.applicationDate < p.effectiveFrom ||
@@ -121,6 +149,8 @@ export function validateCase(input: unknown) {
   if ((manifestTestOnly && c.dataClass !== 'synthetic_test') || c.dataClass === 'fictional_example') add('test-only', '架空例・テスト用の制度・商品・画面対応は実案件に利用不可', 'maintainer');
   const state = unsupported ? 'unsupported' : issues.some(i => i.priority === 'blocking') ? 'needsInformation' : issues.length ? 'needsReview' : 'readyForTranscription';
   return { caseId: c.caseId, revision: c.revision, state, testOnly, issues, notices,
+    productivity: { baseline, projection },
+    completionKind: state === 'readyForTranscription' ? (testOnly ? 'simulationReady' : 'realPreparationReady') : 'incomplete',
     pending: ['本人認証', '宣誓・同意', '最終確認', '本人による提出', '公式画面での操作受入（A15）'],
     rulesVersion: p.version, fieldMapVersion: c.fieldMap.version, productVersion: product.version };
 }

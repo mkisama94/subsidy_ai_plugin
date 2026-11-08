@@ -1,0 +1,27 @@
+[
+  {
+    "trial_id": "trial-58b53f10-d9fa-4619-a0f9-3ed51e3a884e",
+    "answer_sha256": "b266caf48dc7db876927d7f66de97bcc01217ba325949598f1ce59e8bc049bda",
+    "rubric_sha256": "9b972654999599739a1da4ec6656865e1ddfe028937bf557812f0e45e11d4157",
+    "status": "PASS",
+    "kind": "model",
+    "reviewer": "Codex primary assistant (implementation author; model identity not independently observed)",
+    "independence": "非独立。同じ実装担当のアシスタントによる回答・固定入力・rubricの照合。外部担当者または人によるレビューではない。",
+    "method_version": "source-contract-review-1",
+    "reviewed_at": "2026-11-06T16:03:29.568Z",
+    "reason": "同一公募回・範囲の申請件数と採択件数が未登録で算出不可と説明。前回全体100件/20件=20%には時点と範囲を付け今回特別枠へ転用しない。適合度80を公式率へ変換せず、今回の個別採択確率は判断不可。公式出典IDは正確で、日付は未確認として本文に分離。rubricの未確認表記の別解を満たす。",
+    "evidence": [
+      "answer.raw.txt: responseの今回特別枠の件数未登録と算出不可の説明",
+      "answer.raw.txt: 前回全体20%は今回特別枠に使えないとの説明",
+      "answer.raw.txt: 適合度80は採択率ではなく、個別確率は判断不可",
+      "answer.raw.txt: sources=[official-b], actions=[]",
+      "frozen/case/input/sources.txt: 件数・範囲・スコアの原記載",
+      "frozen/rubric.json: required、alternatives、failuresを照合"
+    ],
+    "checks": {
+      "correctness": "PASS",
+      "scope": "PASS",
+      "evidence": "PASS"
+    }
+  }
+]

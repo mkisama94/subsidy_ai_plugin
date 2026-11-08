@@ -1,0 +1,48 @@
+Generated with built-in image_gen.
+Purpose: PCA interim report, conceptual wizard UI.
+
+Use case: productivity-visual / infographic with UI mockup.
+Create a polished Japanese business presentation infographic for an interim development report to PCA, the accounting software company. One landscape image, 16:9, very high resolution, ideally 2560x1440 or 3840x2160. Entirely Japanese, exquisitely legible precise typesetting. Flat front-facing presentation layout, no perspective, no photographed desk. Premium restrained enterprise design, white and very pale blue background, deep navy text, teal accents, blue active step, warm amber small development badge. Generous whitespace, beautiful alignment, simple line icons, thin borders, soft subtle shadows. No corporate logo or certification seal. Do not invent integrations, approvals, grant rates, or guaranteed eligibility. This is a conceptual wizard operated in an AI conversation, not an implemented standalone web application.
+
+CONTENT AND LAYOUT:
+Top left small eyebrow: 「開発中間報告」
+Large main title: 「PCAクラウド会計の補助金申請を、一問ずつ。」
+Subtitle: 「デジタル化・AI導入補助金の申請準備を、対話形式で案内」
+Top right compact badge: 「開発・検証中」
+
+Below header, a wide horizontal four-stage progress strip with numbered circles and small line icons:
+「1 会社・製品を確認」 → 「2 書類をそろえる」 → 「3 内容を確認する」 → 「4 申請画面へ進む」
+Stage 1 completed with a small check, stage 2 active blue, stages 3 and 4 neutral, do not show whole application complete.
+
+Main area under strip: left ~62% large attractive white mock conversation/wizard card. Right ~34% two or three short explanation cards.
+Left card header: 「対話画面のイメージ」
+Small position indicator: 「STEP 2｜書類をそろえる」
+AI speech card text: 「見積書の内容を確認しました。」
+Below, neat compact known-info rows:
+「製品　PCAクラウド会計」
+「購入先　ミモザ情報システム（想定）」
+A light teal helpful label: 「確認済みの内容は、聞き直しません」
+Main one-question panel: 「販売会社の申込・同意書はお手元にありますか？」
+Three attractive response options, visually clearly aligned:
+「手元にある」  「取り寄せたい」  「あとで確認する」
+A short secondary help line below: 「未受領なら依頼文を作成し、待つ間も資料整理を進めます。」
+Use realistic conversational UI elements, no upload or submit actually executed, no arbitrary mouse or human figures.
+
+Right cards exact text, big clear section titles and short descriptions:
+Card 1 title: 「次の操作がわかる」
+body: 「必要な質問を一つずつ。
+見積書や会話の情報を引き継ぎます。」
+Card 2 title: 「販売会社の手順に合わせる」
+body: 「見積・所定書式・受付期限を案内。
+ミモザ情報システムを想定して設計。」
+Card 3 title: 「確認しながら申請へ」
+body: 「資料と説明案を整理し、
+本人が内容を確認して進めます。」
+
+Bottom full-width muted navy or pale blue band, large readable progress status:
+「現在：会話手順・参照資料を実装し、品質検証中」
+Smaller line: 「次の段階：実ホストでの動作確認・更新申請準備」
+At very bottom a readable subtle footnote, not tiny:
+「画面は開発中の説明用イメージです。認証・同意・最終提出は申請者本人が行います。」
+
+Avoid dense microtext, excessive decoration, random English labels, bogus charts, test pass counts, timestamps, made-up logos, claims of live PCA integration, claims of partnership with Mimosa, official submission completion, automatic application submission. All wording should look natural and professional for Japanese enterprise stakeholders. Render all specified Japanese text accurately and beautifully, with strong hierarchy.

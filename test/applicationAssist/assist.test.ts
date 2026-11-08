@@ -47,6 +47,12 @@ function complete(): AssistCase {
     periodEnd: '2026-06-30', expectedPeriodEnd: '2026-06-30', expiresAt: '2026-12-01', format: 'pdf', bytes: 100, maxBytes: 1000,
     verified: true, mappingVersion: 'test-map', visibility: 'applicantOnly' }];
   c.apiChecks = [{ provider: 'nta', checkedAt: now, checkedOn: null, status: 'matched', code: null, addressImageId: null, addressImageVerified: false, notice: 'test', sourceUrl: ref.url }];
+  c.projectionPeriods = ['2028-06-30', '2029-06-30', '2030-06-30'];
+  for (const [index, periodEnd] of c.projectionPeriods.entries()) for (const id of ['operatingProfit', 'personnelCosts', 'depreciation', 'annualTotalHours']) {
+    const original = c.fields.find(f => f.fieldId === id)!;
+    c.fields.push({ ...original, fieldId: `plan.${index + 1}.${id}`, periodEnd,
+      value: id === 'operatingProfit' ? 500 + 50 * (index + 1) : original.value });
+  }
   c.review = { reviewer: 'test', reviewedAt: now, revision: 1, inputSnapshot: reviewSnapshot(c) };
   return c;
 }
@@ -113,7 +119,7 @@ test('P1 length limits apply to the converted copy value', () => {
 });
 function priorDecemberCase() {
   const c = complete(); field(c, 'periodStart').value = '2025-01-01'; field(c, 'periodEnd').value = '2025-12-31';
-  for (const f of c.fields) f.periodEnd = '2025-12-31';
+  for (const f of c.fields.filter(f => !f.fieldId.startsWith('plan.'))) f.periodEnd = '2025-12-31';
   c.requiredPeriods = { latest: '2025-12-31', productivity: '2025-12-31', wages: '2025-12-31', ruleVersion: c.rulePack.version };
   c.attachments[0].periodEnd = '2025-12-31'; c.attachments[0].expectedPeriodEnd = '2025-12-31';
   c.review!.inputSnapshot = reviewSnapshot(c); return c;
@@ -223,6 +229,51 @@ test('A14 complete independent synthetic case qualifies only as a test', () => {
   const c = complete(), r = validateCase(c); assert.deepEqual(r.issues, []); assert.equal(r.state, 'readyForTranscription'); assert.equal(r.testOnly, true);
   assert.ok(generatePackage(c).applicantHtml.includes('実申請には使用不可'));
   c.dataClass = 'private_actual'; assert.notEqual(validateCase(c).state, 'readyForTranscription');
+});
+test('numeric productivity plans are required even when narrative and review are complete', () => {
+  const c = complete(); c.fields = c.fields.filter(f => !f.fieldId.startsWith('plan.'));
+  c.review!.inputSnapshot = reviewSnapshot(c);
+  assert.equal(validateCase(c).state, 'needsInformation');
+  assert.equal(generatePackage(c).fieldValues.applicant.find(r => r.officialLabel === 'Synthetic productivityPlan')!.copyable, false);
+});
+test('wage increases offset by reduced profits cannot pass numeric productivity validation', () => {
+  const c = complete();
+  for (let year = 1; year <= 3; year++) {
+    field(c, `plan.${year}.personnelCosts`).value = 200 + year * 10;
+    field(c, `plan.${year}.operatingProfit`).value = 500 - year * 10;
+  }
+  c.review!.inputSnapshot = reviewSnapshot(c);
+  const r = validateCase(c);
+  assert.equal(r.state, 'needsInformation');
+  assert.deepEqual(r.productivity.projection.map(p => p.growthPercent), [0, 0, 0]);
+  assert.ok(r.issues.some(i => i.id === 'productivity-target:1'));
+  assert.ok(r.issues.some(i => i.id === 'productivity-target:3'));
+});
+test('three-year target, zero hours, wrong units, wrong periods and unconfirmed forecasts block readiness', () => {
+  for (const mutate of [
+    (c: AssistCase) => { field(c, 'plan.3.operatingProfit').value = 500; },
+    (c: AssistCase) => { field(c, 'plan.2.annualTotalHours').value = 0; },
+    (c: AssistCase) => { field(c, 'plan.1.personnelCosts').unit = 'thousandJPY'; },
+    (c: AssistCase) => { field(c, 'plan.1.personnelCosts').periodEnd = '2026-06-30'; },
+    (c: AssistCase) => { field(c, 'plan.1.personnelCosts').applicantConfirmed = false; },
+    (c: AssistCase) => { c.projectionPeriods = ['2028-06-30', '2028-06-30', '2030-06-30']; },
+  ]) { const c = complete(); mutate(c); c.review!.inputSnapshot = reviewSnapshot(c); assert.equal(validateCase(c).state, 'needsInformation'); }
+});
+test('simulation completion and unperformed security declaration remain separate', () => {
+  const c = complete(); assert.equal(validateCase(c).completionKind, 'simulationReady');
+  field(c, 'securityActionReady').value = false; c.review!.inputSnapshot = reviewSnapshot(c);
+  const r = validateCase(c); assert.equal(r.completionKind, 'incomplete');
+  assert.deepEqual(r.issues.map(i => i.id), ['confirmation:securityActionReady']);
+});
+
+test('exact productivity thresholds pass without display-rounding below-threshold values upward', () => {
+  const c = complete();
+  for (let year = 1; year <= 3; year++) field(c, `plan.${year}.operatingProfit`).value = 750 * 1.03 ** year - 250;
+  c.review!.inputSnapshot = reviewSnapshot(c);
+  assert.equal(validateCase(c).state, 'readyForTranscription');
+  field(c, 'plan.3.operatingProfit').value = Number(field(c, 'plan.3.operatingProfit').value) - 0.01;
+  c.review!.inputSnapshot = reviewSnapshot(c);
+  assert.deepEqual(validateCase(c).issues.map(i => i.id), ['productivity-target:3']);
 });
 test('unsupported frame is preserved, declarations cannot be copied, unknown cannot be zero', () => {
   const c = complete(); c.scope.frame = 'invoice'; assert.equal(validateCase(c).state, 'unsupported'); assert.equal(c.scope.frame, 'invoice');

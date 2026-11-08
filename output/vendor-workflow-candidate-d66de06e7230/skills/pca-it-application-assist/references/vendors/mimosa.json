@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "1",
+  "vendorKey": "mimosa-pca",
+  "profileVersion": "0.1.0-public-draft",
+  "displayName": { "value": "株式会社ミモザ情報システム", "sourceId": "M04", "status": "contentChecked", "checkedAt": "2026-11-07T01:19:33Z", "applicableYear": null },
+  "identitySource": "M04",
+  "applicability": {
+    "years": { "value": [2026], "sourceId": "M01", "status": "contentChecked", "checkedAt": "2026-11-07T01:19:33Z", "applicableYear": 2026 },
+    "frames": { "value": ["normal", "invoice"], "sourceId": "M01", "status": "contentChecked", "checkedAt": "2026-11-07T01:19:33Z", "applicableYear": 2026 },
+    "productFamilies": { "value": ["PCAクラウド"], "sourceId": "M02", "status": "contentChecked", "checkedAt": "2026-11-07T01:19:33Z", "applicableYear": 2026 },
+    "unconfirmedYears": [2027]
+  },
+  "sources": [
+    { "sourceId": "M01", "url": "https://www.mimosa.gr.jp/pca/it-hojo.html", "publisher": "株式会社ミモザ情報システム", "retrievedOn": "2026-11-07", "retrievedAt": null, "checkedAt": "2026-11-07T01:19:33Z", "publishedUpdatedAt": "2026-10-02", "headings": ["対象期間とスケジュール", "申請ステップ", "申請に関する注意点"], "status": "contentChecked", "applicableYear": 2026 },
+    { "sourceId": "M02", "url": "https://www.mimosa.gr.jp/pca/item_list/cloud/", "publisher": "株式会社ミモザ情報システム", "retrievedOn": "2026-11-07", "retrievedAt": null, "checkedAt": "2026-11-07T01:19:33Z", "publishedUpdatedAt": null, "headings": ["製品ラインナップ", "見積相談"], "status": "contentChecked", "applicableYear": 2026 },
+    { "sourceId": "M03", "url": "https://www.mimosa.gr.jp/pca/cloud_estimate.html", "publisher": "株式会社ミモザ情報システム", "retrievedOn": "2026-11-07", "retrievedAt": null, "checkedAt": "2026-11-07T01:19:33Z", "publishedUpdatedAt": null, "headings": ["PCAクラウド 見積依頼フォーム"], "status": "contentChecked", "applicableYear": 2026 },
+    { "sourceId": "M04", "url": "https://www.mimosa.gr.jp/pca/ownerInformation.html", "publisher": "株式会社ミモザ情報システム", "retrievedOn": "2026-11-07", "retrievedAt": null, "checkedAt": "2026-11-07T01:19:33Z", "publishedUpdatedAt": null, "headings": ["会社概要"], "status": "contentChecked", "applicableYear": 2026 }
+  ],
+  "channels": {
+    "quote": { "value": "https://www.mimosa.gr.jp/pca/cloud_estimate.html", "sourceId": "M03", "status": "contentChecked", "checkedAt": "2026-11-07T01:19:33Z", "applicableYear": 2026, "linkVerified": true, "operationVerified": false, "embeddedForm": { "status": "pending", "fetchStatus": "failed", "fields": null, "submissionBehavior": null } },
+    "applicationReturn": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 }
+  },
+  "workflowSteps": [
+    { "stepId": "W01", "label": "購入先の指定", "actor": "applicant", "prerequisites": [], "requiredInputs": ["本人の指定"], "output": "購入先確認", "completionEvidence": ["明示指定、または見積候補への本人確認"], "downstream": ["W02", "W04"], "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    { "stepId": "W02", "label": "見積依頼", "actor": "applicant", "prerequisites": ["W01"], "requiredInputs": ["製品・人数・期間・補助金利用希望"], "output": "見積依頼", "completionEvidence": ["文面作成・本人の送付・見積受領を別々に確認"], "downstream": ["W03"], "sourceId": "M01", "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    { "stepId": "W03", "label": "見積・商品照合", "actor": "applicant", "prerequisites": ["W02"], "requiredInputs": ["見積原本"], "output": "見積読取り・照合", "completionEvidence": ["原本照合と本人確認。登録と機能は別確認"], "downstream": ["W05"], "sourceId": "M01", "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    { "stepId": "W04", "label": "所定書式の確認", "actor": "applicant", "prerequisites": ["W01"], "requiredInputs": ["同社発行の書式原本"], "output": "書式記入準備", "completionEvidence": ["発行元・年度・版・案件・宛先・条項確認。同意署名は本人"], "downstream": ["W05"], "sourceId": "M01", "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    { "stepId": "W05", "label": "販売会社への申込", "actor": "applicant", "prerequisites": ["W03", "W04"], "requiredInputs": ["実際の宛先・方法・期限"], "output": "販売会社への申込準備", "completionEvidence": ["準備・本人申告の送付・受付を区別"], "downstream": ["W06"], "sourceId": "M01", "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    { "stepId": "W06", "label": "申請マイページの開始", "actor": "applicant", "prerequisites": ["W05"], "requiredInputs": ["実際に届いた案内"], "output": "公式申請の開始準備", "completionEvidence": ["招待等の受領と実案内確認"], "downstream": ["W07"], "sourceId": "M01", "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    { "stepId": "W07", "label": "公式画面の入力", "actor": "applicantAndVendor", "prerequisites": ["W06"], "requiredInputs": ["適用マニュアル・実画面・確認済み値と添付"], "output": "担当工程の入力準備", "completionEvidence": ["本人・担当者確認と既存の厳密な転記判定"], "downstream": ["W08"], "sourceId": "M01", "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    { "stepId": "W08", "label": "本人の最終確認・提出", "actor": "applicant", "prerequisites": ["W07"], "requiredInputs": ["本人の意思・最終確認"], "output": "本人の提出操作", "completionEvidence": ["提出結果。準備完了とは別"], "downstream": [], "sourceId": "M01", "status": "pending", "checkedAt": null, "applicableYear": 2026 }
+  ],
+  "forms": [{ "name": { "value": "補助金申請申込・同意書", "sourceId": "M01", "status": "contentChecked", "checkedAt": "2026-11-07T01:19:33Z", "applicableYear": 2026 }, "issuer": "株式会社ミモザ情報システム", "applicableYear": 2026, "version": null, "original": null, "fieldMap": null, "consentFields": null, "signatureFields": null, "destination": null, "contractTerms": null, "sourceId": "M01", "status": "pending", "checkedAt": null }],
+  "deadlines": {
+    "official": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    "vendor": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    "relation": { "value": "販売会社への提出は事務局締切より前。案件の日付は別途確認", "sourceId": "M01", "status": "contentChecked", "checkedAt": "2026-11-07T01:19:33Z", "applicableYear": 2026 }
+  },
+  "registrationEvidence": {
+    "programYear": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    "frame": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    "registeredEntity": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    "consortiumMember": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    "toolNumber": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    "formalPlan": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    "registrationVersion": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 }
+  },
+  "supportBoundaries": {
+    "publicScope": { "value": "製品選定・相談・情報補完・申請者の最終確認と提出。記述代行を行わない旨の公開案内", "sourceId": "M01", "status": "contentChecked", "checkedAt": "2026-11-07T01:19:33Z", "applicableYear": 2026 },
+    "caseAcceptance": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": 2026 },
+    "partnership": { "value": null, "sourceId": null, "status": "pending", "checkedAt": null, "applicableYear": null }
+  },
+  "reusePolicy": { "registrationMatchKeys": ["year", "frame", "registeredEntity", "consortiumMember", "toolNumber", "formalPlan", "registrationVersion"], "caseDifferences": ["quotePrice", "users", "term", "additionalServices", "vendorDeadline", "caseAcceptance"], "privateCaseValuesAllowed": false },
+  "notice": "公開情報の参照用。提携・監修・個別受付・登録済みを意味しない。実案件で年度と有効性を再確認する。"
+}

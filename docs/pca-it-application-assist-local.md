@@ -14,11 +14,24 @@ npm run application-assist -- export 'D:/private/case.json'
 
 台帳形式は今回の内部case-manifest.json。取込みは原本ハッシュ・PDF物理ページ数を実ファイルから確認する。既存の読取り台帳の数値をextracted候補として読み、reviewerやAPI取得時刻を創作しない。架空DOCXは本文だけを参考データとして取り込み、実績へ転用しない。実会社の財務値・名称・住所・法人番号・ハッシュ・API生データを公開リポジトリへ保存しない。
 
-各出力フォルダにcase.json、applicant-guide.html、vendor-guide.html、field-values.json、missing-items.json、attachment-index.json、validation-report.json、attachments/を保存する。case.json、JSON一式、申請者用ガイドは私有情報を含む。**支援事業者へ渡せるのはvendor-guide.html単体**。JSON一式や出力フォルダ全体を共有しない。支援事業者用のZIPは作らない。
+各出力フォルダにcase.json、assessment-summary.html、applicant-guide.html、vendor-guide.html、field-values.json、missing-items.json、attachment-index.json、validation-report.json、attachments/を保存する。確認結果HTML、case.json、JSON一式、申請者用ガイドは私有情報を含む。**支援事業者へ渡せるのはvendor-guide.html単体**。JSON一式や出力フォルダ全体を共有しない。支援事業者用のZIPは作らない。
 
 出力フォルダは入力内容のSHA256・revision・生成時刻で識別し、旧ガイドを上書きしない。原本のハッシュが変わった場合は出力を停止し、再取込み・再レビューする。正式添付として個別に指定し、検証済みの原本のみattachments/へコピーする。40ページの報告書を自動共有しない。
 
-## ローカルOCR
+## 合成ケースの再現（2026-11-08追加）
+
+```powershell
+$env:SUBSIDY_ASSIST_PRIVATE_DIR = 'D:/private/simulation-output'
+npm run application-assist:simulate -- 'D:/private/simulation-input.json'
+```
+
+入力は `{schema: 'application-assist-simulation-v1', testOnly: true, notes: '模擬の確認状態の説明', case: AssistCase}`。`synthetic_test` かつ制度・商品・画面対応がすべて `testOnly` のものに限定する。入力JSONからの相対ファイルパスを解決し、原本ハッシュ、PDFのページ数、document根拠の引用を実ファイルと照合する。レビューを明示した入力のみ、照合後のスナップショットを模擬レビューとして更新する。これはフィクスチャの再現入口であり、PDFから任意の案件を自動理解する処理、実API照会、人による原本レビューの代用ではない。
+
+`projectionPeriods` に適用資料で確認した計画3期を指定する。各期の `plan.1`〜`plan.3` に `operatingProfit`、`personnelCosts`、`depreciation`、`annualTotalHours` の値・単位・対象期・根拠・本人確認を保持する。生産性は基準年と各計画年の4項目から再計算し、対応範囲の1年目3％以上・3年間年平均3％以上を検証する。計画期の年度解釈と実現可能性は担当レビューの対象。根拠は[2026年第7次以降通常枠公募要領](https://it-shien.smrj.go.jp/pdf/it2026_kaitei_koubo_tsujyo.pdf)の印刷7ページ・30ページ（2026-11-08確認）。
+
+検証結果に `completionKind`（`simulationReady` / `realPreparationReady` / `incomplete`）と計算結果を追加した。画面には「模擬の入力ガイド完成」と明示する。未充足ケースも不足理由付きの成果物を出す。従来の内部実行で不足したことを、別のケースの固定期待結果にはしない。
+
+## ローカルOCRの実行
 
 Pythonのpypdfium2とPillow、Nodeのtesseract.js、日本語・英語の学習データをローカルに用意する。ランタイムのパスは環境に合わせて指定する。
 

@@ -20,7 +20,7 @@ async function fixture(t, options = {}) {
   // scenarios have their own integration tests and must not expand fake trials.
   await fs.cp(projectRoot, path.join(root, 'project'), { recursive: true, filter: source => {
     const parts = path.relative(projectRoot, source).split(path.sep);
-    return !(parts[0] === 'cases' && /^V\d{2}$/.test(parts[1] ?? ''));
+    return !(parts[0] === 'cases' && /^[VQF]\d{2}$/.test(parts[1] ?? ''));
   } });
   // Adapter's relative core import remains in a separate, trusted module tree.
   await fs.cp(path.join(base, 'core'), path.join(root, 'core'), { recursive: true });

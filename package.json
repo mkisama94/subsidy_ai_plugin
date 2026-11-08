@@ -15,6 +15,7 @@
     "typecheck:application-assist": "tsc --noEmit -p tsconfig.application-assist.json",
     "test:application-assist": "tsx --test test/applicationAssist/*.test.ts",
     "application-assist": "tsx scripts/application-assist/cli.ts",
+    "application-assist:simulate": "tsx scripts/application-assist/simulate.ts",
     "application-assist:import": "tsx scripts/application-assist/import-manifest.ts",
     "application-assist:ocr": "tsx scripts/application-assist/ocr.ts",
     "application-assist:import-api": "tsx scripts/application-assist/import-api.ts",

@@ -1,0 +1,19 @@
+{
+  "zip": "C:\\git\\subsidy_ai_plugin\\output\\pdf\\vendor-contact-tests\\cocreate-batch-test-data.zip",
+  "zipSha256": "984f61aef1317f9f5c8aed6f016117d3effa02b567875e7aece6ddbdc111f7fe",
+  "files": 8,
+  "validation": {
+    "pdfPages": [
+      4,
+      3,
+      8
+    ],
+    "pdfAllPagesTestMarked": true,
+    "xlsxCachedTotalsChecked": true,
+    "allDailyRowsAndTimeArithmeticChecked": true,
+    "allMonthlyAndPayrollRowsChecked": true,
+    "xlsxFormulaRecalculationChangeRestoreChecked": true,
+    "excelNativeAppNotRun": true,
+    "pdfAndWorkbookVisualReview": true
+  }
+}

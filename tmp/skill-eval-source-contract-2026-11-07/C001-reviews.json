@@ -1,0 +1,27 @@
+[
+  {
+    "trial_id": "trial-a7d7e17b-9625-4349-a264-4ac63396ecc5",
+    "answer_sha256": "f6b031329bad0fde0af0b1c21cbab3683a5c3423ca36838d065a5bd8789e5068",
+    "rubric_sha256": "c99a373eecfeb222edadbed40a0d690d8d2fee6eca3640c8a4b10b8015b1d6b8",
+    "status": "FAIL",
+    "kind": "model",
+    "reviewer": "Codex primary assistant (implementation author; model identity not independently observed)",
+    "independence": "非独立。同じ実装担当のアシスタントによる回答・固定入力・rubricの照合。外部担当者または人によるレビューではない。",
+    "method_version": "source-contract-review-1",
+    "reviewed_at": "2026-11-06T16:03:29.568Z",
+    "reason": "出典official-aの完全一致、事業との相性と資格の分離、設立年月・資本関係の未確認、最優先と断定しない判断は満たす。しかしrubric.required[1]が要求する判定基準日の確認案内がない。回答末尾に基準日の記載なしと示すだけでは、設立3年以内の判定に必要な基準日の確認を案内したとは扱わない。出典形式修正の問題と区別し、内容の未充足としてFAILとする。",
+    "evidence": [
+      "answer.raw.txt: response第1段落（相性と資格条件の分離）",
+      "answer.raw.txt: 未確認事項は設立年月・みなし大企業該当性のみ",
+      "answer.raw.txt: 末尾の基準日記載なしは確認先・確認必要性の案内を含まない",
+      "answer.raw.txt: sources=[official-a], actions=[]",
+      "frozen/rubric.json: required[1] 設立日・判定基準日と資本関係の確認を案内する",
+      "frozen/case/input/sources.txt: 設立3年以内と資本関係の資格条件"
+    ],
+    "checks": {
+      "correctness": "FAIL",
+      "scope": "PASS",
+      "evidence": "PASS"
+    }
+  }
+]

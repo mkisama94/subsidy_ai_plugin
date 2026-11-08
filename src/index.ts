@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/server";
 import { expirePublicHistory } from './publicHistory/service';
 import { registerComparison } from "./comparison/register";
 import { registerDiscovery } from "./subsidyDiscovery/register";
+import { registerPcaRelay, type PcaRelayEnv } from './pcaAssist/relay';
 import { DISCOVERY_GUIDANCE } from "./subsidyDiscovery/service";
 import { collectDueMhlwSources } from "./officialSources/mhlw/collect";
 import type { CatalogEnv } from "./officialSubsidyCatalog/types";
@@ -126,7 +127,7 @@ function errorToolResult(error: unknown) {
   };
 }
 
-type Env = DocumentEnv & CatalogEnv & {
+type Env = DocumentEnv & CatalogEnv & PcaRelayEnv & {
   PUBLIC_HISTORY_ENABLED?: string;
   SUBSIDY_COMPARISON_ENABLED?: string;
   NTA_APPLICATION_ID?: string;
@@ -1128,6 +1129,7 @@ export function createServer(env: Env): McpServer {
   }
   if (enabled(env.SUBSIDY_COMPARISON_ENABLED)) registerComparison(server);
   registerDiscovery(server, env);
+  registerPcaRelay(server, env);
   return server;
 }
 

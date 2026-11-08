@@ -25,9 +25,17 @@
     "scope",
     "unknown",
     "evidence",
-    "vendor"
+    "vendor",
+    "quote-entry",
+    "financial-documents"
   ],
   "vendor-workflow": [
     "vendor"
+  ],
+  "quote-entry": [
+    "quote-entry"
+  ],
+  "financial-documents": [
+    "financial-documents"
   ]
 }

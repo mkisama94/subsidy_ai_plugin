@@ -3,7 +3,9 @@
   "version": "2",
   "title": "ローカル実行なしで三つの成果物を提示",
   "tags": [
-    "vendor"
+    "vendor",
+    "quote-entry",
+    "financial-documents"
   ],
   "skill": "pca-it-application-assist",
   "request_file": "request.txt",

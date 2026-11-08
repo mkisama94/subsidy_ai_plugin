@@ -1,0 +1,2 @@
+pca-it-application-assist: metadata and unfinished-placeholder checks passed
+subsidy-consultation: metadata and unfinished-placeholder checks passed

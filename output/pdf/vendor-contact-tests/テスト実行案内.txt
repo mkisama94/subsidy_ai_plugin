@@ -1,0 +1,13 @@
+﻿A：Co createの申請準備
+
+使用する資料は次のフォルダに集約しました。
+C:\git\subsidy_ai_plugin\output\pdf\cocreate-application
+
+新しいチャットにPDF3点・Excel1点をまとめて添付し、
+「この資料で補助金申請の準備を進めてください。」と依頼してください。
+旧01・04・05のPDF、Excel、ZIPの内容も更新済みです。
+画面に表示する資料名は、上記フォルダの日本語ファイル名を使ってください。
+
+管理記録・旧版・B/Cの別シナリオの手順は添付対象外です。
+管理記録：C:\Users\yamamotoma\OneDrive\Documents\助成金プラグイン内部資料\PCAデモ管理\2026-11-07
+従来のB/Cの実行案内：C:\Users\yamamotoma\OneDrive\Documents\助成金プラグイン内部資料\PCAデモ管理\2026-11-07\変更前\テスト実行案内.txt
